@@ -1,1 +1,0 @@
-c:\users\max\anaconda\lib\site-packages\pyvoronoi-0.0.1-py2.7-win-amd64.egg
