@@ -36,7 +36,7 @@ else:
 
 ext = Extension("pyvoronoi",
                 sources=sources,
-                extra_compile_args = ["/EHsc"],
+                include_dirs = ["pyvoronoi"],
                 language="c++"
                 )
 
@@ -84,8 +84,9 @@ class build_ext_subclass( build_ext ):
         #    for e in self.extensions:
         #        e.include_dirs = iopt[ c ]
         if c == 'msvc':
+            for e in self.extensions:
+                e.extra_compile_args = ["/EHsc"]
             os.environ["INCLUDE"] = "C:\\Users\\max\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
-        print(os.environ["INCLUDE"])
         build_ext.build_extensions(self)        
         
 setup(
