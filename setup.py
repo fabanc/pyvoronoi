@@ -75,25 +75,22 @@ if sys.argv[-1] == 'tag':
     os.system("git push --tags")
     sys.exit()
 
-#iopt =  {'msvc': ['C:\\Users\\max\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include'] }
-
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
         c = self.compiler.compiler_type
-        #if iopt.has_key(c):            
-        #    for e in self.extensions:
-        #        e.include_dirs = iopt[ c ]
         if c == 'msvc':
             for e in self.extensions:
                 e.extra_compile_args = ["/EHsc"]
-            os.environ["INCLUDE"] = "C:\\Users\\max\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
+            userdir = os.environ["USERPROFILE"]
+            os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
+
         build_ext.build_extensions(self)        
         
 setup(
     name='pyvoronoi',
     version=version,
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
-    author='',
+    author='Andrii Sydorchuk, Voxel8',
     author_email='',
     url='https://github.com/Voxel8/pyvoronoi',
     keywords=['voronoi','Boost','polygon'],
