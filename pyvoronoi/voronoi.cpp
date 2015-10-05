@@ -17,9 +17,9 @@ void VoronoiDiagram::Construct() {
 	construct_voronoi(points.begin(), points.end(), segments.begin(), segments.end(), &vd);
 }
 
-std::vector<c_Edge> VoronoiDiagram::GetEdges() {
-	std::vector<c_Edge> edges;
+void VoronoiDiagram::GetEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edge> &edges) {
 	std::set<const voronoi_edge<double> *> visited;
+	std::map<const voronoi_vertex<double> *, size_t> vertexMap;
 
 	for (voronoi_diagram<double>::const_edge_iterator it = vd.edges().begin(); 	it != vd.edges().end(); ++it) {
 		if (visited.find(&(*it)) != visited.end())
@@ -28,13 +28,37 @@ std::vector<c_Edge> VoronoiDiagram::GetEdges() {
 		const voronoi_vertex<double> *start = it->vertex0();
 		const voronoi_vertex<double> *end = it->vertex1();
 		
-		c_Vertex startVertex;
-		if (start != 0)
-			startVertex = c_Vertex(start->x(), start->y());
+		size_t startIndex = -1;
+		if (start != 0) {
+			std::map<const voronoi_vertex<double> *, size_t>::iterator it = vertexMap.find(start);
+
+			if (it == vertexMap.end())
+			{
+				c_Vertex startVertex = c_Vertex(start->x(), start->y());
+				startIndex = vertices.size();
+				vertices.push_back(startVertex);
+				vertexMap[start] = startIndex;
+			}
+			else {
+				startIndex = it->second;
+			}
+		}
 		
-		c_Vertex endVertex;
-		if (end != 0)
-			endVertex = c_Vertex(end->x(), end->y());
+		size_t endIndex = -1;
+		if (end != 0) {
+			std::map<const voronoi_vertex<double> *, size_t>::iterator it = vertexMap.find(end);
+
+			if (it == vertexMap.end())
+			{
+				c_Vertex endVertex = c_Vertex(end->x(), end->y());
+				endIndex = vertices.size();
+				vertices.push_back(endVertex);
+				vertexMap[end] = endIndex;
+			}
+			else {
+				endIndex = it->second;
+			}
+		}
 		
 		size_t firstIndex = it->cell()->source_index();
 
@@ -43,10 +67,8 @@ std::vector<c_Edge> VoronoiDiagram::GetEdges() {
 
 		size_t secondIndex = twin->cell()->source_index();
 
-		edges.push_back(c_Edge(start != 0, end != 0, startVertex, endVertex, it->is_primary(), firstIndex, secondIndex));
+		edges.push_back(c_Edge(startIndex, endIndex, it->is_primary(), firstIndex, secondIndex));
 	}
-	
-	return edges;
 }
 
 std::vector<Point> VoronoiDiagram::GetPoints() {

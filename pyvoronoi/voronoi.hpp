@@ -59,20 +59,17 @@ struct c_Vertex {
 };
 
 struct c_Edge {
-	bool hasStart;
-	bool hasEnd;
-	
-	c_Vertex start;
-	c_Vertex end;
+	size_t start;
+	size_t end;
 
 	bool isPrimary;
 
 	size_t site1;
 	size_t site2;
 
-	c_Edge(bool hasStart = false, bool hasEnd = false, c_Vertex a = c_Vertex(), c_Vertex b = c_Vertex(), bool isPrimary = false, size_t site1 = -1, size_t site2 = -1) : start(a.X, a.Y), end(b.X, b.Y) {
-		this->hasStart = hasStart;
-		this->hasEnd = hasEnd;
+	c_Edge(size_t start = -1, size_t end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1) {
+		this->start = start;
+		this->end = end;
 		this->isPrimary = isPrimary;
 		this->site1 = site1;
 		this->site2 = site2;
@@ -85,7 +82,7 @@ public:
 	void AddPoint(Point p);
 	void AddSegment(Segment s);
 	void Construct();
-	std::vector<c_Edge> GetEdges();
+	void GetEdges(std::vector<c_Vertex> &, std::vector<c_Edge> &);
 	std::vector<Point> GetPoints();
 	std::vector<Segment> GetSegments();
 private:

@@ -3,12 +3,6 @@ Cython wrapper for the C++ translation of the Voronoi diagram part of Boost's
 Polygon library: http://www.boost.org/doc/libs/1_53_0_beta1/libs/polygon/doc/voronoi_diagram.htm
 """
 SILENT = True
-"""
-Voronoi library operates with integer coordinates. To preserve the degree of
-floating point precision use the SCALING_FACTOR with which all the coordinates and
-relevant properties will be multiplied before used with the Voronoi library.
-More info: http://www.angusj.com/delphi/clipper/documentation/Docs/Units/ClipperLib/Classes/ClipperOffset/Properties/ArcTolerance.htm"""
-SCALING_FACTOR = 1
 
 def log_action(description):
     if not SILENT:
@@ -76,10 +70,8 @@ cdef extern from "voronoi.hpp":
         double Y
         
     cdef struct c_Edge:
-        int hasStart
-        int hasEnd
-        c_Vertex start
-        c_Vertex end
+        int start
+        int end
         int isPrimary
         int site1
         int site2
@@ -89,7 +81,7 @@ cdef extern from "voronoi.hpp":
         void AddPoint(Point p)
         void AddSegment(Segment s)
         void Construct()
-        vector[c_Edge] GetEdges()
+        void GetEdges(vector[c_Vertex] & c_vertices, vector[c_Edge] & c_edges)
         vector[Point] GetPoints()
         vector[Segment] GetSegments()
         
@@ -99,10 +91,8 @@ class Vertex:
     Y = 0.0
 
 class Edge:
-    has_start = False
-    has_end = False
-    start = Vertex()
-    end = Vertex()
+    start = -1
+    end = -1
     is_primary = False
     site1 = -1
     site2 = -1
@@ -114,17 +104,27 @@ cdef class Pyvoronoi:
     cdef VoronoiDiagram *thisptr
     cdef int constructed
 
-    def __cinit__(self):
+    outputEdges = []
+    outputVertices = []
+
+    cdef public int SCALING_FACTOR
+
+    def __cinit__(self, scaling_factor = None):
         """ Creates an instance of the Pyvoronoi class.
         """
         log_action("Creating an VoronoiDiagram instance")
         self.thisptr = new VoronoiDiagram()
         self.constructed = 0
 
+        if scaling_factor != None:
+            self.SCALING_FACTOR = scaling_factor
+        else:
+            self.SCALING_FACTOR = 1
+
     def __dealloc__(self):
         log_action("Deleting the VoronoiDiagram instance")
         del self.thisptr
-
+                        
     def AddPoint(self, point):
         """ Add a point
         """
@@ -132,7 +132,7 @@ cdef class Pyvoronoi:
         if self.constructed == 1:
             raise VoronoiException('Construct() has been called, can\'t add more elements')
 
-        cdef Point c_point = _to_voronoi_point(point)
+        cdef Point c_point = self._to_voronoi_point(point)
         self.thisptr.AddPoint(c_point)
 
     def AddSegment(self, segment):
@@ -142,18 +142,57 @@ cdef class Pyvoronoi:
         if self.constructed == 1:
             raise VoronoiException('Construct() has been called, can\'t add more elements')
 
-        cdef Segment c_segment = _to_voronoi_segment(segment)
+        cdef Segment c_segment = self._to_voronoi_segment(segment)
         self.thisptr.AddSegment(c_segment)
 
     def Construct(self):
         """ Generates the voronoi diagram for the added points and segments.
         """
-
+        
         if self.constructed == 1:
             raise VoronoiException('Construct() has already been called')
 
         self.constructed = 1
         self.thisptr.Construct()
+        
+        cdef vector[c_Edge] c_edges
+        cdef vector[c_Vertex] c_vertices
+        
+        self.thisptr.GetEdges(c_vertices, c_edges)
+
+        cdef size_t count = c_edges.size()
+        
+        del self.outputEdges[:] 
+        del self.outputVertices[:]
+
+        for i in range(count):
+            edge = Edge()
+            edge.start = c_edges[i].start
+            edge.end = c_edges[i].end
+            edge.is_primary = c_edges[i].isPrimary != False
+
+            edge.site1 = c_edges[i].site1
+            edge.site2 = c_edges[i].site2
+
+            self.outputEdges.append(edge)
+
+        count = c_vertices.size()
+        
+        for i in range(count):
+            vertex = Vertex()
+            vertex.X = self._from_voronoi_value(c_vertices[i].X)
+            vertex.Y = self._from_voronoi_value(c_vertices[i].Y)
+
+            self.outputVertices.append(vertex)
+
+    def GetVertices(self):
+        """ Returns the edges of the voronoi diagram.             
+        """
+
+        if self.constructed == 0:
+            raise VoronoiException('Construct() has not been called')
+
+        return self.outputVertices
 
     def GetEdges(self):
         """ Returns the edges of the voronoi diagram.             
@@ -161,34 +200,8 @@ cdef class Pyvoronoi:
 
         if self.constructed == 0:
             raise VoronoiException('Construct() has not been called')
-
-        cdef vector[c_Edge] edges = self.thisptr.GetEdges()
-        cdef size_t count = edges.size()
-        outputEdges = []
-
-        for i in range(count):
-            edge = Edge()
-            edge.has_start = edges[i].hasStart != False
-            edge.has_end = edges[i].hasEnd != False
-
-            start = Vertex()
-            start.X = _from_voronoi_value(edges[i].start.X)
-            start.Y = _from_voronoi_value(edges[i].start.Y)
-
-            end = Vertex()
-            end.X = _from_voronoi_value(edges[i].end.X)
-            end.Y = _from_voronoi_value(edges[i].end.Y)
-
-            edge.start = start
-            edge.end = end
-            edge.is_primary = edges[i].isPrimary
-
-            edge.site1 = edges[i].site1
-            edge.site2 = edges[i].site2
-
-            outputEdges.append(edge)
-
-        return outputEdges
+        
+        return self.outputEdges
 
     def GetPoints(self):
         """ Returns the points added to the voronoi diagram
@@ -198,7 +211,7 @@ cdef class Pyvoronoi:
         outputPoints = []
 
         for i in range(count):
-            point = [_from_voronoi_value(points[i].X), _from_voronoi_value(points[i].Y)]
+            point = [self._from_voronoi_value(points[i].X), self._from_voronoi_value(points[i].Y)]
             outputPoints.append(point)
 
         return outputPoints
@@ -212,27 +225,26 @@ cdef class Pyvoronoi:
 
         for i in range(count):
             segment = []
-            startPoint = [_from_voronoi_value(segments[i].p0.X), _from_voronoi_value(segments[i].p0.Y)]
+            startPoint = [self._from_voronoi_value(segments[i].p0.X), self._from_voronoi_value(segments[i].p0.Y)]
             segment.append(startPoint)
 
-            endPoint = [_from_voronoi_value(segments[i].p1.X), _from_voronoi_value(segments[i].p1.Y)]
+            endPoint = [self._from_voronoi_value(segments[i].p1.X), self._from_voronoi_value(segments[i].p1.Y)]
             segment.append(endPoint)
             outputSegments.append(segment)
 
         return outputSegments
 
+    cdef Segment _to_voronoi_segment(self, object py_segment):
+        return Segment(self._to_voronoi_point(py_segment[0]), self._to_voronoi_point(py_segment[1]))
 
-cdef Segment _to_voronoi_segment(object py_segment):
-    return Segment(_to_voronoi_point(py_segment[0]), _to_voronoi_point(py_segment[1]))
+    cdef Point _to_voronoi_point(self, object py_point):
+        return Point(self._to_voronoi_int(py_point[0]), self._to_voronoi_int(py_point[1]))
 
-cdef Point _to_voronoi_point(object py_point):
-    return Point(_to_voronoi_int(py_point[0]), _to_voronoi_int(py_point[1]))
+    cdef int _to_voronoi_int(self, val):
+        return val * self.SCALING_FACTOR
 
-cdef int _to_voronoi_int(val):
-    return val * SCALING_FACTOR
+    cdef double _to_voronoi_double(self, val):
+        return val * <double>self.SCALING_FACTOR
 
-cdef double _to_voronoi_double(val):
-    return val * <double>SCALING_FACTOR
-
-cdef double _from_voronoi_value(val):
-    return val / <double>SCALING_FACTOR
+    cdef double _from_voronoi_value(self, val):
+        return val / <double>self.SCALING_FACTOR

@@ -5,4 +5,5 @@ pyvoronoi.egg-info
 *.so
 pyvoronoi/pyvoronoi.cpp
 *.pyc
+*.pyd
 MANIFEST

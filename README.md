@@ -36,11 +36,14 @@ After every modification of .pyx files compile with Cython:
 
 ## Using
 
-Create a new instance:
+Create a new instance, passing the scaling factor into the constructor:
 ``` 
 import pyvoronoi
-pv = pyvoronoi.Pyvoronoi()
+pv = pyvoronoi.Pyvoronoi(10)
 ```
+
+Since the voronoi library uses integer representation for points, the scaling factor chosen must be high enough
+to avoid roundoff error when converting from point coordinates to integers.
 
 Add points and segments:
 
@@ -49,17 +52,16 @@ pv.AddPoint([0, 0])
 pv.AddSegment([[1,5],[2,2]])
 ```
 
-Call ```Construct()``` and get the edges:
+Call ```Construct()``` and get the edges and vertices:
 ``` 
 pv.Construct()
 edges = pv.GetEdges()
+vertices = pv.GetVertices()
 ```
 
 Edges have the following properties:
 
-* ```has_start, has_end``` indicate whether the edge has a start and end point, correspondingly. 
-Edges can be infinite or one-ended. In this case the corresponding ```start/end``` property is invalid.
-* ```start, end``` contain the X, Y coordinates of the start and end points if ```has_start/has_end``` is set.
+* ```start, end``` contain the indices of the start and end vertices or -1 if the edge is infinite at that end.
 * ```is_primary``` is true if the edge is not coincident with one of the source inputs.
 * ```site1, site2``` are the indices of the sites which generated this edge. Sites are indexed as points, then segments,
 so if there are 5 points and 3 segments, a site index of 7 means the last segment, a site index of 2 means the third 
