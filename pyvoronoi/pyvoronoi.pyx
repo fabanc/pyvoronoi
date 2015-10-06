@@ -70,11 +70,11 @@ cdef extern from "voronoi.hpp":
         double Y
         
     cdef struct c_Edge:
-        int start
-        int end
+        size_t start
+        size_t end
         int isPrimary
-        int site1
-        int site2
+        size_t site1
+        size_t site2
         
     cdef cppclass VoronoiDiagram:
         VoronoiDiagram()

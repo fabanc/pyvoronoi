@@ -11,7 +11,6 @@
 #define __GLIBC__ 0
 
 #include "boost/polygon/voronoi.hpp"
-using namespace boost::polygon;
 
 struct Point {
 	int X;
@@ -25,31 +24,35 @@ struct Segment {
 	Segment(Point a = Point(), Point b = Point()) : p0(a.X, a.Y), p1(b.X, b.Y) {}
 };
 
-template <>
-struct geometry_concept<Point> { typedef point_concept type; };
+namespace boost {
+	namespace polygon {
+		template <>
+		struct geometry_concept<Point> { typedef point_concept type; };
 
-template <>
-struct point_traits<Point> {
-	typedef int coordinate_type;
+		template <>
+		struct point_traits<Point> {
+			typedef int coordinate_type;
 
-	static inline coordinate_type get(const Point& point, orientation_2d orient) {
-		return (orient == HORIZONTAL) ? point.X: point.Y;
+			static inline coordinate_type get(const Point& point, orientation_2d orient) {
+				return (orient == HORIZONTAL) ? point.X : point.Y;
+			}
+		};
+
+		template <>
+		struct geometry_concept<Segment> { typedef segment_concept type; };
+
+		template <>
+		struct segment_traits<Segment> {
+			typedef Segment segment_type;
+			typedef Point point_type;
+			typedef int coordinate_type;
+
+			static point_type get(const segment_type& segment, direction_1d dir) {
+				return dir.to_int() ? segment.p1 : segment.p0;
+			}
+		};
 	}
-};
-
-template <>
-struct geometry_concept<Segment> { typedef segment_concept type; };
-
-template <>
-struct segment_traits<Segment> {
-	typedef Segment segment_type;
-	typedef Point point_type;
-	typedef int coordinate_type;
-
-	static point_type get(const segment_type& segment, direction_1d dir) {
-		return dir.to_int() ? segment.p1 : segment.p0;
-	}
-};
+}
 
 struct c_Vertex {
 	double X;
@@ -75,6 +78,8 @@ struct c_Edge {
 		this->site2 = site2;
 	}
 };
+
+using namespace boost::polygon;
 
 class VoronoiDiagram {
 public:
