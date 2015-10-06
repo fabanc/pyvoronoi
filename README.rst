@@ -4,12 +4,11 @@
 
 A wrapper for Boost's Voronoi diagram library
 
-=======
 Install
 =======
 
 Dependencies
-============
+------------
 
 Cython dependency is optional. Cpp sources generated with Cython are available in releases.
 
@@ -25,8 +24,15 @@ This way the package can be used without or with an incompatible version of Cyth
 
 The idea comes from Matt Shannon's bandmat library.
 
+From PyPI
+---------
+
+Cython not required.
+
+``pip install pyvoronoi``
+
 From source
-===========
+-----------
 
 Cython required.
 
