@@ -62,15 +62,15 @@ struct c_Vertex {
 };
 
 struct c_Edge {
-	size_t start;
-	size_t end;
+	long long start;
+	long long end;
 
 	bool isPrimary;
 
 	size_t site1;
 	size_t site2;
 
-	c_Edge(size_t start = -1, size_t end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1) {
+	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1) {
 		this->start = start;
 		this->end = end;
 		this->isPrimary = isPrimary;

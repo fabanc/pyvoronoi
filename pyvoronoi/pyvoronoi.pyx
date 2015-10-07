@@ -70,8 +70,8 @@ cdef extern from "voronoi.hpp":
         double Y
         
     cdef struct c_Edge:
-        size_t start
-        size_t end
+        long long start
+        long long end
         int isPrimary
         size_t site1
         size_t site2
