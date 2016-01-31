@@ -25,6 +25,10 @@ void VoronoiDiagram::GetEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 		if (visited.find(&(*it)) != visited.end())
 			continue;
 		
+		//FA: Add the segment to a map
+		//const voronoi_diagram<double>::edge_type &edge = *it;
+		//edgeMap[&(*it)] = edges.size();
+		
 		const voronoi_vertex<double> *start = it->vertex0();
 		const voronoi_vertex<double> *end = it->vertex1();
 		
@@ -67,9 +71,101 @@ void VoronoiDiagram::GetEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 
 		size_t secondIndex = twin->cell()->source_index();
 
-		edges.push_back(c_Edge(startIndex, endIndex, it->is_primary(), firstIndex, secondIndex));
+		edges.push_back(c_Edge(startIndex, endIndex, it->is_primary(), firstIndex, secondIndex, it->is_linear()));
 	}
 }
+
+
+
+void VoronoiDiagram::GetCellEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edge> &edges, std::vector<c_CellEdge> & cell_edges) {
+	
+	std::map<const voronoi_vertex<double> *, long long> vertexMap;
+	std::map<const voronoi_edge<double> *, long long> edgeMap;
+	std::map<const voronoi_cell<double> *, long long> cellMap;
+
+	long long cellId = 0;
+    for (voronoi_diagram<double>::const_cell_iterator itcell = vd.cells().begin(); 
+		itcell != vd.cells().end(); 
+		++itcell) {
+			
+		const voronoi_diagram<double>::cell_type &cell = *itcell;
+		
+
+		
+		if(!cell.is_degenerate()){
+			c_CellEdge cell_edge = c_CellEdge(cellId, cell.source_index(), cell.contains_point(), cell.contains_segment(), false);
+			const voronoi_diagram<double>::edge_type *edge = cell.incident_edge();	
+			if(edge != NULL){
+				do {
+					
+					const voronoi_vertex<double> *start = edge->vertex0();
+					const voronoi_vertex<double> *end = edge->vertex1();
+						
+					//Add an map the vertices
+					long long startIndex = -1;
+					if(start != 0){
+						std::map<const voronoi_vertex<double> *, long long>::iterator vertexMapIterator = vertexMap.find(start);
+						if(vertexMapIterator == vertexMap.end()){
+							c_Vertex endVertex = c_Vertex(start->x(), start->y());
+							startIndex = (long long) vertices.size();
+							vertices.push_back(endVertex);						
+							vertexMap[start] = startIndex;
+						}
+						else {
+							startIndex = vertexMapIterator->second;
+						}					
+					}				
+					
+					long long endIndex = -1;
+					if(end != 0){
+						std::map<const voronoi_vertex<double> *, long long>::iterator vertexMapIterator = vertexMap.find(end);
+						if(vertexMapIterator == vertexMap.end()){
+							c_Vertex endVertex = c_Vertex(end->x(), end->y());
+							endIndex = (long long) vertices.size();
+							vertices.push_back(endVertex);						
+							vertexMap[end] = endIndex;
+						}
+						else {
+							endIndex = vertexMapIterator->second;
+						}					
+					}	
+
+					if(startIndex == -1 || endIndex == -1){
+						cell_edge.is_open = true;
+					}
+					
+					cell_edge.vertices.push_back(startIndex);
+					
+					//Add and map the edge
+					
+					std::map<const voronoi_edge<double> *, long long>::iterator edgeMapIterator = edgeMap.find(edge);
+					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear());
+					
+					int edge_index = -1;
+					if(edgeMapIterator == edgeMap.end()){
+						edge_index = edges.size();
+						edgeMap[edge] = edge_index;
+						edges.push_back(outputEdge);
+					}else{
+						edge_index = edgeMapIterator->second;
+						//cell_edge.edgeId = edgeMapIterator->second;
+					}	
+					cell_edge.edges.push_back(edge_index);
+					
+					edge = edge->next();
+				} while (edge != cell.incident_edge() && edge != NULL);
+			}
+			cell_edges.push_back(cell_edge);		
+			cellId ++;
+		}
+
+	}		
+}
+
+
+
+
+
 
 std::vector<Point> VoronoiDiagram::GetPoints() {
 	return points;
