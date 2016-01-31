@@ -61,6 +61,7 @@ struct c_Vertex {
 	c_Vertex(double x = 0, double y = 0) : X(x), Y(y) {}
 };
 
+
 struct c_Edge {
 	long long start;
 	long long end;
@@ -69,13 +70,58 @@ struct c_Edge {
 
 	size_t site1;
 	size_t site2;
+	
+	bool isLinear;
 
-	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1) {
+	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false) {
 		this->start = start;
 		this->end = end;
 		this->isPrimary = isPrimary;
 		this->site1 = site1;
 		this->site2 = site2;
+		this->isLinear = isLinear;
+	}
+};
+
+
+struct c_Edge2 {
+	
+	double x1;
+	double y1;
+	double x2;
+	double y2;
+	bool isPrimary;
+	size_t site;
+	bool isLinear;
+
+	c_Edge2(double x1 = -1, double y1 = -1, double x2 = -1, double y2 = -1, bool isPrimary = false, size_t site = -1, bool isLinear = false) {
+		this->x1 = x1;
+		this->y1 = y1;
+		this->x2 = x2;
+		this->y2 = y2;
+		this->isPrimary = isPrimary;
+		this->site = site;
+		this->isLinear = isLinear;
+	}
+};
+
+
+struct c_CellEdge{
+	size_t cellId;
+	size_t source_index;
+	bool contains_point;
+	bool contains_segment;
+	bool is_open;
+	
+	std::vector<long long> vertices;
+	std::vector<long long> edges;
+	
+	c_CellEdge(size_t cellId = -1, size_t source_index = -1, bool contains_point = false, bool contains_segment = false, bool is_open = false){
+		this->cellId = cellId;
+		this->source_index = source_index;
+		this->contains_point = contains_point;
+		this->contains_segment = contains_segment;
+		this->is_open = is_open;
 	}
 };
 
@@ -88,10 +134,15 @@ public:
 	void AddSegment(Segment s);
 	void Construct();
 	void GetEdges(std::vector<c_Vertex> &, std::vector<c_Edge> &);
+    void GetCellEdges(std::vector<c_Vertex> &, std::vector<c_Edge> &, std::vector<c_CellEdge> &);
 	std::vector<Point> GetPoints();
 	std::vector<Segment> GetSegments();
 private:
 	std::vector<Point> points;
 	std::vector<Segment> segments;
 	voronoi_diagram<double> vd;
+	
+	//Maps. 
+	//std::map<const voronoi_vertex<double> *, long long> vertexMap;
+	//std::map<const voronoi_edge<double> *, long long> edgeMap;
 };
