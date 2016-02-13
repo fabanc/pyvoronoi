@@ -81,6 +81,53 @@ Edges have the following properties:
 * ``is_primary`` is true if the edge is not coincident with any of the source inputs.
 * ``site1, site2`` are the indices of the sites which generated this edge. Sites are indexed as points, then segments, so if there are 5 points and 3 segments, a site index of 7 means the last segment, a site index of 2 means the third point.
 
+The function construct does not return any cell. In order to get cells, use the following function:
+
+.. code:: python
+	pv = pyvoronoi.Pyvoronoi(100)
+	pv.AddSegment([[0.1,0.8],[0.3,0.6]])
+	pv.AddSegment([[0.3,0.6],[0.4,0.6]])
+	pv.AddSegment([[0.4,0.6],[0.4,0.5]])
+	pv.AddSegment([[0.4,0.6],[0.4,0.7]])
+	pv.AddSegment([[0.4,0.7],[0.5,0.8]])
+	pv.AddSegment([[0.4,0.7],[0.5,0.6]])
+	pv.AddSegment([[0.5,0.6],[0.7,0.7]])
+
+	for i in range(len(pfroms)):
+		pv.AddSegment([pfroms[i],ptos[i]])
+
+	pv.ConstructWithCells()
+	edges = pv.GetCellEdges()
+	vertices = pv.GetCellVertices()
+		
+	print "Cell Edges"
+	cells = pv.GetCells()
+	print "Cell Count: " + str(len(cells))
+	for c in cells:
+		print "Cell ID: {0}. Contains point: {1}. Contains segment: {2}. Is open: {3}, Site Index: {4}".format(c.cellId, c.contains_point, c.contains_segment, c.is_open, c.source_index)#Works fine
+		print ",".join(map(str,c.vertices))
+		for sIndex in c.segments:
+			print "Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end)#Fail with error AttributeError: 'dict' object has no attribute 'x1'
+		print "\n"
+
+Note that when using the method ConstructWithCells instead of Construct , the object are retrieved using different methods:
+
+* GetCells() --> GetCellVertices()
+* GetEdges() --> GetCellEdges()
+
+You can also retrieve object that belong to the class VoronoiCell using the method GetCells()
+
+.. code:: python
+class VoronoiCell:
+    cellId = -1
+    source_index = -1
+    contains_point = 0
+    contains_segment = 0
+    is_open = 0
+	
+    vertices = None
+    segments = None	
+		
 
 License
 =======
