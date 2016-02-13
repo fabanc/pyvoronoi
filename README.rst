@@ -84,6 +84,7 @@ Edges have the following properties:
 The function construct does not return any cell. In order to get cells, use the following function:
 
 .. code:: python
+
 	pv = pyvoronoi.Pyvoronoi(100)
 	pv.AddSegment([[0.1,0.8],[0.3,0.6]])
 	pv.AddSegment([[0.3,0.6],[0.4,0.6]])
@@ -118,15 +119,16 @@ Note that when using the method ConstructWithCells instead of Construct , the ob
 You can also retrieve object that belong to the class VoronoiCell using the method GetCells()
 
 .. code:: python
-class VoronoiCell:
-    cellId = -1
-    source_index = -1
-    contains_point = 0
-    contains_segment = 0
-    is_open = 0
-	
-    vertices = None
-    segments = None	
+
+	class VoronoiCell:
+		cellId = -1
+		source_index = -1
+		contains_point = 0
+		contains_segment = 0
+		is_open = 0
+		
+		vertices = None
+		segments = None	
 		
 
 License
