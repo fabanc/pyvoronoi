@@ -94,22 +94,21 @@ The function construct does not return any cell. In order to get cells, use the 
 	pv.AddSegment([[0.4,0.7],[0.5,0.6]])
 	pv.AddSegment([[0.5,0.6],[0.7,0.7]])
 
-	for i in range(len(pfroms)):
-		pv.AddSegment([pfroms[i],ptos[i]])
+.. code:: python
 
 	pv.ConstructWithCells()
 	edges = pv.GetCellEdges()
 	vertices = pv.GetCellVertices()
 		
-	print "Cell Edges"
+.. code:: python
+		
 	cells = pv.GetCells()
 	print "Cell Count: " + str(len(cells))
 	for c in cells:
 		print "Cell ID: {0}. Contains point: {1}. Contains segment: {2}. Is open: {3}, Site Index: {4}".format(c.cellId, c.contains_point, c.contains_segment, c.is_open, c.source_index)#Works fine
 		print ",".join(map(str,c.vertices))
 		for sIndex in c.segments:
-			print "Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end)#Fail with error AttributeError: 'dict' object has no attribute 'x1'
-		print "\n"
+			print "Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end)
 
 Note that when using the method ConstructWithCells instead of Construct , the object are retrieved using different methods:
 
