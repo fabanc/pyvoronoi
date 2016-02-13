@@ -210,15 +210,58 @@ cdef class Pyvoronoi:
         cdef Segment c_segment = self._to_voronoi_segment(segment)
         self.thisptr.AddSegment(c_segment)
 
+		
+		
     def Construct(self):
-        """ Generates the voronoi diagram for the added points and segments.
+        """ Generates the voronoi diagram for the added points and segments. Voronoi cell structure will NOT be generated.
         """
         
         if self.constructed == 1:
             raise VoronoiException('Construct() has already been called')
 
         self.constructed = 1
-        print "Construct..."
+        self.thisptr.Construct()
+        
+        cdef vector[c_Edge] c_edges
+        cdef vector[c_Vertex] c_vertices
+        
+        self.thisptr.GetEdges(c_vertices, c_edges)
+
+        cdef size_t count = c_edges.size()
+        
+        del self.outputEdges[:] 
+        del self.outputVertices[:]
+
+        for i in range(count):
+            edge = Edge()
+            edge.start = c_edges[i].start
+            edge.end = c_edges[i].end
+            edge.is_primary = c_edges[i].isPrimary != False
+
+            edge.site1 = c_edges[i].site1
+            edge.site2 = c_edges[i].site2
+
+            self.outputEdges.append(edge)
+
+        count = c_vertices.size()
+        
+        for i in range(count):
+            vertex = Vertex()
+            vertex.X = self._from_voronoi_value(c_vertices[i].X)
+            vertex.Y = self._from_voronoi_value(c_vertices[i].Y)
+
+            self.outputVertices.append(vertex)
+			
+		
+    def ConstructWithCells(self):
+        """ Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
+        """
+        
+        if self.constructed == 1:
+            raise VoronoiException('Construct() has already been called')
+
+        self.constructed = 1
+		
         self.thisptr.Construct()
         
         cdef vector[c_Edge] c_edges
@@ -231,11 +274,6 @@ cdef class Pyvoronoi:
         self.thisptr.GetCellEdges(c_vertices2, c_edges2, c_cell_edges)		
         print "Done!"
 		
-        #self.thisptr.GetEdges(c_vertices, c_edges)
-		
-
-        #cdef size_t count = c_edges.size()
-        
         del self.outputEdges[:] 
         del self.outputVertices[:]
 		
@@ -245,35 +283,11 @@ cdef class Pyvoronoi:
         del self.outputCells[:]
         del self.outputSortedCells[:]
 		
-		
-        #for i in range(count):
-        #    edge = Edge()
-        #    edge.start = c_edges[i].start
-        #    edge.end = c_edges[i].end
-        #    edge.is_primary = c_edges[i].isPrimary != False
-        #    edge.is_linear = c_edges[i].isLinear != False
-        #
-        #    edge.site1 = c_edges[i].site1
-        #    edge.site2 = c_edges[i].site2
-        #
-        #    self.outputEdges.append(edge)
-        #
-        #count = c_vertices.size()
-        #
-        #for i in range(count):
-        #    vertex = Vertex()
-        #    vertex.X = self._from_voronoi_value(c_vertices[i].X)
-        #    vertex.Y = self._from_voronoi_value(c_vertices[i].Y)
-        #
-        #    self.outputVertices.append(vertex)
-			
-		
-
         #--------------------------------------------------------
         #LOGIC TO PRINT CELL OBJECTS
         #--------------------------------------------------------
         count = c_edges2.size()
-        print "Cell edges size = " + str(count)
+        #print "Cell edges size = " + str(count)
         for i in range(count):
             edge = Edge()
             edge.start = c_edges2[i].start
@@ -288,7 +302,7 @@ cdef class Pyvoronoi:
 			
 					
         count = c_vertices2.size()
-        print "Cell vertex size = " + str(count)        
+        #print "Cell vertex size = " + str(count)        
         for i in range(count):
             vertex = Vertex()
             vertex.X = self._from_voronoi_value(c_vertices2[i].X)
@@ -297,7 +311,7 @@ cdef class Pyvoronoi:
             self.outputCellVertices.append(vertex)
 				
         count = c_cell_edges.size()
-        print "Number of cells: {0}".format(count)
+        #print "Number of cells: {0}".format(count)
 		
 		
         for i in range(count):
@@ -307,37 +321,6 @@ cdef class Pyvoronoi:
             self.outputCells[-1].contains_segment = c_cell.contains_segment != False
             self.outputCells[-1].is_open = c_cell.is_open != False		
 			
-        #print "Building Cells"
-        #for i in range(count):
-        #    cedge = c_cell_edges[i]
-        #    #print "Edge index: {0}".format(cedge.edgeId)
-        #    edge = self.outputCellEdges[cedge.edgeId]
-        #    #print "Site: {0}, Edge Index: {1}, Start: {2}, End: {3}, Is Linear: {4}".format(cedge.cellId,i,edge.start, edge.end, edge.is_linear)
-        #    if (i==0):
-        #        cell = VoronoiCell(cellId)
-        #        cell.segments.append(i)
-        #        self.outputCells.append(cell)
-        #        cellId = cellId + 1				
-        #    else:
-        #        if(self.outputCells[-1].cellId != cedge.cellId):
-        #            cell = VoronoiCell(cedge.cellId)
-        #            cell.segments.append(i)
-        #            self.outputCells.append(cell)
-        #            cellId = cellId + 1
-        #        else:
-        #            self.outputCells[-1].segments.append(i)
-        #
-		#			
-        #print "Sorting Cells"
-        #sortedCells = []
-        #for c in self.outputCells:
-        #    print "Cell: {0}".format(c.cellId)
-        #    sortedSegments = self.SortCell(c.segments)
-        #    if(sortedSegments != None):
-        #        c.segments = sortedSegments
-        #        sortedCells.append(c)
-		#		
-        #self.outputCells = sortedCells
 				
     def GetVertices(self):
         """ Returns the edges of the voronoi diagram.             
@@ -381,7 +364,8 @@ cdef class Pyvoronoi:
         return self.outputCells
 
     def SortCell(self, cellSegments):
-	
+        """ Internal method. Generate a cell structure that exclude infinite edges
+        """	
         #Default checks
         if len(cellSegments) == 0:
             return None
@@ -408,10 +392,6 @@ cdef class Pyvoronoi:
                     break
             if len(sortedList) == count:
                 return None#raise Exception ("Error while sorting segments")	
-
-        #for e in sortedList:
-        #    tEdge = self.outputCellEdges[e]
-        #    print "Sorted List Element. Start element: {0}, End element: {1}".format(tEdge.start, tEdge.end)
 
         return sortedList			
 
