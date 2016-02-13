@@ -117,18 +117,11 @@ Note that when using the method ConstructWithCells instead of Construct , the ob
 * GetEdges() --> GetCellEdges()
 
 You can also retrieve object that belong to the class VoronoiCell using the method GetCells()
-
-.. code:: python
-
-	class VoronoiCell:
-		cellId = -1
-		source_index = -1
-		contains_point = 0
-		contains_segment = 0
-		is_open = 0
-		
-		vertices = None
-		segments = None	
+* ``cellId`` contains a unique identifier arbitrarly defined in python.
+* ``source_index``. The index of the segment.
+* ``contains_point``. See the boost documentation for the cell data structure. Contains the result of the cell method contains_point() 
+* ``contains_segment``. See the boost documentation for the cell data structure. Contains the result of the cell method contains_segment() 
+* ``is_open``. True if the cell contains edges pointing toward infinity.
 		
 
 License
