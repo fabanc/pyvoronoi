@@ -24,11 +24,7 @@ void VoronoiDiagram::GetEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 	for (voronoi_diagram<double>::const_edge_iterator it = vd.edges().begin(); 	it != vd.edges().end(); ++it) {
 		if (visited.find(&(*it)) != visited.end())
 			continue;
-		
-		//FA: Add the segment to a map
-		//const voronoi_diagram<double>::edge_type &edge = *it;
-		//edgeMap[&(*it)] = edges.size();
-		
+				
 		const voronoi_vertex<double> *start = it->vertex0();
 		const voronoi_vertex<double> *end = it->vertex1();
 		
@@ -137,7 +133,6 @@ void VoronoiDiagram::GetCellEdges(std::vector<c_Vertex> &vertices, std::vector<c
 					cell_edge.vertices.push_back(startIndex);
 					
 					//Add and map the edge
-					
 					std::map<const voronoi_edge<double> *, long long>::iterator edgeMapIterator = edgeMap.find(edge);
 					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear());
 					
@@ -148,7 +143,6 @@ void VoronoiDiagram::GetCellEdges(std::vector<c_Vertex> &vertices, std::vector<c
 						edges.push_back(outputEdge);
 					}else{
 						edge_index = edgeMapIterator->second;
-						//cell_edge.edgeId = edgeMapIterator->second;
 					}	
 					cell_edge.edges.push_back(edge_index);
 					
@@ -161,11 +155,6 @@ void VoronoiDiagram::GetCellEdges(std::vector<c_Vertex> &vertices, std::vector<c
 
 	}		
 }
-
-
-
-
-
 
 std::vector<Point> VoronoiDiagram::GetPoints() {
 	return points;

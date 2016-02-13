@@ -79,14 +79,14 @@ cdef extern from "voronoi.hpp":
         size_t site2
         int isLinear
 
-    cdef struct c_Edge2:
-        double x1
-        double y1
-        double x2
-        double y2		
-        int isPrimary
-        size_t site
-        int isLinear
+#    cdef struct c_Edge2:
+#        double x1
+#        double y1
+#        double x2
+#        double y2		
+#        int isPrimary
+#        size_t site
+#        int isLinear
 		
     cdef struct c_CellEdge:
         size_t cellId
@@ -121,23 +121,23 @@ class Edge:
     site2 = -1
     is_linear = False
 	
-class Edge2:
-    x1 = -1
-    y1 = -1
-    x2 = -1
-    y2 = -1	
-    is_primary = False
-    site = -1
-    is_linear = False
-
-    def __init__(self, x1,y1,x2,y2, is_primary, site, is_linear):
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.is_primary = is_primary
-        self.site = site
-        self.is_linear = is_linear
+#class Edge2:
+#    x1 = -1
+#    y1 = -1
+#    x2 = -1
+#    y2 = -1	
+#    is_primary = False
+#    site = -1
+#    is_linear = False
+#
+#    def __init__(self, x1,y1,x2,y2, is_primary, site, is_linear):
+#        self.x1 = x1
+#        self.y1 = y1
+#        self.x2 = x2
+#        self.y2 = y2
+#        self.is_primary = is_primary
+#        self.site = site
+#        self.is_linear = is_linear
 		
 class VoronoiCell:
     cellId = -1
@@ -228,6 +228,7 @@ cdef class Pyvoronoi:
         self.thisptr.GetEdges(c_vertices, c_edges)
 
         cdef size_t count = c_edges.size()
+        print "Voronoi Edge Size: {0}".format(count)
         
         del self.outputEdges[:] 
         del self.outputVertices[:]
@@ -244,6 +245,7 @@ cdef class Pyvoronoi:
             self.outputEdges.append(edge)
 
         count = c_vertices.size()
+        print "Voronoi Vertices Size: {0}".format(count)
         
         for i in range(count):
             vertex = Vertex()

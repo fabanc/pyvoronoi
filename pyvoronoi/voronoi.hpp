@@ -83,29 +83,29 @@ struct c_Edge {
 	}
 };
 
+//An edge structure added for segments part of a cell.
+//struct c_Edge2 {
+//	double x1;
+//	double y1;
+//	double x2;
+//	double y2;
+//	bool isPrimary;
+//	size_t site;
+//	bool isLinear;
+//
+//	c_Edge2(double x1 = -1, double y1 = -1, double x2 = -1, double y2 = -1, bool isPrimary = false, size_t site = -1, bool isLinear = false) {
+//		this->x1 = x1;
+//		this->y1 = y1;
+//		this->x2 = x2;
+//		this->y2 = y2;
+//		this->isPrimary = isPrimary;
+//		this->site = site;
+//		this->isLinear = isLinear;
+//	}
+//};
 
-struct c_Edge2 {
-	
-	double x1;
-	double y1;
-	double x2;
-	double y2;
-	bool isPrimary;
-	size_t site;
-	bool isLinear;
 
-	c_Edge2(double x1 = -1, double y1 = -1, double x2 = -1, double y2 = -1, bool isPrimary = false, size_t site = -1, bool isLinear = false) {
-		this->x1 = x1;
-		this->y1 = y1;
-		this->x2 = x2;
-		this->y2 = y2;
-		this->isPrimary = isPrimary;
-		this->site = site;
-		this->isLinear = isLinear;
-	}
-};
-
-
+//A structure to identify a segment as part of one cell only
 struct c_CellEdge{
 	size_t cellId;
 	size_t source_index;
@@ -141,8 +141,4 @@ private:
 	std::vector<Point> points;
 	std::vector<Segment> segments;
 	voronoi_diagram<double> vd;
-	
-	//Maps. 
-	//std::map<const voronoi_vertex<double> *, long long> vertexMap;
-	//std::map<const voronoi_edge<double> *, long long> edgeMap;
 };
