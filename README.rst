@@ -81,7 +81,7 @@ Edges have the following properties:
 * ``is_primary`` is true if the edge is not coincident with any of the source inputs.
 * ``site1, site2`` are the indices of the sites which generated this edge. Sites are indexed as points, then segments, so if there are 5 points and 3 segments, a site index of 7 means the last segment, a site index of 2 means the third point.
 
-The function construct does not return any cell. In order to get cells, use the following function:
+The function construct does not return any cell. In order to get cells, use the function ``ConstructWithCells()``as per the following example:
 
 .. code:: python
 
