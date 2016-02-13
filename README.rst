@@ -83,7 +83,7 @@ Edges have the following properties:
 
 The function construct does not return any cell. In order to get cells, use the following function:
 
-.. code:: python
+``` 
 
 	pv = pyvoronoi.Pyvoronoi(100)
 	pv.AddSegment([[0.1,0.8],[0.3,0.6]])
@@ -94,13 +94,11 @@ The function construct does not return any cell. In order to get cells, use the 
 	pv.AddSegment([[0.4,0.7],[0.5,0.6]])
 	pv.AddSegment([[0.5,0.6],[0.7,0.7]])
 
-.. code:: python
+
 
 	pv.ConstructWithCells()
 	edges = pv.GetCellEdges()
 	vertices = pv.GetCellVertices()
-		
-.. code:: python
 		
 	cells = pv.GetCells()
 	print "Cell Count: " + str(len(cells))
@@ -110,6 +108,8 @@ The function construct does not return any cell. In order to get cells, use the 
 		for sIndex in c.segments:
 			print "Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end)
 
+``` 			
+			
 Note that when using the method ConstructWithCells instead of Construct , the object are retrieved using different methods:
 
 * GetCells() --> GetCellVertices()
