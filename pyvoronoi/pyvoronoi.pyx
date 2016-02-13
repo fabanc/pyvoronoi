@@ -228,7 +228,7 @@ cdef class Pyvoronoi:
         self.thisptr.GetEdges(c_vertices, c_edges)
 
         cdef size_t count = c_edges.size()
-        print "Voronoi Edge Size: {0}".format(count)
+        
         
         del self.outputEdges[:] 
         del self.outputVertices[:]
@@ -245,7 +245,6 @@ cdef class Pyvoronoi:
             self.outputEdges.append(edge)
 
         count = c_vertices.size()
-        print "Voronoi Vertices Size: {0}".format(count)
         
         for i in range(count):
             vertex = Vertex()
@@ -289,7 +288,6 @@ cdef class Pyvoronoi:
         #LOGIC TO PRINT CELL OBJECTS
         #--------------------------------------------------------
         count = c_edges2.size()
-        #print "Cell edges size = " + str(count)
         for i in range(count):
             edge = Edge()
             edge.start = c_edges2[i].start
@@ -303,8 +301,7 @@ cdef class Pyvoronoi:
             self.outputCellEdges.append(edge)
 			
 					
-        count = c_vertices2.size()
-        #print "Cell vertex size = " + str(count)        
+        count = c_vertices2.size()      
         for i in range(count):
             vertex = Vertex()
             vertex.X = self._from_voronoi_value(c_vertices2[i].X)
@@ -313,7 +310,6 @@ cdef class Pyvoronoi:
             self.outputCellVertices.append(vertex)
 				
         count = c_cell_edges.size()
-        #print "Number of cells: {0}".format(count)
 		
 		
         for i in range(count):
