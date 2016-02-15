@@ -2,7 +2,7 @@
 Cython wrapper for the C++ translation of the Voronoi diagram part of Boost's
 Polygon library: http://www.boost.org/doc/libs/1_53_0_beta1/libs/polygon/doc/voronoi_diagram.htm
 """
-SILENT = True
+SILENT = False
 
 def log_action(description):
     if not SILENT:
@@ -10,11 +10,13 @@ def log_action(description):
 
 log_action("Python binding clipper library")
 
+
 import sys as _sys
 import struct
 import copy as _copy
 import unicodedata as _unicodedata
 import time as _time
+
 from cython.operator cimport dereference as deref
 
 cdef extern from "Python.h":
@@ -75,13 +77,23 @@ cdef extern from "voronoi.hpp":
         int isPrimary
         size_t site1
         size_t site2
-        
+        int isLinear
+
+    cdef struct c_Cell:
+        size_t site
+        int contains_point
+        int contains_segment
+        int is_open		
+        vector[long long] vertices
+        vector[long long] edges
+				
     cdef cppclass VoronoiDiagram:
         VoronoiDiagram()
         void AddPoint(Point p)
         void AddSegment(Segment s)
         void Construct()
         void GetEdges(vector[c_Vertex] & c_vertices, vector[c_Edge] & c_edges)
+        void GetCells(vector[c_Vertex] & c_vertices, vector[c_Edge] & c_edges, vector[c_Cell] & c_cell_edges)
         vector[Point] GetPoints()
         vector[Segment] GetSegments()
         
@@ -96,6 +108,22 @@ class Edge:
     is_primary = False
     site1 = -1
     site2 = -1
+    is_linear = False
+			
+class Cell:
+    site = -1
+    contains_point = False
+    contains_segment = False
+    is_open = False
+	
+    vertices = None
+    edges = None
+
+    def __init__(self, site, vertices, edges):
+        self.site = site
+        self.vertices = vertices
+        self.edges = edges
+        self.vertices.append(self.vertices[0])
 
 class VoronoiException(Exception):
     pass
@@ -106,6 +134,7 @@ cdef class Pyvoronoi:
 
     outputEdges = []
     outputVertices = []
+    outputCells = []
 
     cdef public int SCALING_FACTOR
 
@@ -146,38 +175,44 @@ cdef class Pyvoronoi:
         self.thisptr.AddSegment(c_segment)
 
     def Construct(self):
-        """ Generates the voronoi diagram for the added points and segments.
+        """ Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
         """
         
         if self.constructed == 1:
             raise VoronoiException('Construct() has already been called')
 
         self.constructed = 1
+		
         self.thisptr.Construct()
         
         cdef vector[c_Edge] c_edges
         cdef vector[c_Vertex] c_vertices
-        
-        self.thisptr.GetEdges(c_vertices, c_edges)
-
-        cdef size_t count = c_edges.size()
-        
+        cdef vector[c_Cell] c_cells
+        print "Get cells information..."
+        self.thisptr.GetCells(c_vertices, c_edges, c_cells)		
+        print "Done!"
+		
         del self.outputEdges[:] 
         del self.outputVertices[:]
-
+        del self.outputCells[:]
+		
+        #--------------------------------------------------------
+        #LOGIC TO PRINT CELL OBJECTS
+        #--------------------------------------------------------
+        cdef size_t count = c_edges.size()
         for i in range(count):
             edge = Edge()
             edge.start = c_edges[i].start
             edge.end = c_edges[i].end
             edge.is_primary = c_edges[i].isPrimary != False
-
+            edge.is_linear = c_edges[i].isLinear != False
+        
             edge.site1 = c_edges[i].site1
             edge.site2 = c_edges[i].site2
-
+        
             self.outputEdges.append(edge)
 
-        count = c_vertices.size()
-        
+        count = c_vertices.size()      
         for i in range(count):
             vertex = Vertex()
             vertex.X = self._from_voronoi_value(c_vertices[i].X)
@@ -185,6 +220,16 @@ cdef class Pyvoronoi:
 
             self.outputVertices.append(vertex)
 
+        count = c_cells.size()
+
+        for i in range(count):
+            c_cell = c_cells[i]
+            outputCell = Cell(c_cell.site, c_cell.vertices, c_cell.edges)
+            outputCell.contains_point = c_cell.contains_point != False
+            outputCell.contains_segment = c_cell.contains_segment != False
+            outputCell.is_open = c_cell.is_open != False
+            self.outputCells.append(outputCell)
+				
     def GetVertices(self):
         """ Returns the edges of the voronoi diagram.             
         """
@@ -202,6 +247,14 @@ cdef class Pyvoronoi:
             raise VoronoiException('Construct() has not been called')
         
         return self.outputEdges
+		
+    def GetCells(self):
+        """ Return pointer to the edges that make the cellss            
+        """	
+        if self.constructed == 0:
+            raise VoronoiException('Construct() has not been called')
+                
+        return self.outputCells
 
     def GetPoints(self):
         """ Returns the points added to the voronoi diagram

@@ -61,6 +61,7 @@ struct c_Vertex {
 	c_Vertex(double x = 0, double y = 0) : X(x), Y(y) {}
 };
 
+
 struct c_Edge {
 	long long start;
 	long long end;
@@ -69,13 +70,34 @@ struct c_Edge {
 
 	size_t site1;
 	size_t site2;
+	
+	bool isLinear;
 
-	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1) {
+	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false) {
 		this->start = start;
 		this->end = end;
 		this->isPrimary = isPrimary;
 		this->site1 = site1;
 		this->site2 = site2;
+		this->isLinear = isLinear;
+	}
+};
+
+//A structure to identify a segment as part of one cell only
+struct c_Cell{
+	size_t site;
+	bool contains_point;
+	bool contains_segment;
+	bool is_open;
+	
+	std::vector<long long> vertices;
+	std::vector<long long> edges;
+	
+	c_Cell(size_t site = -1, bool contains_point = false, bool contains_segment = false, bool is_open = false){
+		this->site = site;
+		this->contains_point = contains_point;
+		this->contains_segment = contains_segment;
+		this->is_open = is_open;
 	}
 };
 
@@ -88,6 +110,7 @@ public:
 	void AddSegment(Segment s);
 	void Construct();
 	void GetEdges(std::vector<c_Vertex> &, std::vector<c_Edge> &);
+  void GetCells(std::vector<c_Vertex> &, std::vector<c_Edge> &, std::vector<c_Cell> &);
 	std::vector<Point> GetPoints();
 	std::vector<Segment> GetSegments();
 private:
