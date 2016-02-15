@@ -71,29 +71,20 @@ void VoronoiDiagram::GetEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 	}
 }
 
-
-
-void VoronoiDiagram::GetCellEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edge> &edges, std::vector<c_CellEdge> & cell_edges) {
-	
+void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edge> &edges, std::vector<c_Cell> &cells) {
 	std::map<const voronoi_vertex<double> *, long long> vertexMap;
 	std::map<const voronoi_edge<double> *, long long> edgeMap;
 	std::map<const voronoi_cell<double> *, long long> cellMap;
 
-	long long cellId = 0;
-    for (voronoi_diagram<double>::const_cell_iterator itcell = vd.cells().begin(); 
-		itcell != vd.cells().end(); 
-		++itcell) {
+	for (voronoi_diagram<double>::const_cell_iterator itcell = vd.cells().begin(); 
+			itcell != vd.cells().end(); 
+			++itcell) {
 			
-		const voronoi_diagram<double>::cell_type &cell = *itcell;
-		
-
-		
-		if(!cell.is_degenerate()){
-			c_CellEdge cell_edge = c_CellEdge(cellId, cell.source_index(), cell.contains_point(), cell.contains_segment(), false);
-			const voronoi_diagram<double>::edge_type *edge = cell.incident_edge();	
+		if(!itcell->is_degenerate()){
+			c_Cell cell = c_Cell(itcell->source_index(), itcell->contains_point(), itcell->contains_segment(), false);
+			const voronoi_diagram<double>::edge_type *edge = itcell->incident_edge();	
 			if(edge != NULL){
 				do {
-					
 					const voronoi_vertex<double> *start = edge->vertex0();
 					const voronoi_vertex<double> *end = edge->vertex1();
 						
@@ -127,32 +118,31 @@ void VoronoiDiagram::GetCellEdges(std::vector<c_Vertex> &vertices, std::vector<c
 					}	
 
 					if(startIndex == -1 || endIndex == -1){
-						cell_edge.is_open = true;
+						cell.is_open = true;
 					}
 					
-					cell_edge.vertices.push_back(startIndex);
+					cell.vertices.push_back(startIndex);
 					
 					//Add and map the edge
 					std::map<const voronoi_edge<double> *, long long>::iterator edgeMapIterator = edgeMap.find(edge);
 					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear());
 					
-					int edge_index = -1;
+					size_t edge_index = -1;
 					if(edgeMapIterator == edgeMap.end()){
 						edge_index = edges.size();
 						edgeMap[edge] = edge_index;
+						edgeMap[edge->twin()] = edge_index;
 						edges.push_back(outputEdge);
 					}else{
 						edge_index = edgeMapIterator->second;
 					}	
-					cell_edge.edges.push_back(edge_index);
+					cell.edges.push_back(edge_index);
 					
 					edge = edge->next();
-				} while (edge != cell.incident_edge() && edge != NULL);
+				} while (edge != itcell->incident_edge() && edge != NULL);
 			}
-			cell_edges.push_back(cell_edge);		
-			cellId ++;
+			cells.push_back(cell);		
 		}
-
 	}		
 }
 
