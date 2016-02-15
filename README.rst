@@ -91,27 +91,27 @@ Cells have the following properties:
 * ``vertices`` contains indices into the vertex array.
 * ``edges`` contains indices into the edge array.
 
-.. code:: python
+.. code-block:: python
 
-pv = pyvoronoi.Pyvoronoi(100)
-pv.AddSegment([[0.1,0.8],[0.3,0.6]])
-pv.AddSegment([[0.3,0.6],[0.4,0.6]])
-pv.AddSegment([[0.4,0.6],[0.4,0.5]])
-pv.AddSegment([[0.4,0.6],[0.4,0.7]])
-pv.AddSegment([[0.4,0.7],[0.5,0.8]])
-pv.AddSegment([[0.4,0.7],[0.5,0.6]])
-pv.AddSegment([[0.5,0.6],[0.7,0.7]])
+    pv = pyvoronoi.Pyvoronoi(100)
+    pv.AddSegment([[0.1,0.8],[0.3,0.6]])
+    pv.AddSegment([[0.3,0.6],[0.4,0.6]])
+    pv.AddSegment([[0.4,0.6],[0.4,0.5]])
+    pv.AddSegment([[0.4,0.6],[0.4,0.7]])
+    pv.AddSegment([[0.4,0.7],[0.5,0.8]])
+    pv.AddSegment([[0.4,0.7],[0.5,0.6]])
+    pv.AddSegment([[0.5,0.6],[0.7,0.7]])
 
-pv.Construct()
-edges = pv.GetEdges()
-vertices = pv.GetVertices()		
-cells = pv.GetCells()
-print("Cell Count: {0}".format(len(cells)))
-for c in cells:
-  print("Cell contains point: {0}. Contains segment: {1}. Is open: {2}, Site Index: {3}".format(c.contains_point, c.contains_segment, c.is_open, c.site))
-  print(",".join(map(str,c.vertices)))
-  for sIndex in c.edges:
-    print("Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end))
+    pv.Construct()
+    edges = pv.GetEdges()
+    vertices = pv.GetVertices()		
+    cells = pv.GetCells()
+    print("Cell Count: {0}".format(len(cells)))
+    for c in cells:
+        print("Cell contains point: {0}. Contains segment: {1}. Is open: {2}, Site Index: {3}".format(c.contains_point, c.contains_segment, c.is_open, c.site))
+        print(",".join(map(str,c.vertices)))
+        for sIndex in c.edges:
+            print("Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end))
 
 License
 =======
