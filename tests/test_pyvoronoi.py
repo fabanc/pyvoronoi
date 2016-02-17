@@ -56,8 +56,11 @@ class TestPyvoronoiConstruct(TestCase):
         pv.Construct()
         edges = pv.GetEdges()
         vertices = pv.GetVertices()
+        cells = pv.GetCells()
+        self.assertTrue(len(cells) == 8) 
         self.assertTrue(len([i for i in edges if i.is_primary == True]) == 4)
         self.assertTrue(len(vertices) == 5)
+        self.assertTrue(len(cells[0].edges) == 2)
 
     def test_rectangle(self):
         pv = pyvoronoi.Pyvoronoi(1)
@@ -68,8 +71,12 @@ class TestPyvoronoiConstruct(TestCase):
         pv.Construct()
         edges = pv.GetEdges()
         vertices = pv.GetVertices()
+        cells = pv.GetCells()
+        self.assertTrue(len(cells) == 8) 
         self.assertTrue(len([i for i in edges if i.is_primary == True]) == 5)
         self.assertTrue(len(vertices) == 6)
+        self.assertTrue(len(filter(lambda e: edges[e].is_primary, cells[1].edges)) == 3)
+        self.assertTrue(len(filter(lambda e: edges[e].is_primary, cells[3].edges)) == 2)
 
 def run_tests():
     main()
