@@ -82,9 +82,33 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 	for (voronoi_diagram<double>::const_cell_iterator itcell = vd.cells().begin(); 
 			itcell != vd.cells().end(); 
 			++itcell) {
+				
+		//Identify the source type
+		int source_category = -1;
+		if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_SINGLE_POINT){
+			source_category = 0;
+		}
+		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_START_POINT){
+			source_category = 1;
+		}
+		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_END_POINT){
+			source_category = 2;
+		}
+		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_INITIAL_SEGMENT){
+			source_category = 3;
+		}
+		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_REVERSE_SEGMENT){
+			source_category = 4;
+		}
+		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_GEOMETRY_SHIFT){
+			source_category = 5;
+		}
+		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_BITMASK){
+			source_category = 6;
+		}				
 			
 		if(!itcell->is_degenerate()){
-			c_Cell cell = c_Cell(cell_identifier, itcell->source_index(), itcell->contains_point(), itcell->contains_segment(), false);
+			c_Cell cell = c_Cell(cell_identifier, itcell->source_index(), itcell->contains_point(), itcell->contains_segment(), false, source_category);
 			const voronoi_diagram<double>::edge_type *edge = itcell->incident_edge();	
 			if(edge != NULL){
 				do {

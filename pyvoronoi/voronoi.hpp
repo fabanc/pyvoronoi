@@ -75,8 +75,10 @@ struct c_Edge {
 	
     long cell;
     long twin;	
+	
+	int source_category;
 
-	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false, long cell = -1, long twin = -1) {
+	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false, long cell = -1, long twin = -1, int source_category = -1) {
 		this->start = start;
 		this->end = end;
 		this->isPrimary = isPrimary;
@@ -84,7 +86,8 @@ struct c_Edge {
 		this->site2 = site2;
 		this->isLinear = isLinear;
 		this->cell = cell;
-		this->twin = twin;		
+		this->twin = twin;
+        this->source_category = source_category;		
 	}
 };
 
