@@ -76,12 +76,15 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 	std::map<const voronoi_edge<double> *, long long> edgeMap;
 	std::map<const voronoi_cell<double> *, long long> cellMap;
 
+    //An identifier for cells
+    long long cell_identifier = 0;	
+	
 	for (voronoi_diagram<double>::const_cell_iterator itcell = vd.cells().begin(); 
 			itcell != vd.cells().end(); 
 			++itcell) {
 			
 		if(!itcell->is_degenerate()){
-			c_Cell cell = c_Cell(itcell->source_index(), itcell->contains_point(), itcell->contains_segment(), false);
+			c_Cell cell = c_Cell(cell_identifier, itcell->source_index(), itcell->contains_point(), itcell->contains_segment(), false);
 			const voronoi_diagram<double>::edge_type *edge = itcell->incident_edge();	
 			if(edge != NULL){
 				do {
@@ -125,7 +128,7 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 					
 					//Add and map the edge
 					std::map<const voronoi_edge<double> *, long long>::iterator edgeMapIterator = edgeMap.find(edge);
-					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear());
+					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear(), cell_identifier);
 					
 					size_t edge_index = -1;
 					if(edgeMapIterator == edgeMap.end()){
@@ -141,9 +144,41 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 					edge = edge->next();
 				} while (edge != itcell->incident_edge() && edge != NULL);
 			}
-			cells.push_back(cell);		
+			cells.push_back(cell);
+			cell_identifier++;			
 		}
 	}		
+	
+    //Second iteration for twins
+    //This part can probably optimized - TBD
+    for (voronoi_diagram<double>::const_cell_iterator it = vd.cells().begin(); it != vd.cells().end(); ++it) {
+    	const voronoi_diagram<double>::cell_type &cell = *it;
+    
+    	//Don't do anything if the cells is degenerate
+    	if (!cell.is_degenerate()){
+    		//Iterate throught the edges
+    		const voronoi_diagram<double>::edge_type *edge = cell.incident_edge();
+    		if (edge != NULL)
+    		{
+    			do {
+    				long long edge_id = -1;
+    				std::map<const voronoi_diagram<double>::edge_type *, long long>::iterator edgeMapIterator = edgeMap.find(edge);
+    				if (edgeMapIterator != edgeMap.end()){
+    					edge_id = edgeMapIterator->second;
+    				}
+    
+    				if (edge_id != -1){
+    					edgeMapIterator = edgeMap.find(edge->twin());
+    					if (edgeMapIterator != edgeMap.end()){
+    						edges[edge_id].twin = edgeMapIterator->second;
+    					}
+    				}		
+    				//Move to the next edge
+    				edge = edge->next();
+    			} while (edge != cell.incident_edge());
+    		}
+    	}
+    }	
 }
 
 std::vector<Point> VoronoiDiagram::GetPoints() {

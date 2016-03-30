@@ -78,8 +78,11 @@ cdef extern from "voronoi.hpp":
         size_t site1
         size_t site2
         int isLinear
+        long cell;
+        long twin;			
 
     cdef struct c_Cell:
+        size_t cell_identifier;
         size_t site
         int contains_point
         int contains_segment
@@ -111,6 +114,7 @@ class Edge:
     is_linear = False
 			
 class Cell:
+    cell_identifier = -1
     site = -1
     contains_point = False
     contains_segment = False
@@ -119,7 +123,8 @@ class Cell:
     vertices = None
     edges = None
 
-    def __init__(self, site, vertices, edges):
+    def __init__(self, cell_identifier, site, vertices, edges):
+        self.cell_identifier = cell_identifier
         self.site = site
         self.vertices = vertices
         self.edges = edges
@@ -209,6 +214,9 @@ cdef class Pyvoronoi:
         
             edge.site1 = c_edges[i].site1
             edge.site2 = c_edges[i].site2
+			
+            edge.cell = c_edges[i].cell
+            edge.twin = c_edges[i].twin
         
             self.outputEdges.append(edge)
 
@@ -224,7 +232,7 @@ cdef class Pyvoronoi:
 
         for i in range(count):
             c_cell = c_cells[i]
-            outputCell = Cell(c_cell.site, c_cell.vertices, c_cell.edges)
+            outputCell = Cell(c_cell.cell_identifier, c_cell.site, c_cell.vertices, c_cell.edges)
             outputCell.contains_point = c_cell.contains_point != False
             outputCell.contains_segment = c_cell.contains_segment != False
             outputCell.is_open = c_cell.is_open != False
