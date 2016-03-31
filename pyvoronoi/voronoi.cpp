@@ -85,25 +85,25 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 				
 		//Identify the source type
 		int source_category = -1;
-		if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_SINGLE_POINT){
+		if (itcell->source_category() == boost::polygon::SOURCE_CATEGORY_SINGLE_POINT){
 			source_category = 0;
 		}
-		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_START_POINT){
+		else if (itcell->source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_START_POINT){
 			source_category = 1;
 		}
-		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_END_POINT){
+		else if (itcell->source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_END_POINT){
 			source_category = 2;
 		}
-		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_INITIAL_SEGMENT){
+		else if (itcell->source_category() == boost::polygon::SOURCE_CATEGORY_INITIAL_SEGMENT){
 			source_category = 3;
 		}
-		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_REVERSE_SEGMENT){
+		else if (itcell->source_category() == boost::polygon::SOURCE_CATEGORY_REVERSE_SEGMENT){
 			source_category = 4;
 		}
-		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_GEOMETRY_SHIFT){
+		else if (itcell->source_category() == boost::polygon::SOURCE_CATEGORY_GEOMETRY_SHIFT){
 			source_category = 5;
 		}
-		else if (cell.source_category() == boost::polygon::SOURCE_CATEGORY_BITMASK){
+		else if (itcell->source_category() == boost::polygon::SOURCE_CATEGORY_BITMASK){
 			source_category = 6;
 		}				
 			
@@ -152,7 +152,7 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 					
 					//Add and map the edge
 					std::map<const voronoi_edge<double> *, long long>::iterator edgeMapIterator = edgeMap.find(edge);
-					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear(), cell_identifier);
+					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear(), cell_identifier, -1);
 					
 					size_t edge_index = -1;
 					if(edgeMapIterator == edgeMap.end()){

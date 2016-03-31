@@ -76,9 +76,7 @@ struct c_Edge {
     long cell;
     long twin;	
 	
-	int source_category;
-
-	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false, long cell = -1, long twin = -1, int source_category = -1) {
+	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false, long cell = -1, long twin = -1) {
 		this->start = start;
 		this->end = end;
 		this->isPrimary = isPrimary;
@@ -86,8 +84,7 @@ struct c_Edge {
 		this->site2 = site2;
 		this->isLinear = isLinear;
 		this->cell = cell;
-		this->twin = twin;
-        this->source_category = source_category;		
+		this->twin = twin;	
 	}
 };
 
@@ -102,12 +99,15 @@ struct c_Cell{
 	std::vector<long long> vertices;
 	std::vector<long long> edges;
 	
-	c_Cell(size_t cell_identifier = -1, size_t site = -1, bool contains_point = false, bool contains_segment = false, bool is_open = false){
+	int source_category;	
+	
+	c_Cell(size_t cell_identifier = -1, size_t site = -1, bool contains_point = false, bool contains_segment = false, bool is_open = false, int source_category = -1){
         this->cell_identifier = cell_identifier;
 		this->site = site;
 		this->contains_point = contains_point;
 		this->contains_segment = contains_segment;
 		this->is_open = is_open;
+		this->source_category = source_category;	
 	}
 };
 
