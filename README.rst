@@ -139,6 +139,11 @@ The sample below shows you how to do that:
 						for p in points:
 							print "{0},{1}".format(p[0], p[1])
 
+The code used for the discretization is a port to python of this C++ code available on the boost voronoi web site
+
+* http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visualizer.cpp
+
+* http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visual_utils.hpp
 						
 License
 =======
