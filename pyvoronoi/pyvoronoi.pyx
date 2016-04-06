@@ -181,6 +181,7 @@ cdef class Pyvoronoi:
 
         cdef Point c_point = self._to_voronoi_point(point)
         self.thisptr.AddPoint(c_point)
+        self.inputPoints.append(point)
 
     def AddSegment(self, segment):
         """ Add a segment
@@ -191,7 +192,8 @@ cdef class Pyvoronoi:
 
         cdef Segment c_segment = self._to_voronoi_segment(segment)
         self.thisptr.AddSegment(c_segment)
-
+        self.inputSegments.append(segment)
+		
     def Construct(self):
         """ Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
         """
@@ -210,8 +212,8 @@ cdef class Pyvoronoi:
         self.thisptr.GetCells(c_vertices, c_edges, c_cells)		
         print "Done!"
 		
-        del self.inputPoints[:]
-        del self.inputSegments[:]
+        #del self.inputPoints[:]
+        #del self.inputSegments[:]
         del self.outputEdges[:] 
         del self.outputVertices[:]
         del self.outputCells[:]
@@ -260,16 +262,16 @@ cdef class Pyvoronoi:
         cdef vector[Point] points = self.thisptr.GetPoints()
         count = points.size()	
 
-        for i in range(count):
-            self.inputPoints.append([self._from_voronoi_value(points[i].X), self._from_voronoi_value(points[i].Y)])	
+        #for i in range(count):
+        #    self.inputPoints.append([self._from_voronoi_value(points[i].X), self._from_voronoi_value(points[i].Y)])	
 
-        cdef vector[Segment] segments = self.thisptr.GetSegments()
-        count = segments.size()
-        for i in range(count):
-            segment = []
-            segment.append([self._from_voronoi_value(segments[i].p0.X), self._from_voronoi_value(segments[i].p0.Y)])
-            segment.append([self._from_voronoi_value(segments[i].p1.X), self._from_voronoi_value(segments[i].p1.Y)])
-            self.inputSegments.append(segment)		
+        #cdef vector[Segment] segments = self.thisptr.GetSegments()
+        #count = segments.size()
+        #for i in range(count):
+        #    segment = []
+        #    segment.append([self._from_voronoi_value(segments[i].p0.X), self._from_voronoi_value(segments[i].p0.Y)])
+        #    segment.append([self._from_voronoi_value(segments[i].p1.X), self._from_voronoi_value(segments[i].p1.Y)])
+        #    self.inputSegments.append(segment)		
 				
     def GetVertices(self):
         """ Returns the edges of the voronoi diagram.             
