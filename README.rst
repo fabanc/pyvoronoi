@@ -94,7 +94,7 @@ Cells have the following properties:
 * ``vertices`` contains indices into the vertex array.
 * ``edges`` contains indices into the edge array.
 
-.. code-block:: python
+.. code:: python
 
     pv = pyvoronoi.Pyvoronoi(100)
     pv.AddSegment([[0.1,0.8],[0.3,0.6]])
@@ -125,9 +125,6 @@ print "Insert into output edge table"
 for cIndex in range(len(cells)):
     cell = cells[cIndex]
     if cell.is_open == False:
-        if (cIndex % 5000 == 0 and cIndex > 0):
-            print "Cell Index: {0}".format(cIndex)
-
         for i in range(len(cell.edges)):    
             e = edges[cell.edges[i]]
             startVertex = vertices[e.start]
