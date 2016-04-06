@@ -122,7 +122,6 @@ The sample below shows you how to do that:
 
 .. code-block:: python
 
-print "Insert into output edge table"
 for cIndex in range(len(cells)):
     cell = cells[cIndex]
     if cell.is_open == False:
@@ -140,6 +139,7 @@ for cIndex in range(len(cells)):
                     for p in points:
                         print "{0},{1}".format(p[0], p[1])
 
+						
 License
 =======
 
