@@ -2,14 +2,7 @@
 Cython wrapper for the C++ translation of the Voronoi diagram part of Boost's
 Polygon library: http://www.boost.org/doc/libs/1_53_0_beta1/libs/polygon/doc/voronoi_diagram.htm
 """
-SILENT = False
-
-def log_action(description):
-    if not SILENT:
-        print description
-
-log_action("Python binding clipper library")
-
+from __future__ import division
 
 import sys as _sys
 import struct
@@ -17,7 +10,18 @@ import copy as _copy
 import unicodedata as _unicodedata
 import time as _time
 
+
 from cython.operator cimport dereference as deref
+
+SILENT = False
+def log_action(description):
+    if not SILENT:
+        print description
+
+log_action("Python binding clipper library")
+
+
+
 
 cdef extern from "Python.h":
     Py_INCREF(object o)
@@ -327,52 +331,41 @@ cdef class Pyvoronoi:
         return self.inputSegments
 		
 
-    def DiscretizeCurvedEdge(self, index):
-	
-        #print "Edge. Site 1 {0}, Site 2 {1}, Is Linear {2}, Cell {3}, Twin {4}".format(edge.site1, edge.site2, edge.is_linear, edge.cell, edge.twin)
+    def DiscretizeCurvedEdge(self, index, max_dist):
+        #The code pertaining to discretization is a port in python of the C++ code available on the boost voronoi library website.
+        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visualizer.cpp
+        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visual_utils.hpp	
+        if(max_dist <= 0):
+            raise Exception("Max distance must be greater than 0. Value passed: {0}".format(max_dist))
 		
-        edge = self.outputEdges[index]
-        print "Edge. Site 1 {0}, Site 2 {1}, Is Linear {2}, Cell {3}, Twin {4}".format(edge.site1, edge.site2, edge.is_linear, edge.cell, edge.twin)			
-		
-        #twinEdge = self.outputEdges[edge.twin]
-        twinEdge = self.outputEdges[15]
-        print "Edge. Site 1 {0}, Site 2 {1}, Is Linear {2}, Cell {3}, Twin {4}".format(twinEdge.site1, twinEdge.site2, twinEdge.is_linear, twinEdge.cell, twinEdge.twin)		
+        edge = self.outputEdges[index]		
+        twinEdge = self.outputEdges[edge.twin]	
 		
         cell = self.outputCells[edge.cell]
-        print "Cell.contains_point: {0}, Cell.contains_segment: {1}, Site Index: {2}, Source Category: {3}, Identifier: {4}".format(cell.contains_point, 
-			cell.contains_segment, cell.site, cell.source_category, cell.cell_identifier)
-			
-        twinCell = self.outputCells[self.outputEdges[edge.twin].cell]
-        print "Cell.contains_point: {0}, Cell.contains_segment: {1}, Site Index: {2}, Source Category: {3}, Identifier: {4}".format(twinCell.contains_point, 
-			twinCell.contains_segment, twinCell.site, twinCell.source_category, twinCell.cell_identifier)
-		
+        twinCell = self.outputCells[twinEdge.cell]
 
-		
-        max_dist = 50
-        pointSite = self.RetrievePoint(self.outputCells[edge.cell]) if self.outputCells[edge.cell].contains_point == True else self.RetrievePoint(self.outputCells[self.outputEdges[edge.twin].cell])
-        segmentSite = self.RetrieveSegment(self.outputCells[self.outputEdges[edge.twin].cell]) if self.outputCells[edge.cell].contains_point == True else self.RetrieveSegment(self.outputCells[edge.cell])
+        pointSite = self.RetrievePoint(cell) if cell.contains_point == True else self.RetrievePoint(twinCell)
+        segmentSite = self.RetrieveSegment(twinCell) if cell.contains_point == True else self.RetrieveSegment(cell)
         return self.Discretize(pointSite,segmentSite, max_dist, edge)		
 
 
     def RetrievePoint(self, cell):
-        #input point
+        """Retrive the input point associated with a cell.
+		:param cell: the cell that contains a point. The point can be either a input point or the end point of an input segment.
+        """
         if(cell.source_category == 0):
             return self.inputPoints[cell.site]
 
         input_segment = self.RetrieveSegment(cell)
-		
         if(cell.source_category == 1):
             return input_segment[0]
         else:			
             return input_segment[1]
 		
     def RetrieveSegment(self, cell):
-        """Retrive the segment associated with a cell.
+        """Retrive the input segment associated with a cell.
         """
-        if(cell.contains_segment != True):
-            raise Exception("The cell does not have a segment as an input site. Cell.contains_point: {0}, Cell.contains_segment: {1}, Site Index: {2}, Source Category: {3}".format(cell.contains_point, 
-			cell.contains_segment, cell.site, cell.source_category))
-        return self.inputSegments[cell.site - len(self.inputPoints)] if cell.contains_segment == True else None
+        return self.inputSegments[cell.site - len(self.inputPoints)]
 		
     def GetParabolaY(self, x,a,b):
         return ((x - a) * (x - a) + b * b) / (b + b)		
@@ -407,14 +400,14 @@ cdef class Pyvoronoi:
         #Compute parabola parameters in the transformed space.
         #Parabola has next representation:
         ##f(x) = ((x-rot_x)^2 + rot_y^2) / (2.0*rot_y).
-        point_vec_x = point[0] - segment[0][0] if segment[0][0] < segment[1][0] else point[0] - segment[1][0];
-        point_vec_y = point[1] - segment[0][1] if segment[0][1] < segment[1][1] else point[1] - segment[1][1];
+        point_vec_x = point[0] - low_segment_x;
+        point_vec_y = point[1] - low_segment_y;
         rot_x = segm_vec_x * point_vec_x + segm_vec_y * point_vec_y;
         rot_y = segm_vec_x * point_vec_y - segm_vec_y * point_vec_x;
     
         #Save the last point.
-        last_point = [self.outputVertices[discretization.end].X, self.outputVertices[discretization.end].Y];
-        discretization_array = [self.outputVertices[discretization.end].X]
+        last_point = [self.outputVertices[discretization.end].X, self.outputVertices[discretization.end].Y]
+        discretization_array = [[self.outputVertices[discretization.start].X, self.outputVertices[discretization.start].Y]]
     
         #Use stack to avoid recursion.
         point_stack = [projection_end]
@@ -423,7 +416,6 @@ cdef class Pyvoronoi:
     
         #Adjust max_dist parameter in the transformed space.
         max_dist_transformed = max_dist * max_dist * sqr_segment_length;
-    
         while (len(point_stack) != 0):
             #Get last element on the stack
             new_x = point_stack[-1]
@@ -436,7 +428,7 @@ cdef class Pyvoronoi:
     
             dist = (new_y - cur_y) * (mid_x - cur_x) - (new_x - cur_x) * (mid_y - cur_y)
             dist = dist * dist / ((new_y - cur_y) * (new_y - cur_y) + (new_x - cur_x) * (new_x - cur_x))
-    
+  
             if (dist <= max_dist_transformed):
                 #Distance between parabola and line segment is less than max_dist.
                 point_stack.pop()
@@ -446,7 +438,7 @@ cdef class Pyvoronoi:
                 cur_x = new_x
                 cur_y = new_y
             else:
-                point_stack.append
+                point_stack.append(mid_x)
     
         discretization_array[-1] = last_point
         return discretization_array
@@ -454,26 +446,30 @@ cdef class Pyvoronoi:
 		
     def GetPointProjection(self, point, segment):
         """
-        Get normalized length of the distance between:
-          1) point projection onto the segment
-          2) start point of the segment
+        Get normalized length of the distance between the input point and segment.
         Return this length divided by the segment length. This is made to avoid
         sqrt computation during transformation from the initial space to the
         transformed one and vice versa. The assumption is made that projection of
-        the point lies between the start-point and endpoint of the segment.	
+        the point lies between the start-point and endpoint of the segment.			
+		:param point: The input point associated with the cell or the neighbour cell
+		:param segment: The input segment associated with the cell or the neighbour cell
         """
-        segment_vec_x = segment[1][0] - segment[0][0] if segment[0][0] < segment[1][0] else segment[0][0] - segment[1][0]
-        segment_vec_y = segment[1][1] - segment[0][1] if segment[0][1] < segment[1][1] else segment[0][1] - segment[1][1]
-        point_vec_x = point.X - segment[0][0] if segment[0][0] < segment[1][0] else point.X - segment[1][0]
-        point_vec_y = point.Y - segment[0][1] if segment[0][1] < segment[1][1] else point.Y - segment[1][1]
+        low_segment_x = segment[0][0] if segment[0][0] < segment[1][0] else segment[1][0]
+        low_segment_y = segment[0][1] if segment[0][1] < segment[1][1] else segment[1][1]
+        
+        max_segment_x = segment[1][0] if segment[0][0] < segment[1][0] else segment[0][0]
+        max_segment_y = segment[1][1] if segment[0][1] < segment[1][1] else segment[0][1]
+		
+        segment_vec_x = max_segment_x - low_segment_x
+        segment_vec_y = max_segment_y - low_segment_y
+        point_vec_x = point.X - low_segment_x
+        point_vec_y = point.Y - low_segment_y
+		
         sqr_segment_length = segment_vec_x * segment_vec_x + segment_vec_y * segment_vec_y
         vec_dot = segment_vec_x * point_vec_x + segment_vec_y * point_vec_y
         return vec_dot / sqr_segment_length
     
     
-
-		
-		
 
     cdef Segment _to_voronoi_segment(self, object py_segment):
         return Segment(self._to_voronoi_point(py_segment[0]), self._to_voronoi_point(py_segment[1]))

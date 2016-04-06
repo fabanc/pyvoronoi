@@ -158,7 +158,6 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 					if(edgeMapIterator == edgeMap.end()){
 						edge_index = edges.size();
 						edgeMap[edge] = edge_index;
-						edgeMap[edge->twin()] = edge_index;
 						edges.push_back(outputEdge);
 					}else{
 						edge_index = edgeMapIterator->second;
