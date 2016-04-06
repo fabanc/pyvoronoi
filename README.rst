@@ -122,22 +122,22 @@ The sample below shows you how to do that:
 
 .. code-block:: python
 
-for cIndex in range(len(cells)):
-    cell = cells[cIndex]
-    if cell.is_open == False:
-        for i in range(len(cell.edges)):    
-            e = edges[cell.edges[i]]
-            startVertex = vertices[e.start]
-            endVertex = vertices[e.end]
+	for cIndex in range(len(cells)):
+		cell = cells[cIndex]
+		if cell.is_open == False:
+			for i in range(len(cell.edges)):    
+				e = edges[cell.edges[i]]
+				startVertex = vertices[e.start]
+				endVertex = vertices[e.end]
 
-            max_distance  = distance([startVertex.X, startVertex.Y], [endVertex.X, endVertex.Y]) / 10
-            if startVertex != -1 and endVertex != -1:
-                if(e.is_linear == True):
-                    array = [[startVertex.X, startVertex.Y],[endVertex.X, endVertex.Y]]
-                else:
-                    points = pv.DiscretizeCurvedEdge(cell.edges[i], max_distance)
-                    for p in points:
-                        print "{0},{1}".format(p[0], p[1])
+				max_distance  = distance([startVertex.X, startVertex.Y], [endVertex.X, endVertex.Y]) / 10
+				if startVertex != -1 and endVertex != -1:
+					if(e.is_linear == True):
+						array = [[startVertex.X, startVertex.Y],[endVertex.X, endVertex.Y]]
+					else:
+						points = pv.DiscretizeCurvedEdge(cell.edges[i], max_distance)
+						for p in points:
+							print "{0},{1}".format(p[0], p[1])
 
 						
 License
