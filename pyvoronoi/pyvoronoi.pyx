@@ -208,9 +208,9 @@ cdef class Pyvoronoi:
         cdef vector[c_Edge] c_edges
         cdef vector[c_Vertex] c_vertices
         cdef vector[c_Cell] c_cells
-        print "Get cells information..."
+        #print "Get cells information..."
         self.thisptr.GetCells(c_vertices, c_edges, c_cells)		
-        print "Done!"
+        #print "Done!"
 		
         #del self.inputPoints[:]
         #del self.inputSegments[:]
@@ -380,12 +380,16 @@ cdef class Pyvoronoi:
             :param max dist: The maximum distance between 2 vertices on the discretized geometry
             :param discretization: The curved output edge		
 		"""
+		
+        #print "Point {0},{1}, Segment: {2},{3} to {4},{4}".format(point[0],point[0], segment[0][0], segment[0][1], segment[1][0], segment[1][1])
+        
         low_segment_x = segment[0][0] if segment[0][0] < segment[1][0] else segment[1][0]
         low_segment_y = segment[0][1] if segment[0][1] < segment[1][1] else segment[1][1]
     
         max_segment_x = segment[1][0] if segment[0][0] < segment[1][0] else segment[0][0]
         max_segment_y = segment[1][1] if segment[0][1] < segment[1][1] else segment[0][1]
-    
+   
+        #print "low_segment_x: {0}, low_segment_y: {1}, max_segment_x: {2}, max_segment_y: {3}".format(low_segment_x, low_segment_y, max_segment_x, max_segment_y)
     
         # Apply the linear transformation to move start point of the segment to
         # the point with coordinates (0, 0) and the direction of the segment to
@@ -418,6 +422,9 @@ cdef class Pyvoronoi:
     
         #Adjust max_dist parameter in the transformed space.
         max_dist_transformed = max_dist * max_dist * sqr_segment_length;
+		
+        #print "rot_x: {0}, rot_y: {1}, cur_x: {2}, cur_y: {3}, max_dist_transformed: {4}".format(rot_x, rot_y, cur_x, cur_y, max_dist_transformed)
+		
         while (len(point_stack) != 0):
             #Get last element on the stack
             new_x = point_stack[-1]
@@ -427,6 +434,8 @@ cdef class Pyvoronoi:
             #furthest from the current line segment.
             mid_x = (new_y - cur_y) / (new_x - cur_x) * rot_y + rot_x
             mid_y = self.GetParabolaY(mid_x, rot_x, rot_y)
+			
+            #print "mid_x: {0}, mid_y: {1}".format(mid_x, mid_y)
     
             dist = (new_y - cur_y) * (mid_x - cur_x) - (new_x - cur_x) * (mid_y - cur_y)
             dist = dist * dist / ((new_y - cur_y) * (new_y - cur_y) + (new_x - cur_x) * (new_x - cur_x))

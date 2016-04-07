@@ -103,10 +103,16 @@ class TestPyvoronoiConstruct(TestCase):
         pv.AddSegment([[10,0],[10,10]])
         pv.Construct()
 
+        vertices = pv.GetVertices()
         edges = pv.GetEdges()
-        points = pv.DiscretizeCurvedEdge(2,0.1)
-        self.assertTrue(points[2][0], 2.5)
-        self.assertTrue(points[2][1], 5)
+        for i in range(len(edges)):
+            startVertex = vertices[edges[i].start]
+            endVertex = vertices[edges[i].end]
+            constX = 2.92893218813452
+            if(startVertex.X == constX and startVertex.Y == constX and endVertex.X == constX and endVertex.Y == 7.07106781186548):
+                points = pv.DiscretizeCurvedEdge(i,0.1)
+                self.assertTrue(points[2][0]== 2.5)
+                self.assertTrue(points[2][1]== 5)
 
 def run_tests():
     main()
