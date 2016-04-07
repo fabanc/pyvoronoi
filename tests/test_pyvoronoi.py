@@ -94,6 +94,20 @@ class TestPyvoronoiConstruct(TestCase):
             print ("{0},{1},{2}".format(i, edge.twin, edges[edge.twin].twin))
             self.assertTrue(edges[edge.twin].twin == i)
 
+    def test_discretize(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+
+        edges = pv.GetEdges()
+        points = pv.DiscretizeCurvedEdge(2,0.1)
+        self.assertTrue(points[2][0], 2.5)
+        self.assertTrue(points[2][1], 5)
+
 def run_tests():
     main()
 
