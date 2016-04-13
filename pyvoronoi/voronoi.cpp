@@ -74,7 +74,6 @@ void VoronoiDiagram::GetEdges(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edge> &edges, std::vector<c_Cell> &cells) {
 	std::map<const voronoi_vertex<double> *, long long> vertexMap;
 	std::map<const voronoi_edge<double> *, long long> edgeMap;
-	std::map<const voronoi_cell<double> *, long long> cellMap;
 
     //An identifier for cells
     long long cell_identifier = 0;	
