@@ -57,8 +57,9 @@ class TestPyvoronoiConstruct(TestCase):
         edges = pv.GetEdges()
         vertices = pv.GetVertices()
         cells = pv.GetCells()
-        self.assertTrue(len(cells) == 8) 
-        self.assertTrue(len([i for i in edges if i.is_primary == True]) == 4)
+        self.assertTrue(len(cells) == 8)
+        #self.assertTrue(len([i for i in edges if i.is_primary == True]) == 4)Should have been changes when fabanc added the cell concept
+        self.assertTrue(len([i for i in edges if i.is_primary == True]) == 8)
         self.assertTrue(len(vertices) == 5)
         self.assertTrue(len(cells[0].edges) == 2)
 
@@ -72,11 +73,46 @@ class TestPyvoronoiConstruct(TestCase):
         edges = pv.GetEdges()
         vertices = pv.GetVertices()
         cells = pv.GetCells()
-        self.assertTrue(len(cells) == 8) 
-        self.assertTrue(len([i for i in edges if i.is_primary == True]) == 5)
+        self.assertTrue(len(cells) == 8)
+        #self.assertTrue(len([i for i in edges if i.is_primary == True]) == 5) Should have been changes when fabanc added the cell concept
+        self.assertTrue(len([i for i in edges if i.is_primary == True]) == 10)
         self.assertTrue(len(vertices) == 6)
         self.assertTrue(len(filter(lambda e: edges[e].is_primary, cells[1].edges)) == 3)
         self.assertTrue(len(filter(lambda e: edges[e].is_primary, cells[3].edges)) == 2)
+
+    def test_twins(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+        edges = pv.GetEdges()
+        for i in range(len(edges)):
+            edge = edges[i]
+            print ("{0},{1},{2}".format(i, edge.twin, edges[edge.twin].twin))
+            self.assertTrue(edges[edge.twin].twin == i)
+
+    def test_discretize(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+
+        vertices = pv.GetVertices()
+        edges = pv.GetEdges()
+        for i in range(len(edges)):
+            startVertex = vertices[edges[i].start]
+            endVertex = vertices[edges[i].end]
+            constX = 2.92893218813452
+            if(startVertex.X == constX and startVertex.Y == constX and endVertex.X == constX and endVertex.Y == 7.07106781186548):
+                points = pv.DiscretizeCurvedEdge(i,0.1)
+                self.assertTrue(points[2][0]== 2.5)
+                self.assertTrue(points[2][1]== 5)
 
 def run_tests():
     main()
