@@ -150,17 +150,10 @@ void VoronoiDiagram::GetCells(std::vector<c_Vertex> &vertices, std::vector<c_Edg
 					cell.vertices.push_back(startIndex);
 					
 					//Add and map the edge
-					std::map<const voronoi_edge<double> *, long long>::iterator edgeMapIterator = edgeMap.find(edge);
-					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear(), cell_identifier, -1);
-					
-					size_t edge_index = -1;
-					if(edgeMapIterator == edgeMap.end()){
-						edge_index = edges.size();
-						edgeMap[edge] = edge_index;
-						edges.push_back(outputEdge);
-					}else{
-						edge_index = edgeMapIterator->second;
-					}	
+					c_Edge outputEdge = c_Edge(startIndex, endIndex, edge->is_primary(), edge->cell()->source_index(), edge->twin()->cell()->source_index(), edge->is_linear(), cell_identifier, -1);	
+					size_t edge_index = edges.size();
+					edgeMap[edge] = edge_index;
+					edges.push_back(outputEdge);	
 					cell.edges.push_back(edge_index);
 					
 					edge = edge->next();
