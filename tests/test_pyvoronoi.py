@@ -91,8 +91,13 @@ class TestPyvoronoiConstruct(TestCase):
         edges = pv.GetEdges()
         for i in range(len(edges)):
             edge = edges[i]
-            print ("{0},{1},{2}".format(i, edge.twin, edges[edge.twin].twin))
             self.assertTrue(edges[edge.twin].twin == i)
+
+    def test_input_point(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.Construct()
+        self.assertTrue(1 == len(pv.inputPoints))
 
     def test_discretize(self):
         pv = pyvoronoi.Pyvoronoi(1)
@@ -105,14 +110,29 @@ class TestPyvoronoiConstruct(TestCase):
 
         vertices = pv.GetVertices()
         edges = pv.GetEdges()
-        for i in range(len(edges)):
-            startVertex = vertices[edges[i].start]
-            endVertex = vertices[edges[i].end]
-            constX = 2.92893218813452
-            if(startVertex.X == constX and startVertex.Y == constX and endVertex.X == constX and endVertex.Y == 7.07106781186548):
-                points = pv.DiscretizeCurvedEdge(i,0.1)
-                self.assertTrue(points[2][0]== 2.5)
-                self.assertTrue(points[2][1]== 5)
+        cells = pv.GetCells()
+
+        #Test edge index. This should be the edge going from  {2.92893218813452, 2.92893218813452} To {2.92893218813452, 7.07106781186548}
+        testEdgeIndex = 2
+        testEdge = edges[testEdgeIndex]
+        sites = pv.ReturnCurvedSiteInformation(testEdge)
+        self.assertTrue(sites[0] == [5,5])
+        self.assertTrue(sites[1] == [[0,0],[0,10]])
+        startVertex = vertices[testEdge.start]
+        endVertex = vertices[testEdge.end]
+        points = pv.DiscretizeCurvedEdge(testEdgeIndex, 0.1)
+
+
+        #Validate the  start point
+        self.assertTrue(points[0][0] == startVertex.X)
+        self.assertTrue(points[0][1] == startVertex.Y)
+        self.assertTrue(points[2][0] == 2.5)
+        self.assertTrue(points[2][1] == 5)
+        self.assertTrue(points[-1][0] == endVertex.X)
+        self.assertTrue(points[-1][1] == endVertex.Y)
+
+
+
 
 def run_tests():
     main()

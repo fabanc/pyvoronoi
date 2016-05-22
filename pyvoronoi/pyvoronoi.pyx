@@ -167,6 +167,9 @@ cdef class Pyvoronoi:
             self.SCALING_FACTOR = scaling_factor
         else:
             self.SCALING_FACTOR = 1
+			
+        del self.inputPoints[:]
+        del self.inputSegments[:]			
 
     def __dealloc__(self):
         log_action("Deleting the VoronoiDiagram instance")
@@ -293,14 +296,9 @@ cdef class Pyvoronoi:
         return self.inputSegments
 		
 
-    def DiscretizeCurvedEdge(self, index, max_dist):
-        #The code pertaining to discretization is a port in python of the C++ code available on the boost voronoi library website.
-        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visualizer.cpp
-        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visual_utils.hpp	
-        if(max_dist <= 0):
-            raise Exception("Max distance must be greater than 0. Value passed: {0}".format(max_dist))
-		
-        edge = self.outputEdges[index]		
+    def ReturnCurvedSiteInformation(self, edge):
+        """Return the index of the point side and the segment site associated  with a segment index
+        """		
         twinEdge = self.outputEdges[edge.twin]	
 		
         cell = self.outputCells[edge.cell]
@@ -308,7 +306,20 @@ cdef class Pyvoronoi:
 
         pointSite = self.RetrievePoint(cell) if cell.contains_point == True else self.RetrievePoint(twinCell)
         segmentSite = self.RetrieveSegment(twinCell) if cell.contains_point == True else self.RetrieveSegment(cell)
-        return self.Discretize(pointSite,segmentSite, max_dist, edge)		
+			
+        return [pointSite, segmentSite]
+        
+    def DiscretizeCurvedEdge(self, index, max_dist):
+        #The code pertaining to discretization is a port in python of the C++ code available on the boost voronoi library website.
+        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visualizer.cpp
+        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visual_utils.hpp	
+        if(max_dist <= 0):
+            raise Exception("Max distance must be greater than 0. Value passed: {0}".format(max_dist))
+		
+        edge = self.outputEdges[index]
+        sites = self.ReturnCurvedSiteInformation(edge)
+        
+        return self.Discretize(sites[0],sites[1], max_dist, edge)		
 
 
     def RetrievePoint(self, cell):
