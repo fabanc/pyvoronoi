@@ -9,7 +9,7 @@ import struct
 import copy as _copy
 import unicodedata as _unicodedata
 import time as _time
-
+import math
 
 from cython.operator cimport dereference as deref
 
@@ -19,8 +19,6 @@ def log_action(description):
         print description
 
 log_action("Python binding clipper library")
-
-
 
 
 cdef extern from "Python.h":
@@ -105,12 +103,16 @@ cdef extern from "voronoi.hpp":
         vector[Point] GetPoints()
         vector[Segment] GetSegments()
 
-        
-	
+####################################
+##VORONOY UTILS
+####################################
 class Vertex:
     X = 0.0
     Y = 0.0
-
+    def __init__(self,x,y):
+        self.X = x
+        self.Y = y
+		
 class Edge:
     start = -1
     end = -1
@@ -143,6 +145,52 @@ class Cell:
 
 class VoronoiException(Exception):
     pass
+	
+class FocusOnDirectixException(Exception):
+    pass
+	
+class UnsolvableParabolaEquation(Exception):
+    pass
+	
+####################################
+##ROTATION
+####################################		
+def Rotate(point, theta):
+    t = -1 * theta
+    cos = math.cos(t)
+    sin = math.sin(t)
+    return [(point[0] * cos) - (point[1] * sin),
+	(point[0] * sin) + (point[1] * cos)]
+	
+def RotateWithShift(point, theta, shift_x, shift_y):
+    return Rotate([point[0] - shift_x, point[1] - shift_y], theta)
+	
+def Unrotate(point, theta, shift_x, shift_y):
+    cos = math.cos(theta)
+    sin = math.sin(theta)
+    return [(point[0] * cos) - (point[1] * sin) + shift_x, (point[0] * sin) + (point[1] * cos) + shift_y]
+	
+def GetLineAngleInRadians(start_point_x, start_point_y,end_point_x, end_point_y):
+    return math.atan2(end_point_y - start_point_y, end_point_x - start_point_x)	
+	
+	
+####################################
+##DISTANCE
+####################################	
+def DistanceSquared(point_start, point_end):
+    """Returns the squared length of the line.
+    :return: a float representing the squared length of the line.
+    """
+    return pow(point_end[0] - point_start[0], 2) + pow(point_end[1] - point_start[1], 2)
+	
+def Distance(point_start, point_end):
+    """Returns the length of the line"""
+    return math.sqrt(DistanceSquared(point_start, point_end))
+	
+			
+####################################
+##PYVORONOI OPERATIONS
+####################################		
 
 cdef class Pyvoronoi:
     cdef VoronoiDiagram *thisptr
@@ -239,10 +287,7 @@ cdef class Pyvoronoi:
 
         count = c_vertices.size()      
         for i in range(count):
-            vertex = Vertex()
-            vertex.X = self._from_voronoi_value(c_vertices[i].X)
-            vertex.Y = self._from_voronoi_value(c_vertices[i].Y)
-
+            vertex = Vertex(self._from_voronoi_value(c_vertices[i].X),  self._from_voronoi_value(c_vertices[i].Y))
             self.outputVertices.append(vertex)
 
         count = c_cells.size()
@@ -309,17 +354,17 @@ cdef class Pyvoronoi:
 			
         return [pointSite, segmentSite]
         
-    def DiscretizeCurvedEdge(self, index, max_dist):
-        #The code pertaining to discretization is a port in python of the C++ code available on the boost voronoi library website.
-        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visualizer.cpp
-        #http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visual_utils.hpp	
+    def DiscretizeCurvedEdge(self, index, max_dist, parabola_equation_tolerance = 1):
         if(max_dist <= 0):
             raise Exception("Max distance must be greater than 0. Value passed: {0}".format(max_dist))
-		
         edge = self.outputEdges[index]
         sites = self.ReturnCurvedSiteInformation(edge)
-        
-        return self.Discretize(sites[0],sites[1], max_dist, edge)		
+        pointSite = sites[0]
+        segmentSite = sites[1]
+		
+        edgeStartVertex = self.outputVertices[edge.start]
+        edgeEndVertex = self.outputVertices[edge.end]
+        return self.Discretize(pointSite,segmentSite, [edgeStartVertex.X,edgeStartVertex.Y], [edgeEndVertex.X, edgeEndVertex.Y], max_dist, parabola_equation_tolerance)
 
 
     def RetrievePoint(self, cell):
@@ -340,110 +385,111 @@ cdef class Pyvoronoi:
         """
         return self.inputSegments[cell.site - len(self.inputPoints)]
 		
-    def GetParabolaY(self, x,a,b):
-        return ((x - a) * (x - a) + b * b) / (b + b)		
+    def GetParabolaY(self, x, focus, directrix_y):
+        """
+		Solve the parabola equation for a given value on the x-axis and return the associated value on the y-axis. 
+		This equation assumes that the directix is parallel to the x-axis. 
+        Parabola equation are different if the directix is parallel to the y-axis.
+		:param x: the x-value used to solve the equation.
+        :param focus: the focus point used for solving the equation of the parabola.
+        :param directix: the directix value used for solving the equation of the parabola.	
+        :return: the associated value on the y-axis.
+        """
+        return (pow(x - focus[0], 2) + pow(focus[1], 2) - pow(directrix_y, 2)) / (2 * (focus[1] - directrix_y));
+
+    def CheckUnsolvableParabolaEquation(self, boost_x, boost_y, focus, directix, tolerance):
+        """
+        Compare the y-coordinate of a point on the parabola returned by Boost with the computed value. 
+		The function will return an exception if the difference between the computed y-value and the y-value returned by Boost.
+		The computed point will be returned otherwise.
+        :param boost_x: the x-value of the point parabola returned by boost.
+        :param boost_y: the y-value of the point parabola returned by boost.
+        :param focus: the focus point used for solving the equation of the parabola.
+        :param directix: the directix value used for solving the equation of the parabola.
+		:param tolerance: the distance allowed between the point computed by boost and the point computed by the equation.
+		:return: the point on the parabola computed using the value of boost_x.
+		"""	
+        computed_point_y = self.GetParabolaY(boost_x, focus, directix)
+        delta = computed_point_y - boost_y if computed_point_y > boost_y else boost_y - computed_point_y
+        if delta > tolerance:
+            raise UnsolvableParabolaEquation("The computed Y on the parabola for the starting / ending point is different from the rotated point returned by Boost. Difference: {0}. Maximum tolerance: {1}".format(delta, tolerance))
+        return [boost_x, computed_point_y]
 	
-    def Discretize(self, point, segment, max_dist, discretization):
+    def Discretize(self, point, segment, parabola_start, parabola_end, max_dist, parabola_equation_tolerance):
         """
-        Discretize
-            :param point: The input point associated with the cell or the neighbour cell
-            :param segment: The input segment associated with the cell or the neighbour cell
-            :param max dist: The maximum distance between 2 vertices on the discretized geometry
-            :param discretization: The curved output edge		
+        Interpolate points on a parabola. The points are garanteed to be closer than the value of the parameter max_dist.
+        :param point: The input point associated with the cell or the neighbour cell. The point is used as the focus in the equation of the parabola.
+        :param segment: The input segment associated with the cell or the neighbour cell. The point is used as the directix in the equation of the parabola.
+        :param max dist: The maximum distance between 2 vertices on the discretized geometry.
+        :param parabola_equation_tolerance: The maximum difference allowed between the y coordinate returned by Boost, and the equation of the parabola.
+		:return: the list of points on the parabola.
 		"""
-		       
-        low_segment_x = segment[0][0] if segment[0][0] < segment[1][0] else segment[1][0]
-        low_segment_y = segment[0][1] if segment[0][1] < segment[1][1] else segment[1][1]
-    
-        max_segment_x = segment[1][0] if segment[0][0] < segment[1][0] else segment[0][0]
-        max_segment_y = segment[1][1] if segment[0][1] < segment[1][1] else segment[0][1]
-    
-        # Apply the linear transformation to move start point of the segment to
-        # the point with coordinates (0, 0) and the direction of the segment to
-        # coincide the positive direction of the x-axis.
-        segm_vec_x = max_segment_x - low_segment_x
-        segm_vec_y = max_segment_y - low_segment_y
-        sqr_segment_length = segm_vec_x * segm_vec_x + segm_vec_y * segm_vec_y;
-    
-        #Compute x-coordinates of the endpoints of the edge
-        ##in the transformed space.
-        projection_start = sqr_segment_length * self.GetPointProjection(self.outputVertices[discretization.start], segment);
-        projection_end = sqr_segment_length * self.GetPointProjection(self.outputVertices[discretization.end], segment);
-    
-        #Compute parabola parameters in the transformed space.
-        #Parabola has next representation:
-        ##f(x) = ((x-rot_x)^2 + rot_y^2) / (2.0*rot_y).
-        point_vec_x = point[0] - low_segment_x;
-        point_vec_y = point[1] - low_segment_y;
-        rot_x = segm_vec_x * point_vec_x + segm_vec_y * point_vec_y;
-        rot_y = segm_vec_x * point_vec_y - segm_vec_y * point_vec_x;
-    
-        #Save the last point.
-        last_point = [self.outputVertices[discretization.end].X, self.outputVertices[discretization.end].Y]
-        discretization_array = [[self.outputVertices[discretization.start].X, self.outputVertices[discretization.start].Y]]
-    
-        #Use stack to avoid recursion.
-        point_stack = [projection_end]
-        cur_x = projection_start
-        cur_y = self.GetParabolaY(cur_x, rot_x, rot_y)
-    
-        #Adjust max_dist parameter in the transformed space.
-        max_dist_transformed = max_dist * max_dist * sqr_segment_length;
+	
+		#Test if the input point is on the input line. If yes, it is impossible to compute a parabola.
+        if(point[0] == segment[0][0] and point[1] == segment[0][1]) or (point[0] == segment[1][0] and point[1] == segment[1][1]):
+            raise FocusOnDirectixException()
+		
+		###############################
+        #Rotate the input information
+		#Rotation is done so that the 
+		#Input segment is aligned with the x-axis.
+		#Input point becomes the focus of the parabola equation.
+		#Input segment becomes the directix of the parabola equation.
+		###############################
+        shift_x = min(segment[0][0], segment[1][0])
+        shift_y = min(segment[0][1], segment[1][1])	
+        angle = GetLineAngleInRadians(
+            segment[0][0],
+            segment[0][1],
+            segment[1][0],
+            segment[1][1],			
+        )
+		
+        focus_rotated = RotateWithShift(point, angle, shift_x, shift_y)
+        directix_start_rotated = RotateWithShift(segment[0], angle, shift_x, shift_y)
+        directix_end_rotated = RotateWithShift(segment[1], angle, shift_x, shift_y)
+        parabola_start_rotated = RotateWithShift(parabola_start, angle, shift_x, shift_y)
+        parabola_end_rotated = RotateWithShift(parabola_end, angle, shift_x, shift_y)
+				
+		###############################
+        #Validate the equation for the 
+		#first and last point given by 
+		#Boost
+		###############################
+        directix = directix_start_rotated[1]
+        parabola_start_rotated_check = self.CheckUnsolvableParabolaEquation(parabola_start_rotated[0], parabola_start_rotated[1], focus_rotated, directix, parabola_equation_tolerance)
+        parabola_end_rotated_check = self.CheckUnsolvableParabolaEquation(parabola_end_rotated[0], parabola_end_rotated[1], focus_rotated, directix, parabola_equation_tolerance)
+
+		
+		###############################
+        #Compute the intermediate points
+		###############################
+        densified_rotated  = [parabola_start_rotated_check]
+        previous = densified_rotated[0]
+        next  = [parabola_end_rotated_check]
+		
+        while (len(next) > 0):	
+            current = next[-1]
+            distance = Distance(current, previous)
 			
-        while (len(point_stack) != 0):
-            #Get last element on the stack
-            new_x = point_stack[-1]
-            new_y = self.GetParabolaY(new_x, rot_x, rot_y)
-    
-            #Compute coordinates of the point of the parabola that is
-            #furthest from the current line segment.
-            mid_x = (new_y - cur_y) / (new_x - cur_x) * rot_y + rot_x
-            mid_y = self.GetParabolaY(mid_x, rot_x, rot_y)
-			   
-            dist = (new_y - cur_y) * (mid_x - cur_x) - (new_x - cur_x) * (mid_y - cur_y)
-            dist = dist * dist / ((new_y - cur_y) * (new_y - cur_y) + (new_x - cur_x) * (new_x - cur_x))
-  
-            if (dist <= max_dist_transformed):
-                #Distance between parabola and line segment is less than max_dist.
-                point_stack.pop()
-                inter_x = (segm_vec_x * new_x - segm_vec_y * new_y) / sqr_segment_length + low_segment_x
-                inter_y = (segm_vec_x * new_y + segm_vec_y * new_x) / sqr_segment_length + low_segment_y
-                discretization_array.append([inter_x,inter_y])
-                cur_x = new_x
-                cur_y = new_y
+            if distance > max_dist:
+                mid_point_x = (previous[0] + current[0]) / 2
+                mid_point = [mid_point_x, self.GetParabolaY(mid_point_x, focus_rotated, directix)]			
+                next.append(mid_point)
             else:
-                point_stack.append(mid_x)
-    
-        discretization_array[-1] = last_point
-        return discretization_array
-		
-		
-    def GetPointProjection(self, point, segment):
-        """
-        Get normalized length of the distance between the input point and segment.
-        Return this length divided by the segment length. This is made to avoid
-        sqrt computation during transformation from the initial space to the
-        transformed one and vice versa. The assumption is made that projection of
-        the point lies between the start-point and endpoint of the segment.			
-		:param point: The input point associated with the cell or the neighbour cell
-		:param segment: The input segment associated with the cell or the neighbour cell
-        """
-        low_segment_x = segment[0][0] if segment[0][0] < segment[1][0] else segment[1][0]
-        low_segment_y = segment[0][1] if segment[0][1] < segment[1][1] else segment[1][1]
-        
-        max_segment_x = segment[1][0] if segment[0][0] < segment[1][0] else segment[0][0]
-        max_segment_y = segment[1][1] if segment[0][1] < segment[1][1] else segment[0][1]
-		
-        segment_vec_x = max_segment_x - low_segment_x
-        segment_vec_y = max_segment_y - low_segment_y
-        point_vec_x = point.X - low_segment_x
-        point_vec_y = point.Y - low_segment_y
-		
-        sqr_segment_length = segment_vec_x * segment_vec_x + segment_vec_y * segment_vec_y
-        vec_dot = segment_vec_x * point_vec_x + segment_vec_y * point_vec_y
-        return vec_dot / sqr_segment_length
-    
-    
+                densified_rotated.append(current)
+                next.pop()
+                previous = current			
+                
+
+        densified_rotated[0] = parabola_start_rotated
+        densified_rotated[-1] = parabola_end_rotated		
+		###############################
+        #Unrotate the computed intermediate points
+		###############################
+        densified = map(lambda x: Unrotate(x, angle, shift_x, shift_y), densified_rotated)
+        return densified
+				
 
     cdef Segment _to_voronoi_segment(self, object py_segment):
         return Segment(self._to_voronoi_point(py_segment[0]), self._to_voronoi_point(py_segment[1]))

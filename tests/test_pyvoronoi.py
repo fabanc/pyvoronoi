@@ -112,24 +112,28 @@ class TestPyvoronoiConstruct(TestCase):
         edges = pv.GetEdges()
         cells = pv.GetCells()
 
+        testEdgeIndex = -1
+        for i in range(len(edges)):
+            if cells[edges[edges[i].twin].cell].source_category == 0 and cells[edges[i].cell].site == 1:
+                testEdgeIndex = i
+
         #Test edge index. This should be the edge going from  {2.92893218813452, 2.92893218813452} To {2.92893218813452, 7.07106781186548}
-        testEdgeIndex = 2
         testEdge = edges[testEdgeIndex]
         sites = pv.ReturnCurvedSiteInformation(testEdge)
         self.assertTrue(sites[0] == [5,5])
         self.assertTrue(sites[1] == [[0,0],[0,10]])
         startVertex = vertices[testEdge.start]
         endVertex = vertices[testEdge.end]
-        points = pv.DiscretizeCurvedEdge(testEdgeIndex, 0.1)
+        points = pv.DiscretizeCurvedEdge(testEdgeIndex, 3)
 
 
         #Validate the  start point
-        self.assertTrue(points[0][0] == startVertex.X)
-        self.assertTrue(points[0][1] == startVertex.Y)
-        self.assertTrue(points[2][0] == 2.5)
-        self.assertTrue(points[2][1] == 5)
-        self.assertTrue(points[-1][0] == endVertex.X)
-        self.assertTrue(points[-1][1] == endVertex.Y)
+        self.assertAlmostEquals(points[0][0],startVertex.X)
+        self.assertAlmostEquals(points[0][1], startVertex.Y)
+        self.assertAlmostEquals(points[1][0], 2.5)
+        self.assertAlmostEquals(points[1][1], 5)
+        self.assertAlmostEquals(points[-1][0], endVertex.X)
+        self.assertAlmostEquals(points[-1][1], endVertex.Y)
 
 
 
