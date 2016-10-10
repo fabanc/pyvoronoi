@@ -139,11 +139,9 @@ The sample below shows you how to do that:
 						for p in points:
 							print "{0},{1}".format(p[0], p[1])
 
-The code used for the discretization is a port to python of this C++ code available on the boost voronoi web site
-
-* http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visualizer.cpp
-
-* http://www.boost.org/doc/libs/1_54_0/libs/polygon/example/voronoi_visual_utils.hpp
+The curve interpolation code can return 2 exceptions.
+*FocusOnDirectixException: this happens when the input point is on the segment side. In that cases, it makes no sense to interpolate a parabola between those two geometries since a parabola equation is supposed to find an equidistant point between the two geometries. 
+*UnsolvableParabolaEquation: there are cases where the point returned by boost does not fit with the parabola equation (for a same position on the x-axis, we get 2 different points, both equidistant). Understanding this issue is still under investigation. It is possible to mitigate this issue by setting an optional 3rd parameter of the function DiscretizeCurvedEdge). A higher value means more tolerance to this exception. The recommended value would be 1 / Scaling Factor.
 						
 License
 =======

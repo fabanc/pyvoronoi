@@ -24,22 +24,28 @@ class TestPyvoronoiModule(TestCase):
         
 class TestPyvoronoiAdd(TestCase):
     def test_add_point(self):
-        pv = pyvoronoi.Pyvoronoi(10)
-        pv.AddPoint([0.5, 1])
+        factor = 10
+        inputPoint = [0.5, 1]
+        pv = pyvoronoi.Pyvoronoi(factor)
+        pv.AddPoint(inputPoint)
         points = pv.GetPoints()
         print(points)
         self.assertTrue(len(points) == 1)
-        self.assertTrue(points[0][0] == 0.5)
-        self.assertTrue(points[0][1] == 1)
+        self.assertTrue(points[0][0] == inputPoint[0] * factor)
+        self.assertTrue(points[0][1] == inputPoint[1] * factor)
 
     def test_add_segment(self):
-        pv = pyvoronoi.Pyvoronoi(10)
+        factor = 10
         segment = [[0.5, 1], [0, 2]]
+        pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddSegment(segment)
         segments = pv.GetSegments()
         print(segments)
         self.assertTrue(len(segments) == 1)
-        self.assertTrue(segments[0] == segment)
+        self.assertTrue(segments[0] == [
+            [segment[0][0] * factor, segment[0][1] * factor],
+            [segment[1][0] * factor, segment[1][1] * factor],
+        ])
 
     def test_add_point_after_construct(self):
         pv = pyvoronoi.Pyvoronoi()
@@ -135,8 +141,18 @@ class TestPyvoronoiConstruct(TestCase):
         self.assertAlmostEquals(points[-1][0], endVertex.X)
         self.assertAlmostEquals(points[-1][1], endVertex.Y)
 
+    def test_discretize_with_invalid_distance(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5, 5])
+        pv.AddSegment([[0, 0], [0, 10]])
+        pv.AddSegment([[0, 0], [10, 0]])
+        pv.AddSegment([[0, 10], [10, 10]])
+        pv.AddSegment([[10, 0], [10, 10]])
+        pv.Construct()
 
 
+        with self.assertRaises(ValueError):
+            pv.DiscretizeCurvedEdge(2, -1)
 
 def run_tests():
     main()

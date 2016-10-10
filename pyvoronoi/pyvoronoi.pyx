@@ -232,7 +232,7 @@ cdef class Pyvoronoi:
 
         cdef Point c_point = self._to_voronoi_point(point)
         self.thisptr.AddPoint(c_point)
-        self.inputPoints.append(point)
+        self.inputPoints.append([c_point.X, c_point.Y])
 
     def AddSegment(self, segment):
         """ Add a segment
@@ -243,7 +243,7 @@ cdef class Pyvoronoi:
 
         cdef Segment c_segment = self._to_voronoi_segment(segment)
         self.thisptr.AddSegment(c_segment)
-        self.inputSegments.append(segment)
+        self.inputSegments.append([[c_segment.p0.X, c_segment.p0.Y], [c_segment.p1.X, c_segment.p1.Y]])
 		
     def Construct(self):
         """ Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
@@ -349,14 +349,18 @@ cdef class Pyvoronoi:
         cell = self.outputCells[edge.cell]
         twinCell = self.outputCells[twinEdge.cell]
 
-        pointSite = self.RetrievePoint(cell) if cell.contains_point == True else self.RetrievePoint(twinCell)
-        segmentSite = self.RetrieveSegment(twinCell) if cell.contains_point == True else self.RetrieveSegment(cell)
+        pointSite = self.RetrieveScaledPoint(cell) if cell.contains_point == True else self.RetrieveScaledPoint(twinCell)
+        segmentSite = self.RetriveScaledSegment(twinCell) if cell.contains_point == True else self.RetriveScaledSegment(cell)
 			
         return [pointSite, segmentSite]
         
-    def DiscretizeCurvedEdge(self, index, max_dist, parabola_equation_tolerance = 1):
+    def DiscretizeCurvedEdge(self, index, max_dist, parabola_equation_tolerance = 0.0001):
         if(max_dist <= 0):
-            raise Exception("Max distance must be greater than 0. Value passed: {0}".format(max_dist))
+            raise ValueError("Max distance must be greater than 0. Value passed: {0}".format(max_dist))
+			
+        if(parabola_equation_tolerance < 0):
+            raise ValueError("Parabola equation tolerance must be greater than 0 or equal to 0. Value passed: {0}".format(parabola_equation_tolerance))
+		
         edge = self.outputEdges[index]
         sites = self.ReturnCurvedSiteInformation(edge)
         pointSite = sites[0]
@@ -384,6 +388,21 @@ cdef class Pyvoronoi:
         """Retrive the input segment associated with a cell.
         """
         return self.inputSegments[cell.site - len(self.inputPoints)]
+		
+		
+    def RetrieveScaledPoint(self, cell):
+        non_scaled_point = self.RetrievePoint(cell)
+        return [
+			non_scaled_point[0] / self.SCALING_FACTOR, 
+			non_scaled_point[1] / self.SCALING_FACTOR
+		]
+		
+    def RetriveScaledSegment(self, cell):
+        non_scaled_segment = self.RetrieveSegment(cell)
+        return [
+			[non_scaled_segment[0][0] / self.SCALING_FACTOR, non_scaled_segment[0][1] / self.SCALING_FACTOR],
+			[non_scaled_segment[1][0] / self.SCALING_FACTOR,non_scaled_segment[1][1] / self.SCALING_FACTOR]
+		]
 		
     def GetParabolaY(self, x, focus, directrix_y):
         """
@@ -424,7 +443,7 @@ cdef class Pyvoronoi:
         :param parabola_equation_tolerance: The maximum difference allowed between the y coordinate returned by Boost, and the equation of the parabola.
 		:return: the list of points on the parabola.
 		"""
-	
+		
 		#Test if the input point is on the input line. If yes, it is impossible to compute a parabola.
         if(point[0] == segment[0][0] and point[1] == segment[0][1]) or (point[0] == segment[1][0] and point[1] == segment[1][1]):
             raise FocusOnDirectixException()
