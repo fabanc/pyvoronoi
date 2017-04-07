@@ -24,22 +24,28 @@ class TestPyvoronoiModule(TestCase):
         
 class TestPyvoronoiAdd(TestCase):
     def test_add_point(self):
-        pv = pyvoronoi.Pyvoronoi(10)
-        pv.AddPoint([0.5, 1])
+        factor = 10
+        inputPoint = [0.5, 1]
+        pv = pyvoronoi.Pyvoronoi(factor)
+        pv.AddPoint(inputPoint)
         points = pv.GetPoints()
         print(points)
         self.assertTrue(len(points) == 1)
-        self.assertTrue(points[0][0] == 0.5)
-        self.assertTrue(points[0][1] == 1)
+        self.assertTrue(points[0][0] == inputPoint[0] * factor)
+        self.assertTrue(points[0][1] == inputPoint[1] * factor)
 
     def test_add_segment(self):
-        pv = pyvoronoi.Pyvoronoi(10)
+        factor = 10
         segment = [[0.5, 1], [0, 2]]
+        pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddSegment(segment)
         segments = pv.GetSegments()
         print(segments)
         self.assertTrue(len(segments) == 1)
-        self.assertTrue(segments[0] == segment)
+        self.assertTrue(segments[0] == [
+            [segment[0][0] * factor, segment[0][1] * factor],
+            [segment[1][0] * factor, segment[1][1] * factor],
+        ])
 
     def test_add_point_after_construct(self):
         pv = pyvoronoi.Pyvoronoi()
@@ -91,8 +97,13 @@ class TestPyvoronoiConstruct(TestCase):
         edges = pv.GetEdges()
         for i in range(len(edges)):
             edge = edges[i]
-            print ("{0},{1},{2}".format(i, edge.twin, edges[edge.twin].twin))
             self.assertTrue(edges[edge.twin].twin == i)
+
+    def test_input_point(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.Construct()
+        self.assertTrue(1 == len(pv.inputPoints))
 
     def test_discretize(self):
         pv = pyvoronoi.Pyvoronoi(1)
@@ -105,14 +116,43 @@ class TestPyvoronoiConstruct(TestCase):
 
         vertices = pv.GetVertices()
         edges = pv.GetEdges()
+        cells = pv.GetCells()
+
+        testEdgeIndex = -1
         for i in range(len(edges)):
-            startVertex = vertices[edges[i].start]
-            endVertex = vertices[edges[i].end]
-            constX = 2.92893218813452
-            if(startVertex.X == constX and startVertex.Y == constX and endVertex.X == constX and endVertex.Y == 7.07106781186548):
-                points = pv.DiscretizeCurvedEdge(i,0.1)
-                self.assertTrue(points[2][0]== 2.5)
-                self.assertTrue(points[2][1]== 5)
+            if cells[edges[edges[i].twin].cell].source_category == 0 and cells[edges[i].cell].site == 1:
+                testEdgeIndex = i
+
+        #Test edge index. This should be the edge going from  {2.92893218813452, 2.92893218813452} To {2.92893218813452, 7.07106781186548}
+        testEdge = edges[testEdgeIndex]
+        sites = pv.ReturnCurvedSiteInformation(testEdge)
+        self.assertTrue(sites[0] == [5,5])
+        self.assertTrue(sites[1] == [[0,0],[0,10]])
+        startVertex = vertices[testEdge.start]
+        endVertex = vertices[testEdge.end]
+        points = pv.DiscretizeCurvedEdge(testEdgeIndex, 3)
+
+
+        #Validate the  start point
+        self.assertAlmostEquals(points[0][0],startVertex.X)
+        self.assertAlmostEquals(points[0][1], startVertex.Y)
+        self.assertAlmostEquals(points[1][0], 2.5)
+        self.assertAlmostEquals(points[1][1], 5)
+        self.assertAlmostEquals(points[-1][0], endVertex.X)
+        self.assertAlmostEquals(points[-1][1], endVertex.Y)
+
+    def test_discretize_with_invalid_distance(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5, 5])
+        pv.AddSegment([[0, 0], [0, 10]])
+        pv.AddSegment([[0, 0], [10, 0]])
+        pv.AddSegment([[0, 10], [10, 10]])
+        pv.AddSegment([[10, 0], [10, 10]])
+        pv.Construct()
+
+
+        with self.assertRaises(ValueError):
+            pv.DiscretizeCurvedEdge(2, -1)
 
 def run_tests():
     main()
