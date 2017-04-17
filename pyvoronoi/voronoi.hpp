@@ -11,6 +11,7 @@
 #define __GLIBC__ 0
 
 #include "boost/polygon/voronoi.hpp"
+#include "boost/bimap/bimap.hpp"
 
 struct Point {
 	int X;
@@ -70,12 +71,12 @@ struct c_Edge {
 
 	size_t site1;
 	size_t site2;
-	
+
 	bool isLinear;
-	
+
     long cell;
-    long twin;	
-	
+    long twin;
+
 	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false, long cell = -1, long twin = -1) {
 		this->start = start;
 		this->end = end;
@@ -84,7 +85,7 @@ struct c_Edge {
 		this->site2 = site2;
 		this->isLinear = isLinear;
 		this->cell = cell;
-		this->twin = twin;	
+		this->twin = twin;
 	}
 };
 
@@ -95,23 +96,24 @@ struct c_Cell{
 	bool contains_point;
 	bool contains_segment;
 	bool is_open;
-	
+
 	std::vector<long long> vertices;
 	std::vector<long long> edges;
-	
-	int source_category;	
-	
+
+	int source_category;
+
 	c_Cell(size_t cell_identifier = -1, size_t site = -1, bool contains_point = false, bool contains_segment = false, bool is_open = false, int source_category = -1){
         this->cell_identifier = cell_identifier;
 		this->site = site;
 		this->contains_point = contains_point;
 		this->contains_segment = contains_segment;
 		this->is_open = is_open;
-		this->source_category = source_category;	
+		this->source_category = source_category;
 	}
 };
 
 using namespace boost::polygon;
+using namespace boost::bimap;
 
 class VoronoiDiagram {
 public:
@@ -120,11 +122,22 @@ public:
 	void AddSegment(Segment s);
 	void Construct();
 	void GetEdges(std::vector<c_Vertex> &, std::vector<c_Edge> &);
-  void GetCells(std::vector<c_Vertex> &, std::vector<c_Edge> &, std::vector<c_Cell> &);
+  	void GetCells(std::vector<c_Vertex> &, std::vector<c_Edge> &, std::vector<c_Cell> &);
 	std::vector<Point> GetPoints();
 	std::vector<Segment> GetSegments();
+
+	long long CountVertices();
+	long long CountEdges();
+	long long CountCells();
+
+	// typedef boost::bimap<const voronoi_diagram<double>::vertex_type*, long long> vertices_bimap;
+	// typedef vertices_bimap::value_type vertex_position;
+	// vertices_bimap vertices;
+
+
 private:
 	std::vector<Point> points;
 	std::vector<Segment> segments;
 	voronoi_diagram<double> vd;
+
 };
