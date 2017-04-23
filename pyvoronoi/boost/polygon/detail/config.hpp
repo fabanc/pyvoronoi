@@ -58,7 +58,7 @@
 #endif
 
 // get config suffix code:
-#include <boost/config/suffix.hpp>
+#include "suffix.hpp"
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 #pragma once
