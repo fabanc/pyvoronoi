@@ -1,5 +1,6 @@
 #pragma warning(disable : 4503)
 #include "voronoi.hpp"
+#include "map"
 
 VoronoiDiagram::VoronoiDiagram() {
 
@@ -218,11 +219,38 @@ long long VoronoiDiagram::CountCells(){
 }
 
 
-void VoronoiDiagram::CreateVertexMap(){
+void VoronoiDiagram::MapVertexIndexes(){
+		long long index = 0;
+		for (voronoi_diagram<double>::const_vertex_iterator it = vd.vertices().begin(); it != vd.vertices().end(); ++it) {
+			const voronoi_diagram<double>::vertex_type* vertex = &(*it);
+			map_vertices_to_indexes.insert(vertex_to_index(index, vertex));
+			index++;
+		}
+}
+
+void VoronoiDiagram::MapEdgeIndexes(){
 	long long index = 0;
-	for (voronoi_diagram<double>::const_vertex_iterator it = vd.vertices().begin(); it != vd.vertices().end(); ++it) {
-		const voronoi_diagram<double>::vertex_type* vertex = &(*it);
-		vertices.insert(vertex_position(vertex, index));
+	for (voronoi_diagram<double>::const_edge_iterator it = vd.edges().begin(); it != vd.edges().end(); ++it) {
+		const voronoi_diagram<double>::edge_type* edge = &(*it);
+		map_edges_to_indexes.insert(edge_to_index(index, edge));
 		index++;
 	}
 }
+
+void VoronoiDiagram::MapCellIndexes(){
+	long long index = 0;
+	for (voronoi_diagram<double>::const_cell_iterator it = vd.cells().begin(); it != vd.cells().end(); ++it) {
+		const voronoi_diagram<double>::cell_type* cell = &(*it);
+		map_cells_to_indexes.insert(cell_to_index(index, cell));
+		index++;
+	}
+}
+
+// void VoronoiDiagram::CreateVertexMap(){
+// 	long long index = 0;
+// 	for (voronoi_diagram<double>::const_vertex_iterator it = vd.vertices().begin(); it != vd.vertices().end(); ++it) {
+// 		const voronoi_diagram<double>::vertex_type* vertex = &(*it);
+// 		vertices.insert(vertex_position(vertex, index));
+// 		index++;
+// 	}
+// }

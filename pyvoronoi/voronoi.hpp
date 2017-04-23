@@ -11,7 +11,7 @@
 #define __GLIBC__ 0
 
 #include "boost/polygon/voronoi.hpp"
-#include "boost/bimap/bimap.hpp"
+#include "map"
 
 struct Point {
 	int X;
@@ -113,7 +113,6 @@ struct c_Cell{
 };
 
 using namespace boost::polygon;
-using namespace boost::bimap;
 
 class VoronoiDiagram {
 public:
@@ -130,9 +129,18 @@ public:
 	long long CountEdges();
 	long long CountCells();
 
-	// typedef boost::bimap<const voronoi_diagram<double>::vertex_type*, long long> vertices_bimap;
-	// typedef vertices_bimap::value_type vertex_position;
-	// vertices_bimap vertices;
+	typedef std::pair<long long, const voronoi_diagram<double>::vertex_type*> vertex_to_index;
+	std::map<long long, const voronoi_diagram<double>::vertex_type*> map_vertices_to_indexes;
+
+	typedef std::pair<long long, const voronoi_diagram<double>::edge_type*> edge_to_index;
+	std::map<long long, const voronoi_diagram<double>::edge_type*> map_edges_to_indexes;
+
+	typedef std::pair<long long, const voronoi_diagram<double>::cell_type*> cell_to_index;
+	std::map<long long, const voronoi_diagram<double>::cell_type*> map_cells_to_indexes;
+
+	void MapVertexIndexes();
+	void MapEdgeIndexes();
+	void MapCellIndexes();
 
 
 private:
