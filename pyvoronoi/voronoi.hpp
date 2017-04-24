@@ -1,6 +1,5 @@
 // Voronoi.cpp : Defines the entry point for the console application.
 //
-
 #define BOOST_POLYGON_NO_DEPS
 #define BOOST_NO_USER_CONFIG
 #define BOOST_NO_COMPILER_CONFIG
@@ -129,14 +128,29 @@ public:
 	long long CountEdges();
 	long long CountCells();
 
-	typedef std::pair<long long, const voronoi_diagram<double>::vertex_type*> vertex_to_index;
-	std::map<long long, const voronoi_diagram<double>::vertex_type*> map_vertices_to_indexes;
+	//Map index to vertex
+	typedef std::pair<long long, const voronoi_diagram<double>::vertex_type*> index_to_vertex;
+	std::map<long long, const voronoi_diagram<double>::vertex_type*> map_indexes_to_vertices;
 
-	typedef std::pair<long long, const voronoi_diagram<double>::edge_type*> edge_to_index;
-	std::map<long long, const voronoi_diagram<double>::edge_type*> map_edges_to_indexes;
+	//Map vertex to index
+	std::map <const voronoi_diagram<double>::vertex_type*, long long> map_vertices_to_indexes;
+	typedef std::pair<const voronoi_diagram<double>::vertex_type*, long long> vertex_to_index;
 
-	typedef std::pair<long long, const voronoi_diagram<double>::cell_type*> cell_to_index;
-	std::map<long long, const voronoi_diagram<double>::cell_type*> map_cells_to_indexes;
+	//Map index to edge
+	typedef std::pair<long long, const voronoi_diagram<double>::edge_type*> index_to_edge;
+	std::map<long long, const voronoi_diagram<double>::edge_type*> map_indexes_to_edges;
+
+	//Map edge to index
+	std::map <const voronoi_diagram<double>::edge_type*, long long> map_edges_to_indexes;
+	typedef std::pair<const voronoi_diagram<double>::edge_type*, long long> edge_to_index;
+
+	//Map index to cell
+	typedef std::pair<long long, const voronoi_diagram<double>::cell_type*> index_to_cell;
+	std::map<long long, const voronoi_diagram<double>::cell_type*> map_indexes_to_cells;
+
+	//Map cell to index
+	std::map <const voronoi_diagram<double>::cell_type*, long long> map_cells_to_indexes;
+	typedef std::pair<const voronoi_diagram<double>::cell_type*, long long> cell_to_index;
 
 	void MapVertexIndexes();
 	void MapEdgeIndexes();
