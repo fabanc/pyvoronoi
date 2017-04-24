@@ -249,11 +249,41 @@ void VoronoiDiagram::MapCellIndexes(){
 	}
 }
 
-// void VoronoiDiagram::CreateVertexMap(){
-// 	long long index = 0;
-// 	for (voronoi_diagram<double>::const_vertex_iterator it = vd.vertices().begin(); it != vd.vertices().end(); ++it) {
-// 		const voronoi_diagram<double>::vertex_type* vertex = &(*it);
-// 		vertices.insert(vertex_position(vertex, index));
-// 		index++;
-// 	}
-// }
+c_Vertex VoronoiDiagram::GetVertex(long long index){
+	const voronoi_diagram<double>::vertex_type* vertex = map_indexes_to_vertices[index];
+	return c_Vertex(vertex->x(), vertex->y());
+}
+
+c_Edge VoronoiDiagram::GetEdge(long long index)
+{
+	const voronoi_diagram<double>::edge_type* edge = map_indexes_to_edges[index];
+
+	//Find vertex references
+	const voronoi_diagram<double>::vertex_type * start = edge->vertex0();
+	const voronoi_diagram<double>::vertex_type * end = edge->vertex1();
+
+	long long start_id = map_vertices_to_indexes[start];
+	long long end_id = map_vertices_to_indexes[end];
+
+	//Find the twin reference using the segment object
+	const voronoi_diagram<double>::edge_type * twin = edge->twin();
+	long long twinIndex = -1;
+	if (edge != NULL){
+		twinIndex = map_edges_to_indexes[twin];
+	}
+
+	//Find the cell reference using ther cell object
+	long long cellIndex = map_cells_to_indexes[edge->cell()];
+
+	//Return the object
+	return c_Edge(
+		start_id,
+		end_id,
+		edge->is_primary(),
+		-1,
+		-1,
+		edge->is_linear(),
+		cellIndex,
+		twinIndex
+	);
+}

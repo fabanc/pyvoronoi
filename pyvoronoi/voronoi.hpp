@@ -156,6 +156,10 @@ public:
 	void MapEdgeIndexes();
 	void MapCellIndexes();
 
+	c_Vertex GetVertex(long long index);
+	c_Edge GetEdge(long long index);
+	c_Cell GetCell(long long index);
+
 
 private:
 	std::vector<Point> points;
