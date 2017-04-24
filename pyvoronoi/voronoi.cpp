@@ -287,3 +287,90 @@ c_Edge VoronoiDiagram::GetEdge(long long index)
 		twinIndex
 	);
 }
+
+c_Cell VoronoiDiagram::GetCell(long long index)
+{
+	//std::map<long long, const voronoi_diagram<double>::cell_type *>::iterator cellMapIterator = cellMap2.find(index);
+	const voronoi_diagram<double>::cell_type* cell = map_indexes_to_cells[index];
+	std::vector<long long> edge_identifiers;
+	std::vector<long long> vertex_identifiers;
+
+	bool is_open = false;
+
+	//Identify the source type
+	int source_category = -1;
+	if (cell->source_category() == boost::polygon::SOURCE_CATEGORY_SINGLE_POINT){
+		source_category = 0;
+	}
+	else if (cell->source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_START_POINT){
+		source_category = 1;
+	}
+	else if (cell->source_category() == boost::polygon::SOURCE_CATEGORY_SEGMENT_END_POINT){
+		source_category = 2;
+	}
+	else if (cell->source_category() == boost::polygon::SOURCE_CATEGORY_INITIAL_SEGMENT){
+		source_category = 3;
+	}
+	else if (cell->source_category() == boost::polygon::SOURCE_CATEGORY_REVERSE_SEGMENT){
+		source_category = 4;
+	}
+	else if (cell->source_category() == boost::polygon::SOURCE_CATEGORY_GEOMETRY_SHIFT){
+		source_category = 5;
+	}
+	else if (cell->source_category() == boost::polygon::SOURCE_CATEGORY_BITMASK){
+		source_category = 6;
+	}
+
+
+	const voronoi_diagram<double>::edge_type* edge = cell->incident_edge();
+	if (edge != NULL)
+	{
+		do {
+			//Get the edge index
+			long long edge_index = map_edges_to_indexes[edge];
+			edge_identifiers.push_back(edge_index);
+
+			if (edge->vertex0() == NULL || edge->vertex1() == NULL)
+				is_open = true;
+
+			long long edge_start = -1;
+			long long edge_end = -1;
+
+			if (edge->vertex0() == NULL){
+				edge_start = map_vertices_to_indexes[edge->vertex0()];
+			}
+
+			if (edge->vertex1() == NULL){
+				edge_end = map_vertices_to_indexes[edge->vertex1()];
+			}
+
+			long vertices_count = vertex_identifiers.size();
+			if (vertices_count == 0){
+				vertex_identifiers.push_back(edge_start);
+			}
+			else{
+				if (vertex_identifiers[vertices_count - 1] != edge_start){
+					vertex_identifiers.push_back(edge_start);
+				}
+			}
+			vertex_identifiers.push_back(edge_end);
+			//Move to the next edge
+			edge = edge->next();
+
+		} while (edge != cell->incident_edge());
+	}
+
+	c_Cell c_cell = c_Cell(
+		index,
+		cell->source_index(),
+		cell->contains_point(),
+		cell->contains_segment(),
+		is_open,
+		source_category
+	);
+
+	c_cell.vertices = vertex_identifiers;
+	c_cell.edges = edge_identifiers;
+
+	return c_cell;
+}
