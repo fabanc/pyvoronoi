@@ -105,9 +105,15 @@ cdef extern from "voronoi.hpp":
         void MapEdgeIndexes()
         void MapCellIndexes()
 
+        long long CountVertices()
+        long long CountEdges()
+        long long CountCells()
+
         c_Vertex GetVertex(long long index)
         c_Edge GetEdge(long long index)
         c_Cell GetCell(long long index)
+
+
 
 ####################################
 ##VORONOY UTILS
@@ -268,6 +274,10 @@ cdef class Pyvoronoi:
 
         self.thisptr.Construct()
 
+        self.thisptr.MapVertexIndexes()
+        self.thisptr.MapEdgeIndexes()
+        self.thisptr.MapCellIndexes()
+
     def GetVertex(self, index):
         """
         """
@@ -288,6 +298,15 @@ cdef class Pyvoronoi:
         cell.contains_segment = c_cell.contains_segment != False
         cell.is_open = c_cell.is_open != False
         return cell
+
+    def CountVertices(self):
+        return self.thisptr.CountVertices()
+
+    def CountEdges(self):
+        return self.thisptr.CountEdges()
+
+    def CountCells(self):
+        return self.thisptr.CountCells()
 
     def GetPoints(self):
         """ Returns the points added to the voronoi diagram
