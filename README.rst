@@ -52,7 +52,7 @@ Using
 =====
 
 Create a new instance, passing the scaling factor into the constructor:
-``` 
+```
 import pyvoronoi
 pv = pyvoronoi.Pyvoronoi(10)
 ```
@@ -76,6 +76,37 @@ Call ``Construct()`` and get the edges and vertices:
 	vertices = pv.GetVertices()
   cells = pv.GetCells()
 
+Note that vertices, edges, and cells, can be accessed individually. The methods above are just convenience wrappers around
+the following functions:
+
+* GetVertex
+
+* GetEdge
+
+* Get Cell
+
+.. code:: python
+
+def GetVertices(self):
+    count = self.CountVertices()
+    output = []
+    for index in  xrange(count):
+        output.append(self.GetVertex(index))
+    return output
+
+def GetEdges(self):
+    count = self.CountEdges()
+    output = []
+    for index in xrange(count):
+        output.append(self.GetEdge(index))
+    return output
+
+def GetCells(self):
+    count = self.CountCells()
+    output = []
+    for index in xrange(count):
+        output.append(self.GetCell(index))
+    return output
 Edges have the following properties:
 
 * ``start, end`` contain the indices of the start and end vertices or ``-1`` if the edge is infinite at that end.
@@ -107,7 +138,7 @@ Cells have the following properties:
 
     pv.Construct()
     edges = pv.GetEdges()
-    vertices = pv.GetVertices()		
+    vertices = pv.GetVertices()
     cells = pv.GetCells()
     print("Cell Count: {0}".format(len(cells)))
     for c in cells:
@@ -115,17 +146,17 @@ Cells have the following properties:
         print(",".join(map(str,c.vertices)))
         for sIndex in c.edges:
             print("Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end))
-			
+
 
 Some output edges returned by the boost voronoi API are suposed to be curved. In the C++ API, it is up to you to code it. Luckily, you can do it in python using the following the function DiscretizeCurvedEdge.
-The sample below shows you how to do that: 
+The sample below shows you how to do that:
 
 .. code-block:: python
 
 	for cIndex in range(len(cells)):
 		cell = cells[cIndex]
 		if cell.is_open == False:
-			for i in range(len(cell.edges)):    
+			for i in range(len(cell.edges)):
 				e = edges[cell.edges[i]]
 				startVertex = vertices[e.start]
 				endVertex = vertices[e.end]
@@ -140,9 +171,9 @@ The sample below shows you how to do that:
 							print "{0},{1}".format(p[0], p[1])
 
 The curve interpolation code can return 2 exceptions.
-*FocusOnDirectixException: this happens when the input point is on the segment side. In that cases, it makes no sense to interpolate a parabola between those two geometries since a parabola equation is supposed to find an equidistant point between the two geometries. 
+*FocusOnDirectixException: this happens when the input point is on the segment side. In that cases, it makes no sense to interpolate a parabola between those two geometries since a parabola equation is supposed to find an equidistant point between the two geometries.
 *UnsolvableParabolaEquation: there are cases where the point returned by boost does not fit with the parabola equation (for a same position on the x-axis, we get 2 different points, both equidistant). Understanding this issue is still under investigation. It is possible to mitigate this issue by setting an optional 3rd parameter of the function DiscretizeCurvedEdge). A higher value means more tolerance to this exception. The recommended value would be 1 / Scaling Factor.
-						
+
 License
 =======
 
