@@ -74,7 +74,7 @@ Call ``Construct()`` and get the edges and vertices:
 	pv.Construct()
 	edges = pv.GetEdges()
 	vertices = pv.GetVertices()
-  cells = pv.GetCells()
+    cells = pv.GetCells()
 
 Note that vertices, edges, and cells, can be accessed individually. The methods above are just convenience wrappers around
 the following functions:
@@ -87,26 +87,31 @@ the following functions:
 
 .. code:: python
 
-def GetVertices(self):
-    count = self.CountVertices()
-    output = []
-    for index in  xrange(count):
-        output.append(self.GetVertex(index))
-    return output
+    def GetVertices(self):
+        count = self.CountVertices()
+        output = []
+        for index in  xrange(count):
+            output.append(self.GetVertex(index))
+        return output
 
-def GetEdges(self):
-    count = self.CountEdges()
-    output = []
-    for index in xrange(count):
-        output.append(self.GetEdge(index))
-    return output
+.. code:: python
 
-def GetCells(self):
-    count = self.CountCells()
-    output = []
-    for index in xrange(count):
-        output.append(self.GetCell(index))
-    return output
+    def GetEdges(self):
+        count = self.CountEdges()
+        output = []
+        for index in xrange(count):
+            output.append(self.GetEdge(index))
+        return output
+
+.. code:: python
+
+    def GetCells(self):
+        count = self.CountCells()
+        output = []
+        for index in xrange(count):
+            output.append(self.GetCell(index))
+        return output
+
 Edges have the following properties:
 
 * ``start, end`` contain the indices of the start and end vertices or ``-1`` if the edge is infinite at that end.
