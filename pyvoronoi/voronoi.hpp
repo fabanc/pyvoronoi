@@ -67,21 +67,15 @@ struct c_Edge {
 	long long end;
 
 	bool isPrimary;
-
-	long long site1;
-	long long site2;
-
 	bool isLinear;
 
     long long cell;
     long long twin;
 
-	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, long long site1 = -1, long long site2 = -1, bool isLinear = false, long cell = -1, long twin = -1) {
+	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, bool isLinear = false, long long cell = -1, long long twin = -1) {
 		this->start = start;
 		this->end = end;
 		this->isPrimary = isPrimary;
-		this->site1 = site1;
-		this->site2 = site2;
 		this->isLinear = isLinear;
 		this->cell = cell;
 		this->twin = twin;
@@ -95,7 +89,7 @@ struct c_Cell{
 	bool contains_point;
 	bool contains_segment;
 	bool is_open;
-
+	bool is_degenerate;
 	std::vector<long long> vertices;
 	std::vector<long long> edges;
 

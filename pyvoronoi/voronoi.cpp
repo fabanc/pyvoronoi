@@ -1,6 +1,7 @@
 #pragma warning(disable : 4503)
 #include "voronoi.hpp"
 #include "map"
+#include "iostream"
 
 VoronoiDiagram::VoronoiDiagram() {
 
@@ -70,7 +71,9 @@ void VoronoiDiagram::MapCellIndexes(){
 
 c_Vertex VoronoiDiagram::GetVertex(long long index){
 	const voronoi_diagram<double>::vertex_type* vertex = map_indexes_to_vertices[index];
-	return c_Vertex(vertex->x(), vertex->y());
+	double x = vertex->x();
+	double y = vertex->y();
+	return c_Vertex(x, y);
 }
 
 c_Edge VoronoiDiagram::GetEdge(long long index)
@@ -94,17 +97,17 @@ c_Edge VoronoiDiagram::GetEdge(long long index)
 	//Find the cell reference using ther cell object
 	long long cellIndex = map_cells_to_indexes[edge->cell()];
 
-	//Return the object
-	return c_Edge(
+	c_Edge c_edge = c_Edge(
 		start_id,
 		end_id,
 		edge->is_primary(),
-		-1,
-		-1,
 		edge->is_linear(),
 		cellIndex,
 		twinIndex
 	);
+
+	//Return the object
+	return c_edge;
 }
 
 c_Cell VoronoiDiagram::GetCell(long long index)
@@ -155,16 +158,17 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 			long long edge_start = -1;
 			long long edge_end = -1;
 
-			if (edge->vertex0() == NULL){
+			if (edge->vertex0() != NULL){
 				edge_start = map_vertices_to_indexes[edge->vertex0()];
 			}
 
-			if (edge->vertex1() == NULL){
+			if (edge->vertex1() != NULL){
 				edge_end = map_vertices_to_indexes[edge->vertex1()];
 			}
 
 			long vertices_count = vertex_identifiers.size();
 			if (vertices_count == 0){
+				//std::cout << "Pushing start vertex index: " << edge_start << '\n';
 				vertex_identifiers.push_back(edge_start);
 			}
 			else{
@@ -172,6 +176,8 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 					vertex_identifiers.push_back(edge_start);
 				}
 			}
+
+			//std::cout << "Pushing end vertex index: " << edge_end << '\n';
 			vertex_identifiers.push_back(edge_end);
 			//Move to the next edge
 			edge = edge->next();
@@ -188,6 +194,7 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 		source_category
 	);
 
+	c_cell.is_degenerate = cell->is_degenerate();
 	c_cell.vertices = vertex_identifiers;
 	c_cell.edges = edge_identifiers;
 

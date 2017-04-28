@@ -77,8 +77,6 @@ cdef extern from "voronoi.hpp":
         long long start
         long long end
         int isPrimary
-        size_t site1
-        size_t site2
         int isLinear
         long long cell;
         long long twin;
@@ -89,6 +87,7 @@ cdef extern from "voronoi.hpp":
         int contains_point
         int contains_segment
         int is_open
+        int is_degenerate
         vector[long long] vertices
         vector[long long] edges
         int source_category
@@ -129,8 +128,6 @@ class Edge:
     start = -1
     end = -1
     is_primary = False
-    site1 = -1
-    site2 = -1
     is_linear = False
     cell = -1
     twin = -1
@@ -148,18 +145,20 @@ class Cell:
     contains_segment = False
     is_open = False
 
-    vertices = None
-    edges = None
+    vertices = []
+    edges = []
 
     source_category = None
 
     def __init__(self, cell_identifier, site, vertices, edges, source_category):
         self.cell_identifier = cell_identifier
         self.site = site
+        self.source_category = source_category
         self.vertices = vertices
         self.edges = edges
-        self.vertices.append(self.vertices[0])
-        self.source_category = source_category
+        if len(self.vertices) > 0:
+            self.vertices.append(self.vertices[0])
+
 
 class VoronoiException(Exception):
     pass
@@ -281,21 +280,22 @@ cdef class Pyvoronoi:
     def GetVertex(self, index):
         """
         """
-        cdef c_vertex = self.thisptr.GetVertex(index)
-        return Vertex(c_vertex.X, c_vertex.Y)
+        c_vertex = self.thisptr.GetVertex(index)
+        return Vertex(c_vertex.X / self.SCALING_FACTOR, c_vertex.Y / self.SCALING_FACTOR)
 
     def GetEdge(self, index):
-        cdef c_edge =  self.thisptr.GetEdge(index)
+        c_edge =  self.thisptr.GetEdge(index)
         edge = Edge(c_edge.start, c_edge.end, c_edge.cell, c_edge.twin)
         edge.is_primary = c_edge.isPrimary != False
         edge.is_linear = c_edge.isLinear != False
         return edge
 
     def GetCell(self, index):
-        cdef c_cell = self.thisptr.GetCell(index)
+        c_cell = self.thisptr.GetCell(index)
         cell = Cell(c_cell.cell_identifier, c_cell.site, c_cell.vertices, c_cell.edges, c_cell.source_category)
         cell.contains_point = c_cell.contains_point != False
         cell.contains_segment = c_cell.contains_segment != False
+        cell.is_degenerate = c_cell.is_degenerate != False
         cell.is_open = c_cell.is_open != False
         return cell
 
@@ -318,14 +318,34 @@ cdef class Pyvoronoi:
         """
         return self.inputSegments
 
+    def GetVertices(self):
+        count = self.CountVertices()
+        output = []
+        for index in  xrange(count):
+            output.append(self.GetVertex(index))
+        return output
+
+    def GetEdges(self):
+        count = self.CountEdges()
+        output = []
+        for index in xrange(count):
+            output.append(self.GetEdge(index))
+        return output
+
+    def GetCells(self):
+        count = self.CountCells()
+        output = []
+        for index in xrange(count):
+            output.append(self.GetCell(index))
+        return output
 
     def ReturnCurvedSiteInformation(self, edge):
         """Return the index of the point side and the segment site associated  with a segment index
         """
-        twinEdge = self.outputEdges[edge.twin]
+        twinEdge = self.GetEdge(edge.twin)
 
-        cell = self.outputCells[edge.cell]
-        twinCell = self.outputCells[twinEdge.cell]
+        cell = self.GetCell(edge.cell)
+        twinCell = self.GetCell(twinEdge.cell)
 
         pointSite = self.RetrieveScaledPoint(cell) if cell.contains_point == True else self.RetrieveScaledPoint(twinCell)
         segmentSite = self.RetriveScaledSegment(twinCell) if cell.contains_point == True else self.RetriveScaledSegment(cell)
@@ -339,13 +359,13 @@ cdef class Pyvoronoi:
         if(parabola_equation_tolerance < 0):
             raise ValueError("Parabola equation tolerance must be greater than 0 or equal to 0. Value passed: {0}".format(parabola_equation_tolerance))
 
-        edge = self.outputEdges[index]
+        edge = self.GetEdge(index)
         sites = self.ReturnCurvedSiteInformation(edge)
         pointSite = sites[0]
         segmentSite = sites[1]
 
-        edgeStartVertex = self.outputVertices[edge.start]
-        edgeEndVertex = self.outputVertices[edge.end]
+        edgeStartVertex = self.GetVertex(edge.start)
+        edgeEndVertex = self.GetVertex(edge.end)
         return self.Discretize(pointSite,segmentSite, [edgeStartVertex.X,edgeStartVertex.Y], [edgeEndVertex.X, edgeEndVertex.Y], max_dist, parabola_equation_tolerance)
 
 
