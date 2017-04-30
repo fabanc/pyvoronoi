@@ -71,9 +71,9 @@ Call ``Construct()`` and get the edges and vertices:
 
 .. code:: python
 
-	pv.Construct()
-	edges = pv.GetEdges()
-	vertices = pv.GetVertices()
+    pv.Construct()
+    edges = pv.GetEdges()
+    vertices = pv.GetVertices()
     cells = pv.GetCells()
 
 Note that vertices, edges, and cells, can be accessed individually. The methods above are just convenience wrappers around
