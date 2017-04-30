@@ -21,7 +21,7 @@ class TestPyvoronoiModule(TestCase):
 
         pv = pyvoronoi.Pyvoronoi(1)
         self.assertTrue(pv.SCALING_FACTOR == 1)
-        
+
 class TestPyvoronoiAdd(TestCase):
     def test_add_point(self):
         factor = 10
@@ -87,6 +87,10 @@ class TestPyvoronoiConstruct(TestCase):
         self.assertTrue(len(filter(lambda e: edges[e].is_primary, cells[3].edges)) == 2)
 
     def test_twins(self):
+        """
+        Validate that the twin attribute is consistent.
+        :return: 
+        """
         pv = pyvoronoi.Pyvoronoi(1)
         pv.AddPoint([5,5])
         pv.AddSegment([[0,0],[0,10]])
@@ -98,6 +102,42 @@ class TestPyvoronoiConstruct(TestCase):
         for i in range(len(edges)):
             edge = edges[i]
             self.assertTrue(edges[edge.twin].twin == i)
+
+    def test_vertex_reference_for_edges(self):
+        """
+        Test the node edge have both ends not referencing a vertex.
+        :return: 
+        """
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+        edges = pv.GetEdges()
+        for i in range(len(edges)):
+            edge = edges[i]
+            self.assertTrue(edge.start != -1 and edge.end != -1)
+
+    def test_vertex_reference_for_cells(self):
+        """
+        Test that cells reference at least one vertex.
+        :return: 
+        """
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+        cells = pv.GetCells()
+        for i in range(len(cells)):
+            cell = cells[i]
+            if not cell.is_degenerate:
+                valid_vertices = [v for v in cell.vertices if v != -1]
+                self.assertTrue(len(valid_vertices) > 0)               
 
     def test_input_point(self):
         pv = pyvoronoi.Pyvoronoi(1)
@@ -149,7 +189,6 @@ class TestPyvoronoiConstruct(TestCase):
         pv.AddSegment([[0, 10], [10, 10]])
         pv.AddSegment([[10, 0], [10, 10]])
         pv.Construct()
-
 
         with self.assertRaises(ValueError):
             pv.DiscretizeCurvedEdge(2, -1)
