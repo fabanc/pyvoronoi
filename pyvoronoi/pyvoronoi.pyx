@@ -18,8 +18,6 @@ def log_action(description):
     if not SILENT:
         print description
 
-log_action("Python binding clipper library")
-
 
 cdef extern from "Python.h":
     Py_INCREF(object o)
