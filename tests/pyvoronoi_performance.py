@@ -20,8 +20,8 @@ def build_and_solve_voronoi_problem(max_x, max_y):
     """
 
     factor = 10
+    pyvoronoi.SILENT = True
     pv = pyvoronoi.Pyvoronoi(factor)
-
     count_points = 0
     for x in xrange(max_x):
         for y in xrange(max_y):

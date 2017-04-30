@@ -13,12 +13,10 @@ import math
 
 from cython.operator cimport dereference as deref
 
-SILENT = False
+SILENT = True
 def log_action(description):
     if not SILENT:
         print description
-
-log_action("Python binding clipper library")
 
 
 cdef extern from "Python.h":
