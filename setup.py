@@ -90,7 +90,7 @@ setup(
     name='pyvoronoi',
     version=version,
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
-    author='Andrii Sydorchuk, Voxel8',
+    author='Andrii Sydorchuk, Voxel8 / Fabien Ancelin',
     author_email='',
     url='https://github.com/Voxel8/pyvoronoi',
     keywords=['voronoi','Boost','polygon'],
