@@ -321,21 +321,21 @@ cdef class Pyvoronoi:
     def GetVertices(self):
         count = self.CountVertices()
         output = []
-        for index in  xrange(count):
+        for index in  range(count):
             output.append(self.GetVertex(index))
         return output
 
     def GetEdges(self):
         count = self.CountEdges()
         output = []
-        for index in xrange(count):
+        for index in range(count):
             output.append(self.GetEdge(index))
         return output
 
     def GetCells(self):
         count = self.CountCells()
         output = []
-        for index in xrange(count):
+        for index in range(count):
             output.append(self.GetCell(index))
         return output
 

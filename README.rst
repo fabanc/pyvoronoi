@@ -90,7 +90,7 @@ the following functions:
     def GetVertices(self):
         count = self.CountVertices()
         output = []
-        for index in  xrange(count):
+        for index in  range(count):
             output.append(self.GetVertex(index))
         return output
 
@@ -99,7 +99,7 @@ the following functions:
     def GetEdges(self):
         count = self.CountEdges()
         output = []
-        for index in xrange(count):
+        for index in range(count):
             output.append(self.GetEdge(index))
         return output
 
@@ -108,9 +108,11 @@ the following functions:
     def GetCells(self):
         count = self.CountCells()
         output = []
-        for index in xrange(count):
+        for index in range(count):
             output.append(self.GetCell(index))
         return output
+
+If you are running python 2.x, you might want to write your own wrappers using xrange. This will be more efficient.
 
 Edges have the following properties:
 
