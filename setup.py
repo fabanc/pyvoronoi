@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 
-version = '0.0.8'
+version = '0.0.9'
 
 """
 Note on using the setup.py:
@@ -84,8 +84,8 @@ class build_ext_subclass( build_ext ):
             userdir = os.environ["USERPROFILE"]
             os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
 
-        build_ext.build_extensions(self)        
-        
+        build_ext.build_extensions(self)
+
 setup(
     name='pyvoronoi',
     version=version,
