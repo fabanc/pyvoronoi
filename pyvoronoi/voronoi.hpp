@@ -1,6 +1,5 @@
 // Voronoi.cpp : Defines the entry point for the console application.
 //
-
 #define BOOST_POLYGON_NO_DEPS
 #define BOOST_NO_USER_CONFIG
 #define BOOST_NO_COMPILER_CONFIG
@@ -11,6 +10,7 @@
 #define __GLIBC__ 0
 
 #include "boost/polygon/voronoi.hpp"
+#include "map"
 
 struct Point {
 	int X;
@@ -67,47 +67,41 @@ struct c_Edge {
 	long long end;
 
 	bool isPrimary;
-
-	size_t site1;
-	size_t site2;
-	
 	bool isLinear;
-	
-    long cell;
-    long twin;	
-	
-	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, size_t site1 = -1, size_t site2 = -1, bool isLinear = false, long cell = -1, long twin = -1) {
+
+    long long cell;
+    long long twin;
+
+	c_Edge(long long start = -1, long long end = -1, bool isPrimary = false, bool isLinear = false, long long cell = -1, long long twin = -1) {
 		this->start = start;
 		this->end = end;
 		this->isPrimary = isPrimary;
-		this->site1 = site1;
-		this->site2 = site2;
 		this->isLinear = isLinear;
 		this->cell = cell;
-		this->twin = twin;	
+		this->twin = twin;
 	}
 };
 
 //A structure to identify a segment as part of one cell only
 struct c_Cell{
-    size_t cell_identifier;
-	size_t site;
+    long long cell_identifier;
+	long long site;
 	bool contains_point;
 	bool contains_segment;
 	bool is_open;
-	
+	bool is_degenerate;
 	std::vector<long long> vertices;
 	std::vector<long long> edges;
-	
-	int source_category;	
-	
+
+	int source_category;
+
 	c_Cell(size_t cell_identifier = -1, size_t site = -1, bool contains_point = false, bool contains_segment = false, bool is_open = false, int source_category = -1){
         this->cell_identifier = cell_identifier;
 		this->site = site;
 		this->contains_point = contains_point;
 		this->contains_segment = contains_segment;
 		this->is_open = is_open;
-		this->source_category = source_category;	
+		this->source_category = source_category;
 	}
 };
 
@@ -119,12 +113,50 @@ public:
 	void AddPoint(Point p);
 	void AddSegment(Segment s);
 	void Construct();
-	void GetEdges(std::vector<c_Vertex> &, std::vector<c_Edge> &);
-  void GetCells(std::vector<c_Vertex> &, std::vector<c_Edge> &, std::vector<c_Cell> &);
+
 	std::vector<Point> GetPoints();
 	std::vector<Segment> GetSegments();
+
+	long long CountVertices();
+	long long CountEdges();
+	long long CountCells();
+
+	//Map index to vertex
+	typedef std::pair<long long, const voronoi_diagram<double>::vertex_type*> index_to_vertex;
+	std::map<long long, const voronoi_diagram<double>::vertex_type*> map_indexes_to_vertices;
+
+	//Map vertex to index
+	std::map <const voronoi_diagram<double>::vertex_type*, long long> map_vertices_to_indexes;
+	typedef std::pair<const voronoi_diagram<double>::vertex_type*, long long> vertex_to_index;
+
+	//Map index to edge
+	typedef std::pair<long long, const voronoi_diagram<double>::edge_type*> index_to_edge;
+	std::map<long long, const voronoi_diagram<double>::edge_type*> map_indexes_to_edges;
+
+	//Map edge to index
+	std::map <const voronoi_diagram<double>::edge_type*, long long> map_edges_to_indexes;
+	typedef std::pair<const voronoi_diagram<double>::edge_type*, long long> edge_to_index;
+
+	//Map index to cell
+	typedef std::pair<long long, const voronoi_diagram<double>::cell_type*> index_to_cell;
+	std::map<long long, const voronoi_diagram<double>::cell_type*> map_indexes_to_cells;
+
+	//Map cell to index
+	std::map <const voronoi_diagram<double>::cell_type*, long long> map_cells_to_indexes;
+	typedef std::pair<const voronoi_diagram<double>::cell_type*, long long> cell_to_index;
+
+	void MapVertexIndexes();
+	void MapEdgeIndexes();
+	void MapCellIndexes();
+
+	c_Vertex GetVertex(long long index);
+	c_Edge GetEdge(long long index);
+	c_Cell GetCell(long long index);
+
+
 private:
 	std::vector<Point> points;
 	std::vector<Segment> segments;
 	voronoi_diagram<double> vd;
+
 };
