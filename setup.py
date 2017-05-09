@@ -77,12 +77,13 @@ if sys.argv[-1] == 'tag':
 
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
-        c = self.compiler.compiler_type
-        if c == 'msvc':
-            for e in self.extensions:
-                e.extra_compile_args = ["/EHsc"]
-            userdir = os.environ["USERPROFILE"]
-            os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
+        if sys.version_info.major < 3:
+            c = self.compiler.compiler_type
+            if c == 'msvc':
+                for e in self.extensions:
+                    e.extra_compile_args = ["/EHsc"]
+                userdir = os.environ["USERPROFILE"]
+                os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
 
         build_ext.build_extensions(self)
 
