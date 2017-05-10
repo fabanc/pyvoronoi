@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 
-version = '1.0.0'
+version = '1.0.3'
 
 """
 Note on using the setup.py:
@@ -77,12 +77,13 @@ if sys.argv[-1] == 'tag':
 
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
-        c = self.compiler.compiler_type
-        if c == 'msvc':
-            for e in self.extensions:
-                e.extra_compile_args = ["/EHsc"]
-            userdir = os.environ["USERPROFILE"]
-            os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
+        if sys.version_info.major < 3:
+            c = self.compiler.compiler_type
+            if c == 'msvc':
+                for e in self.extensions:
+                    e.extra_compile_args = ["/EHsc"]
+                userdir = os.environ["USERPROFILE"]
+                os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
 
         build_ext.build_extensions(self)
 
@@ -100,13 +101,14 @@ setup(
         "Programming Language :: Cython",
         "Programming Language :: C++",
         "Environment :: Other Environment",
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "License :: OSI Approved",
         "License :: OSI Approved :: MIT License",
         "Topic :: Multimedia :: Graphics",
         "Topic :: Scientific/Engineering :: Mathematics",
+        "Topic :: Scientific/Engineering :: GIS",
         "Topic :: Software Development :: Libraries :: Python Modules"
     ],
     ext_modules=[ext],
