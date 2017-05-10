@@ -1,7 +1,6 @@
 #pragma warning(disable : 4503)
 #include "voronoi.hpp"
 #include "map"
-#include "iostream"
 
 VoronoiDiagram::VoronoiDiagram() {
 
@@ -168,7 +167,6 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 
 			long vertices_count = vertex_identifiers.size();
 			if (vertices_count == 0){
-				//std::cout << "Pushing start vertex index: " << edge_start << '\n';
 				vertex_identifiers.push_back(edge_start);
 			}
 			else{
@@ -177,7 +175,6 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 				}
 			}
 
-			//std::cout << "Pushing end vertex index: " << edge_end << '\n';
 			vertex_identifiers.push_back(edge_end);
 			//Move to the next edge
 			edge = edge->next();
