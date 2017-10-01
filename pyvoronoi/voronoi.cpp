@@ -80,11 +80,16 @@ c_Edge VoronoiDiagram::GetEdge(long long index)
 	const voronoi_diagram<double>::edge_type* edge = map_indexes_to_edges[index];
 
 	//Find vertex references
-	const voronoi_diagram<double>::vertex_type * start = edge->vertex0();
-	const voronoi_diagram<double>::vertex_type * end = edge->vertex1();
+	long long edge_start = -1;
+    	long long edge_end = -1;
 
-	long long start_id = map_vertices_to_indexes[start];
-	long long end_id = map_vertices_to_indexes[end];
+    	if (edge->vertex0() != NULL){
+        	edge_start = map_vertices_to_indexes[edge->vertex0()];
+    	}
+
+    	if (edge->vertex1() != NULL){
+        	edge_end = map_vertices_to_indexes[edge->vertex1()];
+	}
 
 	//Find the twin reference using the segment object
 	const voronoi_diagram<double>::edge_type * twin = edge->twin();
@@ -97,8 +102,8 @@ c_Edge VoronoiDiagram::GetEdge(long long index)
 	long long cellIndex = map_cells_to_indexes[edge->cell()];
 
 	c_Edge c_edge = c_Edge(
-		start_id,
-		end_id,
+		edge_start,
+		edge_end,
 		edge->is_primary(),
 		edge->is_linear(),
 		cellIndex,
