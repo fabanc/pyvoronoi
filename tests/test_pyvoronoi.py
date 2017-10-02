@@ -116,9 +116,35 @@ class TestPyvoronoiConstruct(TestCase):
         pv.AddSegment([[10,0],[10,10]])
         pv.Construct()
         edges = pv.GetEdges()
+        cells = pv.GetCells()
         for i in range(len(edges)):
             edge = edges[i]
-            self.assertTrue(edge.start != -1 and edge.end != -1)
+            if cells[edge.cell].is_open == False:
+                self.assertTrue(edge.start != -1 and edge.end != -1)
+
+    def test_edge_vertices_indexes(self):
+        """
+        Test the node edge have both ends not referencing a vertex.
+        :return: 
+        """
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+        edges = pv.GetEdges()
+
+        vertices_count = 0
+
+        for i in range(len(edges)):
+            edge = edges[i]
+            vertices = [edge.start, edge.end]
+            for v in vertices:
+                if v == -1:
+                    vertices_count += 1
+
+        self.assertTrue(vertices_count == 16)
 
     def test_vertex_reference_for_cells(self):
         """
