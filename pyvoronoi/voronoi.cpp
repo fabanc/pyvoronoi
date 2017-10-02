@@ -1,7 +1,6 @@
 #pragma warning(disable : 4503)
 #include "voronoi.hpp"
 #include "map"
-#include "iostream"
 
 VoronoiDiagram::VoronoiDiagram() {
 
@@ -82,13 +81,13 @@ c_Edge VoronoiDiagram::GetEdge(long long index)
 
 	//Find vertex references
 	long long edge_start = -1;
-    	long long edge_end = -1;
+    long long edge_end = -1;
 
-    	if (edge->vertex0() != NULL){
+    if (edge->vertex0() != NULL){
         	edge_start = map_vertices_to_indexes[edge->vertex0()];
-    	}
+    }
 
-    	if (edge->vertex1() != NULL){
+    if (edge->vertex1() != NULL){
         	edge_end = map_vertices_to_indexes[edge->vertex1()];
 	}
 
@@ -173,7 +172,6 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 
 			long vertices_count = vertex_identifiers.size();
 			if (vertices_count == 0){
-				//std::cout << "Pushing start vertex index: " << edge_start << '\n';
 				vertex_identifiers.push_back(edge_start);
 			}
 			else{
@@ -182,7 +180,6 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 				}
 			}
 
-			//std::cout << "Pushing end vertex index: " << edge_end << '\n';
 			vertex_identifiers.push_back(edge_end);
 			//Move to the next edge
 			edge = edge->next();
