@@ -81,13 +81,13 @@ c_Edge VoronoiDiagram::GetEdge(long long index)
 
 	//Find vertex references
 	long long edge_start = -1;
-    	long long edge_end = -1;
+    long long edge_end = -1;
 
-    	if (edge->vertex0() != NULL){
+    if (edge->vertex0() != NULL){
         	edge_start = map_vertices_to_indexes[edge->vertex0()];
-    	}
+    }
 
-    	if (edge->vertex1() != NULL){
+    if (edge->vertex1() != NULL){
         	edge_end = map_vertices_to_indexes[edge->vertex1()];
 	}
 
