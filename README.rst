@@ -174,7 +174,7 @@ The sample below shows you how to do that:
 					if(e.is_linear == True):
 						array = [[startVertex.X, startVertex.Y],[endVertex.X, endVertex.Y]]
 					else:
-						points = pv.DiscretizeCurvedEdge(cell.edges[i], max_distance)
+						points = pv.DiscretizeCurvedEdge(i, max_distance)
 						for p in points:
 							print "{0},{1}".format(p[0], p[1])
 
