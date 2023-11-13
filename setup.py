@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 
-version = '1.0.5'
+version = '1.0.6'
 
 """
 Note on using the setup.py:
@@ -26,6 +26,7 @@ if dev_mode:
 
     print('Development mode: Compiling Cython modules from .pyx sources.')
     sources = ["pyvoronoi/pyvoronoi.pyx", "pyvoronoi/voronoi.cpp"]
+    print('Development mode: Compiled using Cython.')
 
 else:
     from distutils.command.build_ext import build_ext
@@ -93,7 +94,7 @@ setup(
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
     author='Andrii Sydorchuk, Voxel8 / Fabien Ancelin',
     author_email='',
-    url='https://github.com/Voxel8/pyvoronoi',
+    url='https://github.com/fabanc/pyvoronoi',
     keywords=['voronoi','Boost','polygon'],
     classifiers=[
         "Programming Language :: Python",

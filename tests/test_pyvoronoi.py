@@ -83,8 +83,8 @@ class TestPyvoronoiConstruct(TestCase):
         #self.assertTrue(len([i for i in edges if i.is_primary == True]) == 5) Should have been changes when fabanc added the cell concept
         self.assertTrue(len([i for i in edges if i.is_primary == True]) == 10)
         self.assertTrue(len(vertices) == 6)
-        self.assertTrue(len(filter(lambda e: edges[e].is_primary, cells[1].edges)) == 3)
-        self.assertTrue(len(filter(lambda e: edges[e].is_primary, cells[3].edges)) == 2)
+        self.assertTrue(len(list(filter(lambda e: edges[e].is_primary, cells[1].edges))) == 3)
+        self.assertTrue(len(list(filter(lambda e: edges[e].is_primary, cells[3].edges))) == 2)
 
     def test_twins(self):
         """
@@ -196,16 +196,16 @@ class TestPyvoronoiConstruct(TestCase):
         self.assertTrue(sites[1] == [[0,0],[0,10]])
         startVertex = vertices[testEdge.start]
         endVertex = vertices[testEdge.end]
-        points = pv.DiscretizeCurvedEdge(testEdgeIndex, 3)
+        points = list(pv.DiscretizeCurvedEdge(testEdgeIndex, 3))
 
 
         #Validate the  start point
-        self.assertAlmostEquals(points[0][0],startVertex.X)
-        self.assertAlmostEquals(points[0][1], startVertex.Y)
-        self.assertAlmostEquals(points[1][0], 2.5)
-        self.assertAlmostEquals(points[1][1], 5)
-        self.assertAlmostEquals(points[-1][0], endVertex.X)
-        self.assertAlmostEquals(points[-1][1], endVertex.Y)
+        self.assertAlmostEqual(points[0][0],startVertex.X)
+        self.assertAlmostEqual(points[0][1], startVertex.Y)
+        self.assertAlmostEqual(points[1][0], 2.5)
+        self.assertAlmostEqual(points[1][1], 5)
+        self.assertAlmostEqual(points[-1][0], endVertex.X)
+        self.assertAlmostEqual(points[-1][1], endVertex.Y)
 
     def test_discretize_with_invalid_distance(self):
         pv = pyvoronoi.Pyvoronoi(1)
