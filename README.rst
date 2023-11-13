@@ -48,6 +48,10 @@ After every modification of .pyx files compile with Cython:
 
 ``python setup.py build_ext --inplace``
 
+Note in order to build the wheels, you will need to also install ``wheel``
+
+``pip install wheel``
+
 Using
 =====
 
