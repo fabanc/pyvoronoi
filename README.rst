@@ -38,7 +38,7 @@ Cython required.
 
 Clone the repository:
 
-``git clone git@github.com:Voxel8/pyvoronoi.git``
+``git clone https://github.com/fabanc/pyvoronoi.git``
 
 Install:
 
