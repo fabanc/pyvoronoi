@@ -26,3 +26,4 @@ include pyvoronoi/boost/polygon/detail/voronoi_ctypes.hpp
 include pyvoronoi/boost/polygon/detail/voronoi_predicates.hpp
 include pyvoronoi/boost/polygon/detail/voronoi_robust_fpt.hpp
 include pyvoronoi/boost/polygon/detail/voronoi_structures.hpp
+include README.md

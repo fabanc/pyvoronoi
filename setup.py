@@ -4,8 +4,9 @@ import os
 from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
+from pathlib import Path
 
-version = '1.0.8.1'
+version = '1.0.8.4'
 
 """
 Note on using the setup.py:
@@ -95,11 +96,13 @@ class build_ext_subclass( build_ext ):
                     e.extra_compile_args = [cpython_directory]
         build_ext.build_extensions(self)
 
+
+this_directory = Path(__file__).parent
 setup(
     name='pyvoronoi',
     version=version,
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
-    long_description=open('ReadMe.md').read(),
+    long_description=(this_directory / "README.md").read_text(),
     long_description_content_type='text/markdown',
     author='Andrii Sydorchuk, Voxel8 / Fabien Ancelin',
     author_email='',
