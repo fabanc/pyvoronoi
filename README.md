@@ -1,14 +1,12 @@
-==========
- pyvoronoi
-==========
+
+# pyvoronoi
 
 A wrapper for Boost's Voronoi diagram library
 
-Install
-=======
+## Install
 
-Dependencies
-------------
+
+### Dependencies
 
 Cython dependency is optional. Cpp sources generated with Cython are available in releases.
 
@@ -24,15 +22,15 @@ This way the package can be used without or with an incompatible version of Cyth
 
 The idea comes from Matt Shannon's bandmat library.
 
-From PyPI
----------
+### From PyPI
+
 
 Cython not required.
 
 ``pip install pyvoronoi``
 
-From source
------------
+### From source
+
 
 Cython required.
 
@@ -48,8 +46,12 @@ After every modification of .pyx files compile with Cython:
 
 ``python setup.py build_ext --inplace``
 
-Using
-=====
+Note in order to build the wheels, you will need to also install ``wheel``
+
+``pip install wheel``
+
+### Using
+
 
 Create a new instance, passing the scaling factor into the constructor:
 ```
@@ -182,8 +184,7 @@ The curve interpolation code can return 2 exceptions.
 *FocusOnDirectixException: this happens when the input point is on the segment side. In that cases, it makes no sense to interpolate a parabola between those two geometries since a parabola equation is supposed to find an equidistant point between the two geometries.
 *UnsolvableParabolaEquation: there are cases where the point returned by boost does not fit with the parabola equation (for a same position on the x-axis, we get 2 different points, both equidistant). Understanding this issue is still under investigation. It is possible to mitigate this issue by setting an optional 3rd parameter of the function DiscretizeCurvedEdge). A higher value means more tolerance to this exception. The recommended value would be 1 / Scaling Factor.
 
-License
-=======
+# License
 
 -  Pyvoronoi is available under `MIT
    license <http://opensource.org/licenses/MIT>`__.

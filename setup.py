@@ -4,8 +4,9 @@ import os
 from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
+from pathlib import Path
 
-version = '1.0.5'
+version = '1.0.8.4'
 
 """
 Note on using the setup.py:
@@ -30,7 +31,7 @@ if dev_mode:
 else:
     from distutils.command.build_ext import build_ext
 
-    print('Distribution mode: Compiling Cython generated .cpp sources.')
+    print('Distribution mode: Compiling Cython geneWWrated .cpp sources.')
     sources = ["pyvoronoi/pyvoronoi.cpp", "pyvoronoi/voronoi.cpp"]
 
 
@@ -85,12 +86,24 @@ class build_ext_subclass( build_ext ):
                 userdir = os.environ["USERPROFILE"]
                 os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
 
+        # Starting from 3.11, the file longintrepr.h has moved. It is no longer under Python@3.XX\include but Python@3.XX\include\cpython        
+        elif sys.version_info.major == 3 and sys.version_info.minor >= 11:
+            c = self.compiler.compiler_type
+            if c == 'msvc':
+                for e in self.extensions:
+                    install_dir = os.path.dirname(sys.executable)
+                    cpython_directory = os.path.join(install_dir, 'include', 'cpython')         
+                    e.extra_compile_args = [cpython_directory]
         build_ext.build_extensions(self)
 
+
+this_directory = Path(__file__).parent
 setup(
     name='pyvoronoi',
     version=version,
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
+    long_description=(this_directory / "README.md").read_text(),
+    long_description_content_type='text/markdown',
     author='Andrii Sydorchuk, Voxel8 / Fabien Ancelin',
     author_email='',
     url='https://github.com/Voxel8/pyvoronoi',

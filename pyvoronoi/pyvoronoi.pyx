@@ -16,7 +16,7 @@ from cython.operator cimport dereference as deref
 SILENT = True
 def log_action(description):
     if not SILENT:
-        print description
+        print(description)
 
 
 cdef extern from "Python.h":
