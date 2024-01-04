@@ -6,7 +6,7 @@ from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 from pathlib import Path
 
-version = '1.0.9.2'
+version = '1.0.9.3'
 
 """
 Note on using the setup.py:
@@ -97,6 +97,7 @@ class build_ext_subclass( build_ext ):
                     e.extra_compile_args = [cpython_directory]
         build_ext.build_extensions(self)
 
+      
 
 this_directory = Path(__file__).parent
 setup(
@@ -129,5 +130,7 @@ setup(
     tests_require=['pytest'],
     cmdclass={
         'test': PyTest,
-        'build_ext': build_ext_subclass},
+        'build_ext': build_ext_subclass
+    },
+        
 )
