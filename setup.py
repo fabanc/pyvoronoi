@@ -6,7 +6,7 @@ from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 from pathlib import Path
 
-version = '1.0.9.1'
+version = '1.0.9.2'
 
 """
 Note on using the setup.py:
@@ -78,6 +78,7 @@ if sys.argv[-1] == 'tag':
 
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
+        print(f'Compiler type: {self.compiler.compiler_type} - Version: {sys.version_info.major}.{sys.version_info.minor}')
         if sys.version_info.major < 3:
             c = self.compiler.compiler_type
             if c == 'msvc':
