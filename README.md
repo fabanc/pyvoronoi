@@ -1,10 +1,11 @@
 
 # pyvoronoi
 
-A wrapper for Boost's Voronoi diagram library
+A wrapper for Boost's Voronoi diagram library. The full documentation of the Boost Voronoi API is available [here](https://www.boost.org/doc/libs/1_75_0/libs/polygon/doc/voronoi_main.htm).
 
 ## Install
 
+The install have been tested on Windows and Linux Ubuntu. If you notice any issue on Mac, reach out to me, I am interested in making sure it works for you.
 
 ### Dependencies
 
@@ -64,19 +65,20 @@ to avoid roundoff error when converting from point coordinates to integers.
 
 Add points and segments:
 
-.. code:: python
-
-	pv.AddPoint([0, 0])
-	pv.AddSegment([[1,5],[2,2]])
+```python
+pv.AddPoint([0, 0])
+pv.AddSegment([[1,5],[2,2]])
+```
 
 Call ``Construct()`` and get the edges and vertices:
 
-.. code:: python
 
-    pv.Construct()
-    edges = pv.GetEdges()
-    vertices = pv.GetVertices()
-    cells = pv.GetCells()
+```python
+pv.Construct()
+edges = pv.GetEdges()
+vertices = pv.GetVertices()
+cells = pv.GetCells()
+```
 
 Note that vertices, edges, and cells, can be accessed individually. The methods above are just convenience wrappers around
 the following functions:
@@ -87,32 +89,32 @@ the following functions:
 
 * Get Cell
 
-.. code:: python
+```python
+def GetVertices(self):
+    count = self.CountVertices()
+    output = []
+    for index in  range(count):
+        output.append(self.GetVertex(index))
+    return output
+```
 
-    def GetVertices(self):
-        count = self.CountVertices()
-        output = []
-        for index in  range(count):
-            output.append(self.GetVertex(index))
-        return output
+```python
+def GetEdges(self):
+    count = self.CountEdges()
+    output = []
+    for index in range(count):
+        output.append(self.GetEdge(index))
+    return output
+```
 
-.. code:: python
-
-    def GetEdges(self):
-        count = self.CountEdges()
-        output = []
-        for index in range(count):
-            output.append(self.GetEdge(index))
-        return output
-
-.. code:: python
-
-    def GetCells(self):
-        count = self.CountCells()
-        output = []
-        for index in range(count):
-            output.append(self.GetCell(index))
-        return output
+```python
+def GetCells(self):
+    count = self.CountCells()
+    output = []
+    for index in range(count):
+        output.append(self.GetCell(index))
+    return output
+```
 
 If you are running python 2.x, you might want to write your own wrappers using xrange. This will be more efficient.
 
@@ -135,54 +137,55 @@ Cells have the following properties:
 * ``vertices`` contains indices into the vertex array.
 * ``edges`` contains indices into the edge array.
 
-.. code:: python
+```python
+pv = pyvoronoi.Pyvoronoi(100)
+pv.AddSegment([[0.1,0.8],[0.3,0.6]])
+pv.AddSegment([[0.3,0.6],[0.4,0.6]])
+pv.AddSegment([[0.4,0.6],[0.4,0.5]])
+pv.AddSegment([[0.4,0.6],[0.4,0.7]])
+pv.AddSegment([[0.4,0.7],[0.5,0.8]])
+pv.AddSegment([[0.4,0.7],[0.5,0.6]])
+pv.AddSegment([[0.5,0.6],[0.7,0.7]])
 
-    pv = pyvoronoi.Pyvoronoi(100)
-    pv.AddSegment([[0.1,0.8],[0.3,0.6]])
-    pv.AddSegment([[0.3,0.6],[0.4,0.6]])
-    pv.AddSegment([[0.4,0.6],[0.4,0.5]])
-    pv.AddSegment([[0.4,0.6],[0.4,0.7]])
-    pv.AddSegment([[0.4,0.7],[0.5,0.8]])
-    pv.AddSegment([[0.4,0.7],[0.5,0.6]])
-    pv.AddSegment([[0.5,0.6],[0.7,0.7]])
-
-    pv.Construct()
-    edges = pv.GetEdges()
-    vertices = pv.GetVertices()
-    cells = pv.GetCells()
-    print("Cell Count: {0}".format(len(cells)))
-    for c in cells:
-        print("Cell contains point: {0}. Contains segment: {1}. Is open: {2}, Site Index: {3}".format(c.contains_point, c.contains_segment, c.is_open, c.site))
-        print(",".join(map(str,c.vertices)))
-        for sIndex in c.edges:
-            print("Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end))
-
+pv.Construct()
+edges = pv.GetEdges()
+vertices = pv.GetVertices()
+cells = pv.GetCells()
+print("Cell Count: {0}".format(len(cells)))
+for c in cells:
+    print("Cell contains point: {0}. Contains segment: {1}. Is open: {2}, Site Index: {3}".format(c.contains_point, c.contains_segment, c.is_open, c.site))
+    print(",".join(map(str,c.vertices)))
+    for sIndex in c.edges:
+        print("Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end))
+```
 
 Some output edges returned by the boost voronoi API are suposed to be curved. In the C++ API, it is up to you to code it. Luckily, you can do it in python using the following the function DiscretizeCurvedEdge.
 The sample below shows you how to do that:
 
-.. code-block:: python
+```python
+for cIndex in range(len(cells)):
+    cell = cells[cIndex]
+    if cell.is_open == False:
+        for i in range(len(cell.edges)):
+            e = edges[cell.edges[i]]
+            startVertex = vertices[e.start]
+            endVertex = vertices[e.end]
 
-	for cIndex in range(len(cells)):
-		cell = cells[cIndex]
-		if cell.is_open == False:
-			for i in range(len(cell.edges)):
-				e = edges[cell.edges[i]]
-				startVertex = vertices[e.start]
-				endVertex = vertices[e.end]
-
-				max_distance  = distance([startVertex.X, startVertex.Y], [endVertex.X, endVertex.Y]) / 10
-				if startVertex != -1 and endVertex != -1:
-					if(e.is_linear == True):
-						array = [[startVertex.X, startVertex.Y],[endVertex.X, endVertex.Y]]
-					else:
-						points = pv.DiscretizeCurvedEdge(i, max_distance)
-						for p in points:
-							print "{0},{1}".format(p[0], p[1])
+            max_distance  = distance([startVertex.X, startVertex.Y], [endVertex.X, endVertex.Y]) / 10
+            if startVertex != -1 and endVertex != -1:
+                if(e.is_linear == True):
+                    array = [[startVertex.X, startVertex.Y],[endVertex.X, endVertex.Y]]
+                else:
+                    points = pv.DiscretizeCurvedEdge(i, max_distance)
+                    for p in points:
+                        print "{0},{1}".format(p[0], p[1])
+```
 
 The curve interpolation code can return 2 exceptions.
-*FocusOnDirectixException: this happens when the input point is on the segment side. In that cases, it makes no sense to interpolate a parabola between those two geometries since a parabola equation is supposed to find an equidistant point between the two geometries.
-*UnsolvableParabolaEquation: there are cases where the point returned by boost does not fit with the parabola equation (for a same position on the x-axis, we get 2 different points, both equidistant). Understanding this issue is still under investigation. It is possible to mitigate this issue by setting an optional 3rd parameter of the function DiscretizeCurvedEdge). A higher value means more tolerance to this exception. The recommended value would be 1 / Scaling Factor.
+
+* FocusOnDirectixException: this happens when the input point is on the segment side. In that cases, it makes no sense to interpolate a parabola between those two geometries since a parabola equation is supposed to find an equidistant point between the two geometries.
+
+* UnsolvableParabolaEquation: there are cases where the point returned by boost does not fit with the parabola equation (for a same position on the x-axis, we get 2 different points, both equidistant). Understanding this issue is still under investigation. It is possible to mitigate this issue by setting an optional 3rd parameter of the function DiscretizeCurvedEdge). A higher value means more tolerance to this exception. The recommended value would be 1 / Scaling Factor.
 
 # License
 

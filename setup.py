@@ -6,7 +6,7 @@ from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 from pathlib import Path
 
-version = '1.0.8.4'
+version = '1.0.9.1'
 
 """
 Note on using the setup.py:
@@ -31,7 +31,7 @@ if dev_mode:
 else:
     from distutils.command.build_ext import build_ext
 
-    print('Distribution mode: Compiling Cython geneWWrated .cpp sources.')
+    print('Distribution mode: Compiling from Cython generated .cpp sources.')
     sources = ["pyvoronoi/pyvoronoi.cpp", "pyvoronoi/voronoi.cpp"]
 
 
@@ -104,9 +104,9 @@ setup(
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
     long_description=(this_directory / "README.md").read_text(),
     long_description_content_type='text/markdown',
-    author='Andrii Sydorchuk, Voxel8 / Fabien Ancelin',
+    author='Fabien Ancelin / Andrii Sydorchuk, Voxel8',
     author_email='',
-    url='https://github.com/Voxel8/pyvoronoi',
+    url='https://github.com/fabanc/pyvoronoi',
     keywords=['voronoi','Boost','polygon'],
     classifiers=[
         "Programming Language :: Python",
