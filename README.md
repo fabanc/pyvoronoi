@@ -1,10 +1,11 @@
 
 # pyvoronoi
 
-A wrapper for Boost's Voronoi diagram library
+A wrapper for Boost's Voronoi diagram library. The full documentation of the Boost Voronoi API is available [here](https://www.boost.org/doc/libs/1_75_0/libs/polygon/doc/voronoi_main.htm).
 
 ## Install
 
+The install have been tested on Windows and Linux Ubuntu. If you notice any issue on Mac, reach out to me, I am interested in making sure it works for you.
 
 ### Dependencies
 

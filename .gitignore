@@ -8,3 +8,4 @@ pyvoronoi/pyvoronoi.cpp
 *.pyc
 *.pyd
 MANIFEST
+Temp.md
