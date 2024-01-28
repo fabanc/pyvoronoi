@@ -19,8 +19,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v5
-      #with:
-      #  python-version: "3.11"
+      with:
+        python-version: ${{ matrix.python-version }}
 
     # Cython is only needed in build mode. No need to install it when publishing in Pypi
     - name: Install pypa/build
