@@ -22,6 +22,9 @@ class TestPyvoronoiModule(TestCase):
         pv = pyvoronoi.Pyvoronoi(1)
         self.assertTrue(pv.SCALING_FACTOR == 1)
 
+    def test_pipeline(self):
+        self.assertTrue(False)
+
 class TestPyvoronoiAdd(TestCase):
     def test_add_point(self):
         factor = 10
