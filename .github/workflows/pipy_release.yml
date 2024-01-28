@@ -43,13 +43,8 @@ jobs:
 
     - name: Remove dev file
       run: rm dev 
+        
       
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/   
-
   build-and-upload:
     needs:
     - build-prior-3-12
