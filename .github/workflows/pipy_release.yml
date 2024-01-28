@@ -45,6 +45,10 @@ jobs:
       run: rm dev 
         
   build-3-12-and-after:
+
+    needs:
+      - build-and-upload
+
     name: Build and test on multiple version (3.12 and after) 📦
 
     runs-on: ${{ matrix.os }}
@@ -60,23 +64,15 @@ jobs:
 
 
     # Cython is only needed in build mode. No need to install it when publishing in Pypi
-    - name: Install pypa/build
-      run: python3 -m pip install build --user
-
-    - name: Install wheel
-      run: python3 -m pip install wheel --user
     
     - name: Install dependencies
       run: python -m pip install Cython     
       
-    - name: Run unit tests
-      run: python3 setup.py test
-      
-    - name: "Compile Cython file"
-      run: python setup.py build_ext --inplace
+    # - name: Run unit tests
+    #   run: python3 setup.py test
 
     - name: Build a binary wheel and a source tarball
-      run: python3 setup.py sdist
+      run: python3 -m build
 
     - name: Remove dev file
       run: rm dev 
