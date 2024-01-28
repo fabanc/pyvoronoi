@@ -6,8 +6,8 @@ on:
 
 jobs:
   build:
-    name: Build distribution 📦
-    
+    # name: Build distribution 📦
+
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
