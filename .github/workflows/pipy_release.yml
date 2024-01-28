@@ -66,6 +66,9 @@ jobs:
 
     # Cython is only needed in build mode. No need to install it when publishing in Pypi
     
+    - name: Install build module
+      run: python -m pip install --upgrade build
+
     - name: Install dependencies
       run: python -m pip install Cython     
       
