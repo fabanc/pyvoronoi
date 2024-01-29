@@ -76,12 +76,11 @@ jobs:
         
       # - name: Run unit tests
       #   run: python3 setup.py test
-      
       - name: Remove dev file
         run: rm dev 
 
       - name: Build a binary wheel and a source tarball
-        run: python3 -m build
+        run: python3 -m build -n
 
 
 
