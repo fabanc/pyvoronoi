@@ -33,6 +33,7 @@ class TestPyvoronoiAdd(TestCase):
         self.assertTrue(len(points) == 1)
         self.assertTrue(points[0][0] == inputPoint[0] * factor)
         self.assertTrue(points[0][1] == inputPoint[1] * factor)
+        self.assertTrue(False)
 
     def test_add_segment(self):
         factor = 10

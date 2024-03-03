@@ -27,12 +27,14 @@ jobs:
             - name: Display Python version
               run: python -c "import sys; print(sys.version)"
 
-
             - name: Install development requirements
               run: python -m pip install -r requirements_dev.txt
 
             - name: "Compile Cython file"
               run: python setup.py build_ext --inplace
+
+            - name: "Install locally for testing"
+              run: python setup.py test              
         
             - name: Build a binary wheel and a source tarball
               run: python3 setup.py sdist
