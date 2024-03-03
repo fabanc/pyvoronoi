@@ -10,15 +10,15 @@ jobs:
         runs-on: ubuntu-latest
         
         strategy:
-        matrix:
-            python-version: ["3.9", "3.10", "3.11", "3.12"]
+            matrix:
+                python-version: ["3.9", "3.10", "3.11", "3.12"]
     
         steps:
-        - uses: actions/checkout@v4
-        - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-            python-version: ${{ matrix.python-version } 
+            - uses: actions/checkout@v4
+            - name: Set up Python ${{matrix.python-version}}
+            uses: actions/setup-python@v4
+            with:
+                python-version: ${{ matrix.python-version } 
 
         # # Cython is only needed in build mode. No need to install it when publishing in Pypi
         # - name: Install build
