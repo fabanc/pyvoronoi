@@ -30,3 +30,12 @@ jobs:
 
             - name: Install development requirements
               run: python -m pip install -r requirements_dev.txt
+
+            - name: "Compile Cython file"
+              run: python setup.py build_ext --inplace
+        
+            - name: Build a binary wheel and a source tarball
+              run: python3 setup.py sdist
+        
+            - name: Remove dev file
+              run: rm dev 
