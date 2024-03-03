@@ -5,7 +5,17 @@ on:
         inputs:
             config-path:
                 required: false    
+<<<<<<< HEAD
 jobs:
+=======
+<<<<<<< HEAD
+jobs:
+=======
+    jobs:
+    call-build:
+        # uses: ./.github/workflows/build.yaml
+>>>>>>> 02b7e4a5e14f08f157bf8a5b90efe58825875401
+>>>>>>> c2a391f6361e802d196b7d6af440a82e085cd7a0
     build:
         name: Build distribution 📦
         runs-on: ubuntu-latest
