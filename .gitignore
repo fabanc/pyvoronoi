@@ -7,5 +7,5 @@ pyvoronoi.egg-info
 pyvoronoi/pyvoronoi.cpp
 *.pyc
 *.pyd
-MANIFEST
+MANIFEST.in
 Temp.md
