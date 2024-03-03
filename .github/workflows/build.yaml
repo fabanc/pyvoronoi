@@ -1,5 +1,9 @@
+name: Build distribution
 on:
     workflow_call:
+        inputs:
+            config-path:
+                required: false
 jobs:
     build:
         name: Build distribution 📦
