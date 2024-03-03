@@ -1,0 +1,9 @@
+on:
+  push:
+    branches:
+      - '!master'
+
+jobs:
+  call-build:
+    uses: ./.github/workflows/build.yml
+      
