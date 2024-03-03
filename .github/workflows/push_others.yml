@@ -4,7 +4,6 @@ on:
     branches:
       - '**'
       - '!master'
-      - '!3.12-fix'
 
 jobs:
   call-build:
