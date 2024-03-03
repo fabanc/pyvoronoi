@@ -23,4 +23,4 @@ jobs:
     
         # Cython is only needed in build mode. No need to install it when publishing in Pypi
         - name: Install pypa/build
-        run: python3 -m pip install build --user
+        run: python3 -m pip install -r requirements_dev.txt --user
