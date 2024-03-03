@@ -1,0 +1,11 @@
+on:
+  push:
+    # A matching negative pattern after a positive match will exclude the ref again.
+    branches:
+      - '**'
+      - '!master'
+
+jobs:
+  call-build:
+    uses: ./.github/workflows/build.yml
+      
