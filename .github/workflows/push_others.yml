@@ -3,7 +3,8 @@ on:
     # A matching negative pattern after a positive match will exclude the ref again.
     branches:
       - '**'
-      - '!master
+      - '!master'
+      - '!3.12-fix'
 
 jobs:
   call-build:
