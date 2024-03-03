@@ -1,7 +1,6 @@
 name: Build distribution
 
 on:
-
     workflow_call:
         inputs:
             config-path:
