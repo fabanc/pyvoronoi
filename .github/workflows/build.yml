@@ -30,17 +30,15 @@ jobs:
             - name: Install development requirements
               run: python -m pip install -r requirements_dev.txt
 
-            - name: "Compile Cython file"
-              run: python setup.py build_ext --inplace
-
             - name: "Install locally for testing"
-              run: python setup.py test              
-        
+              run: python setup.py test  
+
+            - name: "Compile Cython file"
+              run: python setup.py build_ext
+
+            
             - name: Build a binary wheel and a source tarball
               run: python3 setup.py sdist
-        
-            - name: Remove dev file
-              run: rm dev 
 
             - name: Store the distribution packages
               uses: actions/upload-artifact@v3
