@@ -29,7 +29,7 @@ if dev_mode:
     sources = ["pyvoronoi/pyvoronoi.pyx", "pyvoronoi/voronoi.cpp"]
 
 else:
-    from distutils.command.build_ext import build_ext
+    from setuptools.command.build_ext import build_ext
 
     print('Distribution mode: Compiling from Cython generated .cpp sources.')
     sources = ["pyvoronoi/pyvoronoi.cpp", "pyvoronoi/voronoi.cpp"]
