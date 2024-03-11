@@ -1,5 +1,4 @@
-﻿from __future__ import print_function
-import sys
+﻿import sys
 import os
 from setuptools import setup
 from setuptools.extension import Extension
@@ -79,16 +78,8 @@ if sys.argv[-1] == 'tag':
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
         print(f'Compiler type: {self.compiler.compiler_type} - Version: {sys.version_info.major}.{sys.version_info.minor}')
-        if sys.version_info.major < 3:
-            c = self.compiler.compiler_type
-            if c == 'msvc':
-                for e in self.extensions:
-                    e.extra_compile_args = ["/EHsc"]
-                userdir = os.environ["USERPROFILE"]
-                os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
-
         # Starting from 3.11, the file longintrepr.h has moved. It is no longer under Python@3.XX\include but Python@3.XX\include\cpython        
-        elif sys.version_info.major == 3 and sys.version_info.minor >= 11:
+        if sys.version_info.major == 3 and sys.version_info.minor >= 11:
             c = self.compiler.compiler_type
             if c == 'msvc':
                 for e in self.extensions:
