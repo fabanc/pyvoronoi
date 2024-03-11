@@ -1,7 +1,8 @@
+name: Release when using specific tags.
 on:
   push:
-    branches:
-      - 'master'
+    tags:        
+      - v*.*
 
 jobs:
   call-build:
