@@ -65,10 +65,6 @@ class PyTest(TestCommand):
 
 # This command has been borrowed from
 # http://www.pydanny.com/python-dot-py-tricks.html
-if sys.argv[-1] == 'publish':
-    os.system("python setup.py sdist upload")
-    os.system("python setup.py bdist_wheel upload")
-    sys.exit()
 
 if sys.argv[-1] == 'tag':
     os.system("git tag -a %s -m 'version %s'" % (version, version))
