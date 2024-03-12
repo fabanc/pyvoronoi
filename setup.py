@@ -5,7 +5,7 @@ from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 from pathlib import Path
 
-version = '1.0.252'
+version = '1.0.253'
 
 """
 Note on using the setup.py:
@@ -67,7 +67,9 @@ class PyTest(TestCommand):
 # http://www.pydanny.com/python-dot-py-tricks.html
 
 if sys.argv[-1] == 'tag':
-    os.system("git tag -a %s -m 'version %s'" % (version, version))
+    tag_command = "git tag -a %s -m 'v%s'" % (version, version)
+    print(tag_command)
+    os.system(tag_command)
     os.system("git push --tags")
     sys.exit()
 
