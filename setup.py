@@ -67,7 +67,7 @@ class PyTest(TestCommand):
 # http://www.pydanny.com/python-dot-py-tricks.html
 
 if sys.argv[-1] == 'tag':
-    tag_command = "git tag -a %s -m 'v%s'" % (version, version)
+    tag_command = "git tag -a v%s -m 'v%s'" % (version, version)
     print(tag_command)
     os.system(tag_command)
     os.system("git push --tags")
