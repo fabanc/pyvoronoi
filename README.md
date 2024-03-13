@@ -5,7 +5,9 @@ A wrapper for Boost's Voronoi diagram library. The full documentation of the Boo
 
 ## Install
 
-The install have been tested on Windows and Linux Ubuntu. If you notice any issue on Mac, reach out to me, I am interested in making sure it works for you.
+The installation have been tested on Windows and Linux Ubuntu. If you notice any issue on Mac, reach out to us, we are interested in making sure it works for you.
+
+Windows users will need Microsoft Visual C++ installed on their machine. You can find information about the version needed on [this](https://wiki.python.org/moin/WindowsCompilers) link. Python version from 3.5 to 3.12 rely on Visual C++ 14.x.
 
 ### Dependencies
 
