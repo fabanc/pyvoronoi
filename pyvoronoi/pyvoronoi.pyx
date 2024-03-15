@@ -198,17 +198,14 @@ cdef class Pyvoronoi:
 
     cdef public int SCALING_FACTOR
 
-    def __cinit__(self, scaling_factor = None):
+    def __cinit__(self, scaling_factor = 1):
         """ Creates an instance of the Pyvoronoi class.
         """
         log_action("Creating an VoronoiDiagram instance")
+
         self.thisptr = new VoronoiDiagram()
         self.constructed = 0
-
-        if scaling_factor != None:
-            self.SCALING_FACTOR = scaling_factor
-        else:
-            self.SCALING_FACTOR = 1
+        self.SCALING_FACTOR = scaling_factor if scaling_factor is not None else 1
 
         del self.inputPoints[:]
         del self.inputSegments[:]
