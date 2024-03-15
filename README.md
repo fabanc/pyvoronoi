@@ -41,6 +41,11 @@ Clone the repository:
 
 ``git clone https://github.com/fabanc/pyvoronoi.git``
 
+
+Install the development dependencies:
+
+`pip install -requirements_dev.txt`
+
 Install:
 
 ``python setup.py install``

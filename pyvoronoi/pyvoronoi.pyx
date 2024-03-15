@@ -195,9 +195,6 @@ cdef class Pyvoronoi:
 
     inputPoints = []
     inputSegments = []
-    outputEdges = []
-    outputVertices = []
-    outputCells = []
 
     cdef public int SCALING_FACTOR
 
