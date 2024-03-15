@@ -1,12 +1,11 @@
-﻿from __future__ import print_function
-import sys
+﻿import sys
 import os
 from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 from pathlib import Path
 
-version = '1.0.252'
+version = '1.0.253'
 
 """
 Note on using the setup.py:
@@ -29,7 +28,7 @@ if dev_mode:
     sources = ["pyvoronoi/pyvoronoi.pyx", "pyvoronoi/voronoi.cpp"]
 
 else:
-    from distutils.command.build_ext import build_ext
+    from setuptools.command.build_ext import build_ext
 
     print('Distribution mode: Compiling from Cython generated .cpp sources.')
     sources = ["pyvoronoi/pyvoronoi.cpp", "pyvoronoi/voronoi.cpp"]
@@ -66,29 +65,19 @@ class PyTest(TestCommand):
 
 # This command has been borrowed from
 # http://www.pydanny.com/python-dot-py-tricks.html
-if sys.argv[-1] == 'publish':
-    os.system("python setup.py sdist upload")
-    os.system("python setup.py bdist_wheel upload")
-    sys.exit()
 
 if sys.argv[-1] == 'tag':
-    os.system("git tag -a %s -m 'version %s'" % (version, version))
+    tag_command = "git tag -a v%s -m 'v%s'" % (version, version)
+    print(tag_command)
+    os.system(tag_command)
     os.system("git push --tags")
     sys.exit()
 
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
         print(f'Compiler type: {self.compiler.compiler_type} - Version: {sys.version_info.major}.{sys.version_info.minor}')
-        if sys.version_info.major < 3:
-            c = self.compiler.compiler_type
-            if c == 'msvc':
-                for e in self.extensions:
-                    e.extra_compile_args = ["/EHsc"]
-                userdir = os.environ["USERPROFILE"]
-                os.environ["INCLUDE"] = userdir + "\\AppData\\Local\\Programs\\Common\\Microsoft\\Visual C++ for Python\\9.0\\VC\\include\\"
-
         # Starting from 3.11, the file longintrepr.h has moved. It is no longer under Python@3.XX\include but Python@3.XX\include\cpython        
-        elif sys.version_info.major == 3 and sys.version_info.minor >= 11:
+        if sys.version_info.major == 3 and sys.version_info.minor >= 11:
             c = self.compiler.compiler_type
             if c == 'msvc':
                 for e in self.extensions:
