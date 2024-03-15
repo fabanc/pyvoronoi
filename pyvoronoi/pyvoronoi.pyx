@@ -10,7 +10,8 @@ import copy as _copy
 import unicodedata as _unicodedata
 import time as _time
 import math
-
+import typing
+from typing import NamedTuple
 from cython.operator cimport dereference as deref
 
 SILENT = True
@@ -115,48 +116,29 @@ cdef extern from "voronoi.hpp":
 ####################################
 ##VORONOY UTILS
 ####################################
-class Vertex:
-    X = 0.0
-    Y = 0.0
-    def __init__(self,x,y):
-        self.X = x
-        self.Y = y
+class Vertex(NamedTuple):
+    X : float = 0.0
+    Y : float = 0.0
 
-class Edge:
-    start = -1
-    end = -1
-    is_primary = False
-    is_linear = False
-    cell = -1
-    twin = -1
+class Edge(NamedTuple):
+    start : int =  -1
+    end : int = -1
+    is_primary : bool = False
+    is_linear : bool =  False
+    cell : int = -1
+    twin : int = -1
 
-    def __init__(self, start, end, cell, twin):
-        self.start = start
-        self.end = end
-        self.cell = cell
-        self.twin = twin
 
-class Cell:
-    cell_identifier = -1
-    site = -1
-    contains_point = False
-    contains_segment = False
-    is_open = False
-
-    vertices = []
-    edges = []
-
-    source_category = None
-
-    def __init__(self, cell_identifier, site, vertices, edges, source_category):
-        self.cell_identifier = cell_identifier
-        self.site = site
-        self.source_category = source_category
-        self.vertices = vertices
-        self.edges = edges
-        if len(self.vertices) > 0:
-            self.vertices.append(self.vertices[0])
-
+class Cell(NamedTuple):
+    cell_identifier : int = -1
+    site : int = -1
+    contains_point : bool = False
+    contains_segment : bool = False
+    is_open : bool = False
+    is_degenerate: bool = False
+    vertices : [typing.Type[Vertex]] = []
+    edges : [typing.Type[Edge]] = []
+    source_category : int  = None
 
 class VoronoiException(Exception):
     pass
@@ -283,18 +265,29 @@ cdef class Pyvoronoi:
 
     def GetEdge(self, index):
         c_edge =  self.thisptr.GetEdge(index)
-        edge = Edge(c_edge.start, c_edge.end, c_edge.cell, c_edge.twin)
-        edge.is_primary = c_edge.isPrimary != False
-        edge.is_linear = c_edge.isLinear != False
+        edge = Edge(
+            start=c_edge.start,
+            end=c_edge.end,
+            cell=c_edge.cell,
+            twin=c_edge.twin,
+            is_primary=c_edge.isPrimary != False,
+            is_linear = c_edge.isLinear != False
+        )
         return edge
 
     def GetCell(self, index):
         c_cell = self.thisptr.GetCell(index)
-        cell = Cell(c_cell.cell_identifier, c_cell.site, c_cell.vertices, c_cell.edges, c_cell.source_category)
-        cell.contains_point = c_cell.contains_point != False
-        cell.contains_segment = c_cell.contains_segment != False
-        cell.is_degenerate = c_cell.is_degenerate != False
-        cell.is_open = c_cell.is_open != False
+        cell = Cell(
+            cell_identifier=c_cell.cell_identifier,
+            site=c_cell.site,
+            vertices=c_cell.vertices,
+            edges=c_cell.edges,
+            source_category=c_cell.source_category,
+            contains_point=c_cell.contains_point != False,
+            contains_segment=c_cell.contains_segment != False,
+            is_degenerate=c_cell.is_degenerate != False,
+            is_open = c_cell.is_open != False
+        )
         return cell
 
     def CountVertices(self):
