@@ -23,14 +23,14 @@ def build_and_solve_voronoi_problem(max_x, max_y):
     pyvoronoi.SILENT = True
     pv = pyvoronoi.Pyvoronoi(factor)
     count_points = 0
-    for x in xrange(max_x):
-        for y in xrange(max_y):
+    for x in range(max_x):
+        for y in range(max_y):
             pv.AddPoint([x + 0.5, y + 0.5])
             count_points += 1
 
     count_segment = 0
-    for x in xrange(max_x):
-        for y in xrange(max_y):
+    for x in range(max_x):
+        for y in range(max_y):
             pv.AddSegment([[x,y], [x, y + 1]])
             count_segment += 1
 
@@ -43,26 +43,26 @@ def build_and_solve_voronoi_problem(max_x, max_y):
             count_segment
     ))
 
-    logging.info("Count output structures. Vertices: {0}, Edges: {1}, Cells: {2}".format(
-        pv.CountVertices(),
-        pv.CountEdges(),
-        pv.CountCells(),
-    ))
+    logging.info(
+        f'Count output structures. Vertices: {pv.CountVertices()}, Edges: {pv.CountEdges()}, Cells: {pv.CountCells()}'
+    )
 
     logging.info('Start parsing edges - Evaluating performance for curve computation')
+    logging.info(f'Number of edges: {pv.CountEdges()}')
     time_before = time.time()
     count_curved_edges = 0
-    for i in xrange(pv.CountEdges()):
+    for i in range(pv.CountEdges()):
         e = pv.GetEdge(i)
-        startVertex = pv.GetVertex(e.start)
-        endVertex = pv.GetVertex(e.end)
-        max_distance = pyvoronoi.Distance([startVertex.X, startVertex.Y], [endVertex.X, endVertex.Y]) / 10
-        if startVertex != -1 and endVertex != -1:
+        if e.start != -1 and e.end != -1:
+            startVertex = pv.GetVertex(e.start)
+            endVertex = pv.GetVertex(e.end)
+            max_distance = pyvoronoi.Distance([startVertex.X, startVertex.Y], [endVertex.X, endVertex.Y]) / 10
             if not e.is_linear:
                 points = pv.DiscretizeCurvedEdge(i, max_distance, 1 / factor)
                 count_curved_edges += 1
     time_after = time.time()
-    logging.info('Done parsing {0} curved edges. Done in {1} sec'.format(count_curved_edges, time_after - time_before))
+    logging.info(f'Done.')
+    logging.info(f'Done parsing {count_curved_edges} curved edges. Done in {time_after - time_before} sec')
     del pv
 
 if __name__ == '__main__':
