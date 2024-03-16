@@ -3,11 +3,10 @@ This script is here to let user test the complexity of the problem that can be s
 their hardware constraints and their software configuration. Can be used to measure possible performance enhancements
 in the future as well.
 """
-
-from __future__ import division
 import time, logging
 import pyvoronoi
 
+import cProfile as profile
 
 def build_and_solve_voronoi_problem(max_x, max_y):
     """
@@ -69,6 +68,10 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - Script: %(filename)s - Line: %(lineno)d - %(levelname)s - %(message)s',
                         datefmt='%m-%d %H:%M:%S')
-
+    pr = profile.Profile()
+    pr.enable()
     build_and_solve_voronoi_problem(100, 1000)
+    pr.disable()
+    # pr.dump_stats('pyvoronoi_profiler.pstat')
+    pr.print_stats(sort="calls")
 
