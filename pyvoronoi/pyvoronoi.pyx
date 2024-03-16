@@ -255,7 +255,10 @@ cdef class Pyvoronoi:
         """
         """
         c_vertex = self.thisptr.GetVertex(index)
-        return Vertex(c_vertex.X / self.SCALING_FACTOR, c_vertex.Y / self.SCALING_FACTOR)
+        return Vertex(
+            X=c_vertex.X / self.SCALING_FACTOR, 
+            Y=c_vertex.Y / self.SCALING_FACTOR
+        )
 
     def GetEdge(self, index):
         c_edge =  self.thisptr.GetEdge(index)
