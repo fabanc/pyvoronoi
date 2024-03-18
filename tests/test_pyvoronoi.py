@@ -42,10 +42,13 @@ class TestPyvoronoiAdd(TestCase):
         segments = pv.GetSegments()
         print(segments)
         self.assertTrue(len(segments) == 1)
-        self.assertTrue(segments[0] == [
-            [segment[0][0] * factor, segment[0][1] * factor],
-            [segment[1][0] * factor, segment[1][1] * factor],
-        ])
+        self.assertEqual(
+            segments[0],
+            [
+                [segment[0][0] * factor, segment[0][1] * factor],
+                [segment[1][0] * factor, segment[1][1] * factor],
+            ]
+        )
 
     def test_add_point_after_construct(self):
         pv = pyvoronoi.Pyvoronoi()
@@ -85,6 +88,56 @@ class TestPyvoronoiConstruct(TestCase):
         self.assertTrue(len(vertices) == 6)
         self.assertTrue(len(list(filter(lambda e: edges[e].is_primary, cells[1].edges))) == 3)
         self.assertTrue(len(list(filter(lambda e: edges[e].is_primary, cells[3].edges))) == 2)
+
+    def test_square(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddSegment([[0, 0], [0, 2]])
+        pv.AddSegment([[0, 2], [2, 2]])
+        pv.AddSegment([[2, 2], [2, 0]])
+        pv.AddSegment([[2, 0], [0, 0]])
+        pv.Construct()
+        edges = pv.GetEdges()
+        vertices = pv.GetVertices()
+        cells = pv.GetCells()
+
+        self.assertTrue(len(cells) == 8)
+        self.assertEqual(len([i for i in edges if i.is_primary == True]),8)
+        self.assertTrue(len(vertices) == 5)
+        self.assertTrue(len(list(filter(lambda e: edges[e].is_primary, cells[1].edges))) == 2)
+
+
+    def test_square_middle_point_first(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([1,1])
+        pv.AddSegment([[0, 0], [0, 2]])
+        pv.AddSegment([[0, 2], [2, 2]])
+        pv.AddSegment([[2, 2], [2, 0]])
+        pv.AddSegment([[2, 0], [0, 0]])
+        pv.Construct()
+        edges = pv.GetEdges()
+        vertices = pv.GetVertices()
+        cells = pv.GetCells()
+
+        r = pv.RetrieveSegment(cells[1])
+        self.assertEqual(r, [[0, 0], [0, 2]])
+
+    def test_square_middle_point_last(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        pv.AddSegment([[0, 0], [0, 2]])
+        pv.AddSegment([[0, 2], [2, 2]])
+        pv.AddSegment([[2, 2], [2, 0]])
+        pv.AddSegment([[2, 0], [0, 0]])
+        pv.AddPoint([1, 1])
+        pv.Construct()
+        edges = pv.GetEdges()
+        vertices = pv.GetVertices()
+        cells = pv.GetCells()
+
+
+        r = pv.RetrieveSegment(cells[1])
+        self.assertEqual(r, [[0, 0], [0, 2]])
+
 
     def test_twins(self):
         """
@@ -169,7 +222,7 @@ class TestPyvoronoiConstruct(TestCase):
         pv = pyvoronoi.Pyvoronoi(1)
         pv.AddPoint([5,5])
         pv.Construct()
-        self.assertTrue(1 == len(pv.inputPoints))
+        self.assertTrue(1 == len(pv.GetPoints()))
 
     def test_discretize(self):
         pv = pyvoronoi.Pyvoronoi(1)

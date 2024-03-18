@@ -115,8 +115,13 @@ public:
 	void Construct();
 
 	std::vector<Point> GetPoints();
+	Point GetPoint(unsigned index);
 	std::vector<Segment> GetSegments();
+	Segment GetSegment(unsigned index);
 
+
+	long long CountPoints();
+	long long CountSegments();
 	long long CountVertices();
 	long long CountEdges();
 	long long CountCells();

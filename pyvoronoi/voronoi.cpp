@@ -22,8 +22,24 @@ std::vector<Point> VoronoiDiagram::GetPoints() {
 	return points;
 }
 
+Point VoronoiDiagram::GetPoint(unsigned index) {
+	return points.at(index);
+}
+
 std::vector<Segment> VoronoiDiagram::GetSegments() {
 	return segments;
+}
+
+Segment VoronoiDiagram::GetSegment(unsigned index) {
+	return segments.at(index);
+}
+
+long long VoronoiDiagram::CountPoints(){
+	return points.size();
+}
+
+long long VoronoiDiagram::CountSegments(){
+	return segments.size();
 }
 
 long long VoronoiDiagram::CountVertices(){
