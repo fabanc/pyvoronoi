@@ -175,12 +175,11 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 				vertex_identifiers.push_back(edge_start);
 			}
 			else{
-				if (vertex_identifiers[vertices_count - 1] != edge_start){
+				if ( vertex_identifiers.back() != edge_start){
 					vertex_identifiers.push_back(edge_start);
 				}
 			}
 
-			vertex_identifiers.push_back(edge_end);
 			//Move to the next edge
 			edge = edge->next();
 
