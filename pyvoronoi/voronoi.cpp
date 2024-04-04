@@ -186,15 +186,11 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 				edge_end = map_vertices_to_indexes[edge->vertex1()];
 			}
 
-			long vertices_count = vertex_identifiers.size();
-			if (vertices_count == 0){
-				vertex_identifiers.push_back(edge_start);
-			}
-			else{
-				if ( vertex_identifiers.back() != edge_start){
-					vertex_identifiers.push_back(edge_start);
-				}
-			}
+			//long vertices_count = vertex_identifiers.size();
+			vertex_identifiers.push_back(edge_start);
+            if ( vertex_identifiers.back() == edge_start){
+                vertex_identifiers.push_back(edge_end);
+            }
 
 			//Move to the next edge
 			edge = edge->next();
