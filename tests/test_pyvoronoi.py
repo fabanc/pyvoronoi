@@ -155,6 +155,27 @@ class TestPyvoronoiConstruct(TestCase):
         for i in range(len(edges)):
             edge = edges[i]
             self.assertTrue(edges[edge.twin].twin == i)
+        cells = pv.GetCells()
+        for cell in cells:
+            print(cell)
+
+    def test_cells_vertices_duplication(self):
+        """
+        Validate that the twin attribute is consistent.
+        :return:
+        """
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+        cells = pv.GetCells()
+        vertices = pv.GetVertices()
+        cell = cells[5]
+        self.assertNotEqual(cell.vertices[-2], cell.vertices[-1])
+        self.assertEqual(cell.vertices[0], cell.vertices[-1])
 
     def test_vertex_reference_for_edges(self):
         """
