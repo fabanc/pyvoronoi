@@ -294,6 +294,7 @@ cdef class Pyvoronoi:
         """
         return [[p.X , p.Y ] for p in self.thisptr.GetPoints()]
 
+
     def GetSegments(self):
         """ Returns the segments added to the voronoi diagram
         """
@@ -306,6 +307,11 @@ cdef class Pyvoronoi:
             output.append(self.GetVertex(index))
         return output
 
+    def IterateVertices(self):
+        count = self.CountVertices()
+        for index in  range(count):
+            yield self.GetVertex(index)
+
     def GetEdges(self):
         count = self.CountEdges()
         output = []
@@ -313,12 +319,22 @@ cdef class Pyvoronoi:
             output.append(self.GetEdge(index))
         return output
 
+    def IterateEdges(self):
+        count = self.CountEdges()
+        for index in range(count):
+            yield self.GetEdge(index)
+
     def GetCells(self):
         count = self.CountCells()
         output = []
         for index in range(count):
             output.append(self.GetCell(index))
         return output
+
+    def IterateCells(self):
+        count = self.CountCells()
+        for index in range(count):
+            yield self.GetCell(index)
 
     def ReturnCurvedSiteInformation(self, edge):
         """Return the index of the point side and the segment site associated  with a segment index

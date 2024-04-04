@@ -166,6 +166,46 @@ for c in cells:
         print("Start Index: {0}, End Index = {1}".format(edges[sIndex].start, edges[sIndex].end))
 ```
 
+Note that since version 1.0.4 each of the Get function has an equivalent function that returns an iterator. This is more memory friendly.
+
+|Goal|Return a list|Return an iterator|
+| - | - | - |
+| Return vertices | GetVertices | IterateVertices |
+| Return edges | GetEdges | IterateEdges |
+| Return cells | GetCells | IterateCells |
+
+They are functionaly equivalent as defined in this automated test:
+
+```python
+    def test_iterators(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+
+        vertices = pv.GetVertices()
+        vertex_generator = pv.IterateVertices()
+        for v in vertices:
+            v_generator = next(vertex_generator)
+            self.assertEqual(v, v_generator)
+
+        edges = pv.GetEdges()
+        edge_generator = pv.IterateEdges()
+        for e in edges:
+            e_generator = next(edge_generator)
+            self.assertEqual(e, e_generator)
+
+        cells = pv.GetCells()
+        cell_generator = pv.IterateCells()
+        for c in cells:
+            c_generator = next(cell_generator)
+            self.assertEqual(c, c_generator)
+```
+
+
 Some output edges returned by the boost voronoi API are suposed to be curved. In the C++ API, it is up to you to code it. Luckily, you can do it in python using the following the function DiscretizeCurvedEdge.
 The sample below shows you how to do that:
 

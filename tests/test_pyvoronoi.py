@@ -155,9 +155,33 @@ class TestPyvoronoiConstruct(TestCase):
         for i in range(len(edges)):
             edge = edges[i]
             self.assertTrue(edges[edge.twin].twin == i)
+
+    def test_iterators(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+
+        vertices = pv.GetVertices()
+        vertex_generator = pv.IterateVertices()
+        for v in vertices:
+            v_generator = next(vertex_generator)
+            self.assertEqual(v, v_generator)
+
+        edges = pv.GetEdges()
+        edge_generator = pv.IterateEdges()
+        for e in edges:
+            e_generator = next(edge_generator)
+            self.assertEqual(e, e_generator)
+
         cells = pv.GetCells()
-        for cell in cells:
-            print(cell)
+        cell_generator = pv.IterateCells()
+        for c in cells:
+            c_generator = next(cell_generator)
+            self.assertEqual(c, c_generator)
 
     def test_cells_vertices_duplication(self):
         """
@@ -176,6 +200,7 @@ class TestPyvoronoiConstruct(TestCase):
         cell = cells[5]
         self.assertNotEqual(cell.vertices[-2], cell.vertices[-1])
         self.assertEqual(cell.vertices[0], cell.vertices[-1])
+
 
     def test_vertex_reference_for_edges(self):
         """
