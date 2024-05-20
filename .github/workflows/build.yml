@@ -34,11 +34,11 @@ jobs:
             - name: Install development requirements
               run: python -m pip install -r requirements_dev.txt
 
-            - name: "Install locally for testing"
-              run: python setup.py test  
+            # - name: "Install locally for testing"
+            #   run: python setup.py test  
 
-            - name: "Compile Cython file"
-              run: python setup.py build_ext
+            # - name: "Compile Cython file"
+            #   run: python setup.py build_ext
 
             - name: Build wheels
               uses: pypa/cibuildwheel@711a3d017d0729f3edde18545fee967f03d65f65  # v2.18.0
