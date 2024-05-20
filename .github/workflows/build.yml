@@ -31,11 +31,11 @@ jobs:
             - name: Install cibuildwheel
               run: python -m pip install cibuildwheel==2.18.1              
 
-            - name: Install development requirements
-              run: python -m pip install -r requirements_dev.txt
+            # - name: Install development requirements
+            #   run: python -m pip install -r requirements_dev.txt
 
-            - name: "Install locally for testing"
-              run: python setup.py test  
+            # - name: "Install locally for testing"
+            #   run: python setup.py test  
 
             - name: "Compile Cython file"
               run: python setup.py build_ext
@@ -43,6 +43,7 @@ jobs:
             - name: Build wheels
               run: python -m cibuildwheel --output-dir wheelhouse
               env:
+                CIBW_BEFORE_BUILD: pip install Cython
                 CIBW_BUILD_VERBOSITY: 3
                 # CIBW_BUILD: ${{ matrix.python }}
 
