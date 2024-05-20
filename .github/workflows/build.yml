@@ -34,11 +34,11 @@ jobs:
             - name: Install development requirements
               run: python -m pip install -r requirements_dev.txt
 
-            # - name: "Install locally for testing"
-            #   run: python setup.py test  
+            - name: "Install locally for testing"
+              run: python setup.py test  
 
-            # - name: "Compile Cython file"
-            #   run: python setup.py build_ext
+            - name: "Compile Cython file"
+              run: python setup.py build_ext
 
             - name: Build wheels
               run: python -m cibuildwheel --output-dir wheelhouse
