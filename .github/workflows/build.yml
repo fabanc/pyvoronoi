@@ -37,8 +37,8 @@ jobs:
             # - name: "Install locally for testing"
             #   run: python setup.py test  
 
-            # - name: "Compile Cython file"
-            #   run: python setup.py build_ext
+            - name: "Compile Cython file"
+              run: python setup.py build_ext
 
             - name: Build wheels
               run: python -m cibuildwheel --output-dir wheelhouse
