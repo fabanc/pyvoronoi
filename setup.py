@@ -37,7 +37,8 @@ else:
 ext = Extension("pyvoronoi",
                 sources=sources,
                 include_dirs = ["pyvoronoi"],
-                language="c++"
+                language="c++",
+                optional=os.environ.get('CIBUILDWHEEL', '0') != '1'
                 )
 
 
