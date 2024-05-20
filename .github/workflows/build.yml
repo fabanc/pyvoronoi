@@ -46,6 +46,6 @@ jobs:
                 CIBW_BUILD: ${{ matrix.python }}-${{ matrix.os }}
 
             - uses: actions/upload-artifact@v4
-            with:
-              name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-              path: ./wheelhouse/*.whl 
+              with:
+                name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+                path: ./wheelhouse/*.whl 
