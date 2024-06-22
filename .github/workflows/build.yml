@@ -1,15 +1,13 @@
 name: Build distribution
-
 on:
     workflow_call:
         inputs:
             config-path:
                 required: false
                 type: string
-
 jobs:
     build:
-        name: Build on ${{ matrix.os }} using ${{ matrix.python }} 📦
+        name: Build on ${{ matrix.os }} 📦
         runs-on: ${{ matrix.os }}
         
         strategy:
@@ -24,22 +22,12 @@ jobs:
             # - name: Set up Python ${{ matrix.python }} ${{ matrix.os }}
             #   uses: actions/setup-python@v5
 
-
             # You can test your matrix by printing the current Python version
             - name: Display Python version
               run: python -c "import sys; print(sys.version)"
 
             - name: Install cibuildwheel
               run: python -m pip install cibuildwheel==2.19.1              
-
-            # - name: Install development requirements
-            #   run: python -m pip install -r requirements_dev.txt
-
-            # - name: "Install locally for testing"
-            #   run: python setup.py test  
-
-            # - name: "Compile Cython file"
-            #   run: python setup.py build_ext
 
             - name: Build wheels
               uses: pypa/cibuildwheel@v2.19.1
