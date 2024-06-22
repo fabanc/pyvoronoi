@@ -45,7 +45,7 @@ jobs:
               env:
                 CIBW_BEFORE_BUILD: pip install Cython
                 CIBW_BUILD_VERBOSITY: 3
-                # CIBW_BUILD: ${{ matrix.python }}
+                CIBW_BUILD: ${{ matrix.python }}
 
             - uses: actions/upload-artifact@v4
               with:
