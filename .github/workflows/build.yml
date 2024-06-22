@@ -47,11 +47,10 @@ jobs:
                 CIBW_BEFORE_BUILD: pip install Cython
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_BUILD: ${{ matrix.python }}
-              with:
-                package-dir: .
-                output-dir: wheelhouse
-                # config-file: "{package}/pyproject.toml"
-                config-file: "pyproject.toml"
+              # with:
+              #   package-dir: .
+              #   output-dir: wheelhouse
+              #   config-file: "{package}/pyproject.toml"
 
 
             - name: Display Python version
