@@ -21,8 +21,8 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - name: Set up Python ${{ matrix.python }} ${{ matrix.os }}
-              uses: actions/setup-python@v5
+            # - name: Set up Python ${{ matrix.python }} ${{ matrix.os }}
+            #   uses: actions/setup-python@v5
 
 
             # You can test your matrix by printing the current Python version
@@ -52,10 +52,6 @@ jobs:
                 package-dir: .
                 output-dir: wheelhouse
                 config-file: "{package}/pyproject.toml"
-
-
-            - name: Display Python version
-              run: python -c "import sys; print(Wheels built)"
 
             - uses: actions/upload-artifact@v4
               with:
