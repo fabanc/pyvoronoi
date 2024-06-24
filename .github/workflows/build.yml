@@ -44,6 +44,9 @@ jobs:
                 output-dir: dist
                 config-file: "{package}/pyproject.toml"
 
+            - name: Build the standard distribution
+              run: python setup.py sdist
+
             - name: List directory
               run: ls ./dist
 
