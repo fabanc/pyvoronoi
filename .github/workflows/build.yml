@@ -35,16 +35,16 @@ jobs:
             - name: Build wheels
               uses: pypa/cibuildwheel@v2.19.1
               env:
-                CIBW_BEFORE_BUILD: pip install Cython
+                CIBW_BEFORE_BUILD: pip install Cython && python setup.py build_ext && python setup.py sdist
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_DEBUG_TRACEBACK: TRUE
               with:
                 package-dir: .
-                output-dir: wheelhouse
+                output-dir: dist
                 config-file: "{package}/pyproject.toml"
 
             # Upload the artefact so they can be sent to pypi later on.
             - uses: actions/upload-artifact@v4
               with:
                 name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-                path: ./wheelhouse/*.whl 
+                path: ./dist/*.whl 
