@@ -44,10 +44,17 @@ jobs:
                 output-dir: dist
                 config-file: "{package}/pyproject.toml"
 
-            - name: Build the standard distribution
+
+            - name: Build the standard distribution (Import Cython)
+              run: pip install Cython
+
+            - name: Build the standard distribution (Build)
+              run: pip install Cython
+
+            - name: Build the standard distribution (SDist)
               run: python setup.py sdist
 
-            - name: List directory
+            - name: List distribution directory content
               run: ls ./dist
 
             # Upload the artefact so they can be sent to pypi later on.
