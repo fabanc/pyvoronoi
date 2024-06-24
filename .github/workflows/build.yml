@@ -44,8 +44,8 @@ jobs:
                 output-dir: dist
                 config-file: "{package}/pyproject.toml"
 
-            - name: Display Python version
-              run: ls ./dist"
+            - name: List directory
+              run: ls ./dist
 
             # Upload the artefact so they can be sent to pypi later on.
             - uses: actions/upload-artifact@v4
