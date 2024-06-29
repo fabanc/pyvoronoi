@@ -42,7 +42,6 @@ jobs:
                 output-dir: dist
                 config-file: "{package}/pyproject.toml"
 
-
             # Upload the artefact so they can be sent to pypi later on.
             - uses: actions/upload-artifact@v4
               with:
@@ -64,6 +63,11 @@ jobs:
             - name: List distribution directory content
               run: ls ./dist
 
+            # Upload the artefact so they can be sent to pypi later on.
+            - uses: actions/upload-artifact@v4
+              with:
+                name: dist
+                path: ./dist/*.*              
       
     merge:
       runs-on: ubuntu-latest
