@@ -5,7 +5,7 @@ from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 from pathlib import Path
 
-version = '1.1.2'
+version = '1.1.3'
 
 """
 Note on using the setup.py:
