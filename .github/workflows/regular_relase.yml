@@ -3,6 +3,8 @@ on:
     # A matching negative pattern after a positive match will exclude the ref again.
     branches:
       - '**'
+    tags-ignore:
+      - v*.*
 
 jobs:
   call-build:
