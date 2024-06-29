@@ -1,47 +1,73 @@
 name: Build distribution
-
 on:
     workflow_call:
         inputs:
             config-path:
                 required: false
                 type: string
-
 jobs:
     build:
-        name: Build distribution 📦
-        runs-on: ubuntu-latest
+        name: Build on ${{ matrix.os }} 📦
+        runs-on: ${{ matrix.os }}
         
+        # The list of runner images can be found on github documentation: https://github.com/actions/runner-images
         strategy:
             matrix:
-                python-version: ["3.9", "3.10", "3.11", "3.12"]
+                os: [
+                  ubuntu-22.04,
+                  windows-2022,
+                  # ubuntu-24.04,
+                  # ubuntu-22.04,
+                  # ubuntu-20.04, 
+                  # windows-2022, 
+                  # windows-2019,
+                  # macos-13, 
+                  # macos-14
+                ]
     
         steps:
+            # Checkout code from GitHub
             - uses: actions/checkout@v4
-            - name: Set up Python ${{ matrix.python-version }}
-              uses: actions/setup-python@v4
-              with:
-                python-version: ${{ matrix.python-version }}
 
             # You can test your matrix by printing the current Python version
             - name: Display Python version
               run: python -c "import sys; print(sys.version)"
 
-            - name: Install development requirements
-              run: python -m pip install -r requirements_dev.txt
-
-            - name: "Install locally for testing"
-              run: python setup.py test  
-
-            - name: "Compile Cython file"
-              run: python setup.py build_ext
-
-            
-            - name: Build a binary wheel and a source tarball
-              run: python3 setup.py sdist
-
-            - name: Store the distribution packages
-              uses: actions/upload-artifact@v3
+            # Calling cibuildwheel. Most of the options are the default, but explicit is better than implicit.
+            - name: Build wheels
+              uses: pypa/cibuildwheel@v2.19.1
+              env:
+                CIBW_BEFORE_BUILD: pip install Cython
+                CIBW_BUILD_VERBOSITY: 3
+                CIBW_DEBUG_TRACEBACK: TRUE
               with:
-                name: python-package-distributions
-                path: dist/   
+                package-dir: .
+                output-dir: dist
+                config-file: "{package}/pyproject.toml"
+
+
+            - name: Build the standard distribution (Import Cython)
+              run: pip install Cython
+
+            - name: Build the standard distribution (Build)
+              run: pip install Cython
+
+            - name: Build the standard distribution (SDist)
+              run: python setup.py sdist
+
+            - name: List distribution directory content
+              run: ls ./dist
+
+            # Upload the artefact so they can be sent to pypi later on.
+            - uses: actions/upload-artifact@v4
+              with:
+                name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+                path: ./dist/*.*
+    merge:
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+        - name: Merge artifacts
+          uses: actions/upload-artifact/merge@v4
+          with:
+            name: python-package-distributions            

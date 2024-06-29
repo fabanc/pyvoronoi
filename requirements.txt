@@ -1,2 +1,0 @@
-# Compatibility for 3.12 and beyond
-setuptools

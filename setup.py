@@ -5,7 +5,7 @@ from setuptools.extension import Extension
 from setuptools.command.test import test as TestCommand
 from pathlib import Path
 
-version = '1.0.3'
+version = '1.1.2'
 
 """
 Note on using the setup.py:
@@ -37,7 +37,8 @@ else:
 ext = Extension("pyvoronoi",
                 sources=sources,
                 include_dirs = ["pyvoronoi"],
-                language="c++"
+                language="c++",
+                optional=os.environ.get('CIBUILDWHEEL', '0') != '1'
                 )
 
 
