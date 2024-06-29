@@ -196,3 +196,10 @@ The curve interpolation code can return 2 exceptions.
 -  The core Voronoi library is available under `Boost Software
    License <http://www.boost.org/LICENSE_1_0.txt>`__. Freeware for both
    open source and commercial applications.
+
+
+# Development
+
+## Build tools
+
+This project uses [cibuildwheel](https://github.com/pypa/cibuildwheel) to build wheels on multiple platforms.
