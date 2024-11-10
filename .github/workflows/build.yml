@@ -30,7 +30,7 @@ jobs:
 
             # Calling cibuildwheel. Most of the options are the default, but explicit is better than implicit.
             - name: Build wheels
-              uses: pypa/cibuildwheel@v2.19.1
+              uses: pypa/cibuildwheel@v2.21.3
               env:
                 CIBW_BEFORE_BUILD: python -m pip install Cython
                 CIBW_BUILD_VERBOSITY: 3
