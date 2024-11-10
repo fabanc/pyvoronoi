@@ -15,6 +15,7 @@ jobs:
             matrix:
                 os: [
                   #ubuntu-22.04,
+                  ubuntu-latest,
                   windows-2022, 
                   # macos-13,
                   # macos-14
