@@ -52,6 +52,19 @@ class TestPyvoronoiAdd(TestCase):
         pv.Construct()
         self.assertRaises(pyvoronoi.VoronoiException, pv.AddPoint, [0, 0])
 
+    def test_add_segment_rounding(self):
+        factor = 10
+        segment = [[0.59, 1.09], [0, 2]]
+        pv = pyvoronoi.Pyvoronoi(factor)
+        pv.AddSegment(segment)
+        segments = pv.GetSegments()
+        print(segments)
+        self.assertTrue(len(segments) == 1)
+        self.assertTrue(segments[0] == [
+            [round(segment[0][0] * factor), round(segment[0][1] * factor)],
+            [segment[1][0] * factor, segment[1][1] * factor],
+        ])
+
 class TestPyvoronoiConstruct(TestCase):
     def test_square(self):
         pv = pyvoronoi.Pyvoronoi(1)
