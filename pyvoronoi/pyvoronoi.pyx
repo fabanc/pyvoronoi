@@ -513,7 +513,7 @@ cdef class Pyvoronoi:
         return Point(self._to_voronoi_int(py_point[0]), self._to_voronoi_int(py_point[1]))
 
     cdef int _to_voronoi_int(self, val):
-        return val * self.SCALING_FACTOR
+        return round(val * self.SCALING_FACTOR)
 
     cdef double _to_voronoi_double(self, val):
         return val * <double>self.SCALING_FACTOR
