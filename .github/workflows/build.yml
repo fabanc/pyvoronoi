@@ -35,6 +35,7 @@ jobs:
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_DEBUG_TRACEBACK: TRUE
                 CIBW_SKIP: "pp3*"
+                CIBW_ARCHS_MACOS: x86_64 universal2
               with:
                 package-dir: .
                 output-dir: dist
