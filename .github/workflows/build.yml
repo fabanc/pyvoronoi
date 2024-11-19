@@ -34,7 +34,7 @@ jobs:
                 CIBW_BEFORE_BUILD: python -m pip install Cython
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_DEBUG_TRACEBACK: TRUE
-                CIBW_SKIP: "pp3* cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64"
+                CIBW_SKIP: "pp3* *-macosx_arm64"
               with:
                 package-dir: .
                 output-dir: dist
