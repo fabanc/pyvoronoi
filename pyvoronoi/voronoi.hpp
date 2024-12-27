@@ -7,7 +7,7 @@
 #define BOOST_NO_PLATFORM_CONFIG
 #define BOOST_HAS_STDINT_H
 
-#define __GLIBC__ 0
+#undef __GLIBC__
 
 #include "boost/polygon/voronoi.hpp"
 #include "map"
