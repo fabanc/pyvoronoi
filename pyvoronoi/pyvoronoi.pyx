@@ -94,7 +94,7 @@ cdef extern from "voronoi.hpp":
         VoronoiDiagram()
         void AddPoint(Point p)
         void AddSegment(Segment s)
-        void Construct()
+        void Construct() nogil
         vector[Point] GetPoints()
         vector[Segment] GetSegments()
 
@@ -268,8 +268,8 @@ cdef class Pyvoronoi:
             raise VoronoiException('Construct() has already been called')
 
         self.constructed = 1
-
-        self.thisptr.Construct()
+        with nogil:
+            self.thisptr.Construct()
 
         self.thisptr.MapVertexIndexes()
         self.thisptr.MapEdgeIndexes()
