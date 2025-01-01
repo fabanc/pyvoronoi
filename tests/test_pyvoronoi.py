@@ -253,6 +253,24 @@ class TestPyvoronoiConstruct(TestCase):
         with self.assertRaises(ValueError):
             pv.DiscretizeCurvedEdge(2, -1)
 
+    def test_objects_dont_share_data(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5, 5])
+        pv.AddSegment([[0, 0], [0, 10]])
+
+        pv2 = pyvoronoi.Pyvoronoi(1)
+        pv2.AddPoint([9, 9])
+        pv2.AddSegment([[1, 1], [1, 9]])
+
+        pv.Construct()
+        pv2.Construct()
+
+        self.assertEqual([[5, 5]], pv.inputPoints)
+        self.assertEqual([[[0, 0], [0, 10]]], pv.inputSegments)
+        self.assertEqual([[9, 9]], pv2.inputPoints)
+        self.assertEqual([[[1, 1], [1, 9]]], pv2.inputSegments)
+
+
 def run_tests():
     main()
 

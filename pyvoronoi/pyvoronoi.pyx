@@ -143,8 +143,8 @@ class Cell:
     contains_segment = False
     is_open = False
 
-    vertices = []
-    edges = []
+    vertices = None
+    edges = None
 
     source_category = None
 
@@ -211,11 +211,8 @@ cdef class Pyvoronoi:
     cdef VoronoiDiagram *thisptr
     cdef int constructed
 
-    inputPoints = []
-    inputSegments = []
-    outputEdges = []
-    outputVertices = []
-    outputCells = []
+    cdef readonly list inputPoints
+    cdef readonly list inputSegments
 
     cdef public int SCALING_FACTOR
 
@@ -231,8 +228,8 @@ cdef class Pyvoronoi:
         else:
             self.SCALING_FACTOR = 1
 
-        del self.inputPoints[:]
-        del self.inputSegments[:]
+        self.inputPoints = []
+        self.inputSegments = []
 
     def __dealloc__(self):
         log_action("Deleting the VoronoiDiagram instance")
