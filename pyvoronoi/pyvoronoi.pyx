@@ -275,10 +275,14 @@ cdef class Pyvoronoi:
     def GetVertex(self, index):
         """
         """
+        if index < 0 or index >= self.CountVertices():
+            raise IndexError(index)
         c_vertex = self.thisptr.GetVertex(index)
         return Vertex(c_vertex.X / self.SCALING_FACTOR, c_vertex.Y / self.SCALING_FACTOR)
 
     def GetEdge(self, index):
+        if index < 0 or index >= self.CountEdges():
+            raise IndexError(index)
         c_edge =  self.thisptr.GetEdge(index)
         edge = Edge(c_edge.start, c_edge.end, c_edge.cell, c_edge.twin)
         edge.is_primary = c_edge.isPrimary != False
@@ -286,6 +290,8 @@ cdef class Pyvoronoi:
         return edge
 
     def GetCell(self, index):
+        if index < 0 or index >= self.CountCells():
+            raise IndexError(index)
         c_cell = self.thisptr.GetCell(index)
         cell = Cell(c_cell.cell_identifier, c_cell.site, c_cell.vertices, c_cell.edges, c_cell.source_category)
         cell.contains_point = c_cell.contains_point != False
