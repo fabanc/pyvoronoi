@@ -160,14 +160,9 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 				is_open = true;
 
 			long long edge_start = -1;
-			long long edge_end = -1;
 
 			if (edge->vertex0() != NULL){
 				edge_start = map_vertices_to_indexes[edge->vertex0()];
-			}
-
-			if (edge->vertex1() != NULL){
-				edge_end = map_vertices_to_indexes[edge->vertex1()];
 			}
 
 			long vertices_count = vertex_identifiers.size();
