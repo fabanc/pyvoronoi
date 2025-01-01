@@ -77,7 +77,6 @@ class TestPyvoronoiConstruct(TestCase):
         vertices = pv.GetVertices()
         cells = pv.GetCells()
         self.assertTrue(len(cells) == 8)
-        #self.assertTrue(len([i for i in edges if i.is_primary == True]) == 4)Should have been changes when fabanc added the cell concept
         self.assertTrue(len([i for i in edges if i.is_primary == True]) == 8)
         self.assertTrue(len(vertices) == 5)
         self.assertTrue(len(cells[0].edges) == 2)
@@ -93,7 +92,6 @@ class TestPyvoronoiConstruct(TestCase):
         vertices = pv.GetVertices()
         cells = pv.GetCells()
         self.assertTrue(len(cells) == 8)
-        #self.assertTrue(len([i for i in edges if i.is_primary == True]) == 5) Should have been changes when fabanc added the cell concept
         self.assertTrue(len([i for i in edges if i.is_primary == True]) == 10)
         self.assertTrue(len(vertices) == 6)
         self.assertTrue(len(list(filter(lambda e: edges[e].is_primary, cells[1].edges))) == 3)
@@ -116,12 +114,10 @@ class TestPyvoronoiConstruct(TestCase):
             edge = edges[i]
             self.assertTrue(edges[edge.twin].twin == i)
         cells = pv.GetCells()
-        for cell in cells:
-            print(cell)
 
     def test_cells_vertices_duplication(self):
         """
-        Validate that the twin attribute is consistent.
+        Validate that the first and last vertex are the same on cells.
         :return:
         """
         pv = pyvoronoi.Pyvoronoi(1)
@@ -197,7 +193,7 @@ class TestPyvoronoiConstruct(TestCase):
             cell = cells[i]
             if not cell.is_degenerate:
                 valid_vertices = [v for v in cell.vertices if v != -1]
-                self.assertTrue(len(valid_vertices) > 0)               
+                self.assertTrue(len(valid_vertices) > 0)
 
     def test_input_point(self):
         pv = pyvoronoi.Pyvoronoi(1)
