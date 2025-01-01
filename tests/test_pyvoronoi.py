@@ -249,6 +249,15 @@ class TestPyvoronoiConstruct(TestCase):
         with self.assertRaises(ValueError):
             pv.DiscretizeCurvedEdge(2, -1)
 
+    def test_get_raises_indexerror(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+        with self.assertRaises(IndexError):
+            pv.GetEdge(0) # shouldn't crash
+        with self.assertRaises(IndexError):
+            pv.GetVertex(0) # shouldn't crash
+        with self.assertRaises(IndexError):
+            pv.GetCell(0) # shouldn't crash
+            
     def test_objects_dont_share_data(self):
         pv = pyvoronoi.Pyvoronoi(1)
         pv.AddPoint([5, 5])
