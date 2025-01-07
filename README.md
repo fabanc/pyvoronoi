@@ -145,6 +145,13 @@ Cells have the following properties:
 * ``vertices`` contains indices into the vertex array.
 * ``edges`` contains indices into the edge array.
 
+They have also a few instance methods. All those are instance methods of the class `Pyvoronoi`. Those methods takes a cell object as a parameter:
+* ``RetrieveScaledPoint`` retrives information about the input point at the origin of a Voronoi Cell, when the center of the cell is a point. This method removes the scaling factor.
+* ``RetrieveScaledSegment`` retrives information about the input segment at the origin of a Voronoi Cell, when the center of the cell is a segment.This method removes the scaling factor.
+* ``RetrievePoint`` retrives information about the input point at the origin of a Voronoi Cell, when the center of the cell is a point. This method uses the scaling factor and show the coordinates as used by the voronoi builder in Boost.
+* ``RetrieveSegment`` retrives information about the input segment at the origin of a Voronoi Cell, when the center of the cell is a segment.This method uses the scaling factor and show the coordinates as used by the voronoi builder in Boost.
+
+
 ```python
 pv = pyvoronoi.Pyvoronoi(100)
 pv.AddSegment([[0.1,0.8],[0.3,0.6]])
