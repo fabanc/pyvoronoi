@@ -120,6 +120,12 @@ def GetCells(self):
 
 If you are running python 2.x, you might want to write your own wrappers using xrange. This will be more efficient.
 
+
+Vertices have the following properties:
+
+* ``X``: the position on the X-axis of the vertex.
+* ``Y``: the position on the Y-axis of the vertex.
+
 Edges have the following properties:
 
 * ``start, end`` contain the indices of the start and end vertices or ``-1`` if the edge is infinite at that end.
