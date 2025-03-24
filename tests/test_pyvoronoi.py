@@ -275,6 +275,11 @@ class TestPyvoronoiConstruct(TestCase):
 
 class TestInputSegmentIntersects(TestCase):
     def test_true_intersection_1(self):
+        """
+         Test that our 2 intersecting segments are detected among two other segment that do not intersect anything.
+         :return:
+        """
+
         pv = pyvoronoi.Pyvoronoi(1)
 
         # Those first two segments not intersect
@@ -292,26 +297,25 @@ class TestInputSegmentIntersects(TestCase):
 
     def test_true_intersection_2(self):
         """
-        Same input geometries but the segment that intersect are first and last
-        :return:
+         Test that our 2 intersecting segments are detected
+         :return:
         """
+
         pv = pyvoronoi.Pyvoronoi(1)
 
-        # Those first two segments not intersect
-        pv.AddSegment([[0, 0], [10, 0]])
-        pv.AddSegment([[-6, -6], [-10, -10]])
-        pv.AddSegment([[6, 6], [10, 10]])
-        pv.AddSegment([[5, -5], [5, 10]])
+        pv.AddSegment([[10, 10], [-10, -10]])
+        pv.AddSegment([[-10, 10], [10, -10]])
 
         intersecting_segments = pv.GetIntersectingSegments()
-        self.assertEqual(len(intersecting_segments), 2)
-        self.assertEqual(intersecting_segments[0], 0)
-        self.assertEqual(intersecting_segments[1], 3)
+        self.assertEqual(2, len(intersecting_segments))
+        self.assertEqual(0, intersecting_segments[0])
+        self.assertEqual(1, intersecting_segments[1])
 
 
     def test_true_intersection_at_ends_is_disregarded(self):
         """
-        Same input geometries but the segment that intersect are first and last
+        Test that the intersection test returns false when line intersects at endpoints.
+        In that case, they touch, but do not intersect.
         :return:
         """
         pv = pyvoronoi.Pyvoronoi(1)
@@ -322,6 +326,23 @@ class TestInputSegmentIntersects(TestCase):
 
         intersecting_segments = pv.GetIntersectingSegments()
         self.assertEqual(len(intersecting_segments), 0)
+
+    def test_colinearity_intersects(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        # Those two segments overlap on 0,0 --> 5,0
+        pv.AddSegment([[0, 0], [10, 0]])
+        pv.AddSegment([[-10, 0], [5, 0]])
+
+        # Those two segments not intersect or overlap anything
+        pv.AddSegment([[-6, -6], [-10, -10]])
+        pv.AddSegment([[6, 6], [10, 10]])
+
+        intersecting_segments = pv.GetIntersectingSegments()
+        self.assertEqual(2, len(intersecting_segments))
+        self.assertEqual(0, intersecting_segments[0])
+        self.assertEqual(1, intersecting_segments[1])
+
 def run_tests():
     main()
 

@@ -29,9 +29,14 @@ struct Segment {
     // point q lies on line segment 'pr'
     bool onSegment(Point p, Point q, Point r)
     {
-        if (q.X <= std::max(p.X, r.X) && q.X >= std::min(p.X, r.X) &&
-            q.Y <= std::max(p.Y, r.Y) && q.Y >= std::min(p.Y, r.Y))
-        return true;
+        // If the segments just equals an endpoint, returns false. It touches, but does not intersect
+        if (q.X == p.X && q.Y == p.Y)
+            return false;
+        if (q.X == r.X && q.Y == r.Y)
+            return false;
+        // Otherwise, it is in the pr space, returns true
+        if (q.X <= std::max(p.X, r.X) && q.X >= std::min(p.X, r.X) && q.Y <= std::max(p.Y, r.Y) && q.Y >= std::min(p.Y, r.Y))
+            return true;
 
         return false;
     }
