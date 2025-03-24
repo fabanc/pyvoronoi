@@ -191,6 +191,7 @@ public:
 	long long CountCells();
 
     std::vector<int> GetIntersectingSegments();
+    std::vector<int> GetDegenerateSegments();
 
 	//Map index to vertex
 	typedef std::pair<long long, const voronoi_diagram<double>::vertex_type*> index_to_vertex;

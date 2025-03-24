@@ -45,6 +45,16 @@ std::vector<int> VoronoiDiagram::GetIntersectingSegments(){
     return overlapping_indexes;
 }
 
+std::vector<int> VoronoiDiagram::GetDegenerateSegments(){
+    std::vector<int> degenerate_indexes;
+    for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
+        Segment* segment = &(*it_left);
+        if (segment->p0.X == segment->p1.X && segment->p0.Y == segment->p1.Y)
+            degenerate_indexes.push_back(distance(segments.begin(),it_left));
+    }
+    return degenerate_indexes;
+}
+
 //std::vector<c_Vertex> VoronoiDiagram::GetOverlappingPoints(){
 //
 //    // A hashmap to be populated as we iterate through vertices.

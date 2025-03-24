@@ -98,7 +98,7 @@ cdef extern from "voronoi.hpp":
         vector[Point] GetPoints()
         vector[Segment] GetSegments()
         vector[int] GetIntersectingSegments()
-
+        vector[int] GetDegenerateSegments()
         void MapVertexIndexes()
         void MapEdgeIndexes()
         void MapCellIndexes()
@@ -330,6 +330,9 @@ cdef class Pyvoronoi:
 
     def GetIntersectingSegments(self):
         return self.thisptr.GetIntersectingSegments()
+
+    def GetDegenerateSegments(self):
+        return self.thisptr.GetDegenerateSegments()
 
     def GetEdges(self):
         count = self.CountEdges()
