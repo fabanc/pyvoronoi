@@ -29,7 +29,6 @@ class TestPyvoronoiAdd(TestCase):
         pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddPoint(inputPoint)
         points = pv.GetPoints()
-        print(points)
         self.assertTrue(len(points) == 1)
         self.assertTrue(points[0][0] == inputPoint[0] * factor)
         self.assertTrue(points[0][1] == inputPoint[1] * factor)
@@ -40,7 +39,6 @@ class TestPyvoronoiAdd(TestCase):
         pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddSegment(segment)
         segments = pv.GetSegments()
-        print(segments)
         self.assertTrue(len(segments) == 1)
         self.assertTrue(segments[0] == [
             [segment[0][0] * factor, segment[0][1] * factor],
@@ -58,7 +56,6 @@ class TestPyvoronoiAdd(TestCase):
         pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddSegment(segment)
         segments = pv.GetSegments()
-        print(segments)
         self.assertTrue(len(segments) == 1)
         self.assertTrue(segments[0] == [
             [round(segment[0][0] * factor), round(segment[0][1] * factor)],
@@ -276,6 +273,55 @@ class TestPyvoronoiConstruct(TestCase):
         self.assertEqual([[[1, 1], [1, 9]]], pv2.inputSegments)
 
 
+class TestInputSegmentIntersects(TestCase):
+    def test_true_intersection_1(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        # Those first two segments not intersect
+        pv.AddSegment([[-6, -6], [-10, -10]])
+        pv.AddSegment([[6, 6], [10, 10]])
+
+        # Those two segments intersect but do not intersect the first two segment
+        pv.AddSegment([[0, 0], [10, 0]])
+        pv.AddSegment([[5, -5], [5, 10]])
+
+        intersecting_segments = pv.GetIntersectingSegments()
+        self.assertEqual(len(intersecting_segments), 2)
+        self.assertEqual(intersecting_segments[0], 2)
+        self.assertEqual(intersecting_segments[1], 3)
+
+    def test_true_intersection_2(self):
+        """
+        Same input geometries but the segment that intersect are first and last
+        :return:
+        """
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        # Those first two segments not intersect
+        pv.AddSegment([[0, 0], [10, 0]])
+        pv.AddSegment([[-6, -6], [-10, -10]])
+        pv.AddSegment([[6, 6], [10, 10]])
+        pv.AddSegment([[5, -5], [5, 10]])
+
+        intersecting_segments = pv.GetIntersectingSegments()
+        self.assertEqual(len(intersecting_segments), 2)
+        self.assertEqual(intersecting_segments[0], 0)
+        self.assertEqual(intersecting_segments[1], 3)
+
+
+    def test_true_intersection_at_ends_is_disregarded(self):
+        """
+        Same input geometries but the segment that intersect are first and last
+        :return:
+        """
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        # Those first two segments not intersect
+        pv.AddSegment([[0, 0], [10, 0]])
+        pv.AddSegment([[-10, 0], [0, 0]])
+
+        intersecting_segments = pv.GetIntersectingSegments()
+        self.assertEqual(len(intersecting_segments), 0)
 def run_tests():
     main()
 

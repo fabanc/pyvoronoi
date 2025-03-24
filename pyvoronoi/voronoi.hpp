@@ -22,7 +22,67 @@ struct Segment {
 	Point p0;
 	Point p1;
 	Segment(Point a = Point(), Point b = Point()) : p0(a.X, a.Y), p1(b.X, b.Y) {}
+
+    //https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+
+    // Given three collinear points p, q, r, the function checks if
+    // point q lies on line segment 'pr'
+    bool onSegment(Point p, Point q, Point r)
+    {
+        if (q.X <= std::max(p.X, r.X) && q.X >= std::min(p.X, r.X) &&
+            q.Y <= std::max(p.Y, r.Y) && q.Y >= std::min(p.Y, r.Y))
+        return true;
+
+        return false;
+    }
+
+    // To find orientation of ordered triplet (p, q, r).
+    // The function returns following values
+    // 0 --> p, q and r are collinear
+    // 1 --> Clockwise
+    // 2 --> Counterclockwise
+    int orientation(Point p, Point q, Point r)
+    {
+        // See https://www.geeksforgeeks.org/orientation-3-ordered-points/
+        // for details of below formula.
+        int val = (q.Y - p.Y) * (r.X - q.X) -
+                (q.X - p.X) * (r.Y - q.Y);
+
+        if (val == 0) return 0; // collinear
+
+        return (val > 0)? 1: 2; // clock or counterclock wise
+    }
+
+
+    bool intersects(Segment otherSegment){
+        // Find the four orientations needed for general and
+        // special cases
+        int o1 = orientation(p0, p1, otherSegment.p0);
+        int o2 = orientation(p0, p1, otherSegment.p1);
+        int o3 = orientation(otherSegment.p0, otherSegment.p1, p0);
+        int o4 = orientation(otherSegment.p0, otherSegment.p1, p1);
+
+        // General case
+        if (o1 != o2 && o3 != o4)
+            return true;
+
+        // Special Cases
+        // p0, p1 and otherSegment.p0 are collinear and otherSegment.p0 lies on segment p0p1
+        if (o1 == 0 && onSegment(p0, otherSegment.p0, p1)) return true;
+
+        // p0, p1 and otherSegment.p1 are collinear and otherSegment.p1 lies on segment p0p1
+        if (o2 == 0 && onSegment(p0, otherSegment.p1, p1)) return true;
+
+        // otherSegment.p0, otherSegment.p1 and p0 are collinear and p0 lies on segment otherSegment.p0otherSegment.p1
+        if (o3 == 0 && onSegment(otherSegment.p0, p0, otherSegment.p1)) return true;
+
+        // otherSegment.p0, otherSegment.p1 and p1 are collinear and p1 lies on segment otherSegment.p0otherSegment.p1
+        if (o4 == 0 && onSegment(otherSegment.p0, p1, otherSegment.p1)) return true;
+
+        return false; // Doesn't fall in any of the above cases
+    }
 };
+
 
 namespace boost {
 	namespace polygon {
@@ -59,6 +119,10 @@ struct c_Vertex {
 	double Y;
 
 	c_Vertex(double x = 0, double y = 0) : X(x), Y(y) {}
+
+	bool operator==(c_Vertex& other){
+	    return (X == other.X) && (Y==other.Y);
+	}
 };
 
 
@@ -120,6 +184,8 @@ public:
 	long long CountVertices();
 	long long CountEdges();
 	long long CountCells();
+
+    std::vector<int> GetIntersectingSegments();
 
 	//Map index to vertex
 	typedef std::pair<long long, const voronoi_diagram<double>::vertex_type*> index_to_vertex;

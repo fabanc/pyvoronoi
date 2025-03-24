@@ -1,6 +1,7 @@
 #pragma warning(disable : 4503)
 #include "voronoi.hpp"
 #include "map"
+#include <unordered_set>
 
 VoronoiDiagram::VoronoiDiagram() {
 
@@ -25,6 +26,41 @@ std::vector<Point> VoronoiDiagram::GetPoints() {
 std::vector<Segment> VoronoiDiagram::GetSegments() {
 	return segments;
 }
+
+std::vector<int> VoronoiDiagram::GetIntersectingSegments(){
+    std::vector<int> overlapping_indexes;
+    for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
+        Segment* segmentLeft = &(*it_left);
+
+        int left_index = distance(segments.begin(),it_left);
+        int next_index = left_index + 1;
+        for (int right_index=next_index;right_index < segments.size(); right_index ++){
+            Segment segmentRight = segments[right_index];
+            if(segmentLeft->intersects(segmentRight)){
+                overlapping_indexes.push_back(left_index);
+                overlapping_indexes.push_back(right_index);
+            }
+        }
+    }
+    return overlapping_indexes;
+}
+
+//std::vector<c_Vertex> VoronoiDiagram::GetOverlappingPoints(){
+//
+//    // A hashmap to be populated as we iterate through vertices.
+//    std::unordered_set<std::string> si;
+//    std::vector<c_Vertex> duplicates;
+//    for (auto it = begin (points); it != end (points); ++it) {
+//        const Point point = &(*it);
+//        std::string hash_text =  std::to_string(point.x) + "," + std::to_string(point.y);
+////        if (!si.insert(hash_text).second)
+////        {
+////            duplicates.push_back(c_Vertex(point->x, point->y));
+////        }
+//    }
+//    return overlappingPoints;
+//}
+
 
 long long VoronoiDiagram::CountVertices(){
 	return vd.num_vertices();
