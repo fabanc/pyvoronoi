@@ -365,6 +365,31 @@ class TestInputSegmentIntersects(TestCase):
         invalid_segments = pv.GetDegenerateSegments()
         self.assertEqual(1, len(invalid_segments))
 
+class TestInputPointOnInputSegment(TestCase):
+    def test_no_point_on_segment(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        # Those two segments not intersect or overlap anything
+        pv.AddSegment([[-6, -6], [-10, -10]])
+        pv.AddSegment([[6, 6], [10, 10]])
+        pv.AddPoint([0,0])
+
+        invalid_points = pv.GetPointsOnSegments()
+        self.assertEqual(0, len(invalid_points))
+
+    def test_point_on_segment(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        # Those two segments not intersect or overlap anything
+        pv.AddSegment([[-6, -6], [-10, -10]])
+        pv.AddSegment([[6, 6], [10, 10]])
+        pv.AddPoint([0, 0])
+        pv.AddPoint([7, 7])
+
+        invalid_points = pv.GetPointsOnSegments()
+        self.assertEqual(1, len(invalid_points))
+        self.assertEqual(1, invalid_points[0])
+
 
 def run_tests():
     main()
