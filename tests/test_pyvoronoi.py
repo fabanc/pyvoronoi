@@ -391,6 +391,20 @@ class TestInputPointOnInputSegment(TestCase):
         self.assertEqual(1, invalid_points[0])
 
 
+    def test_point_on_segment_factor10(self):
+        pv = pyvoronoi.Pyvoronoi(10)
+
+        # Those two segments not intersect or overlap anything
+        pv.AddSegment([[-6, -6], [-10, -10]])
+        pv.AddSegment([[6.6, 6.6], [10.1, 10.1]])
+        pv.AddPoint([0, 0])
+        pv.AddPoint([7.7, 7.7])
+
+        invalid_points = pv.GetPointsOnSegments()
+        self.assertEqual(1, len(invalid_points))
+        self.assertEqual(1, invalid_points[0])
+
+
 def run_tests():
     main()
 
