@@ -344,7 +344,7 @@ class TestInputSegmentIntersects(TestCase):
         self.assertEqual(1, intersecting_segments[1])
 
 
-class TestInputSegmentIntersects(TestCase):
+class TestDegeneratedInputSegment(TestCase):
     def test_no_degenerate_segment(self):
         pv = pyvoronoi.Pyvoronoi(1)
 
