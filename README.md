@@ -202,6 +202,52 @@ The curve interpolation code can return 2 exceptions.
 
 * UnsolvableParabolaEquation: there are cases where the point returned by boost does not fit with the parabola equation (for a same position on the x-axis, we get 2 different points, both equidistant). Understanding this issue is still under investigation. It is possible to mitigate this issue by setting an optional 3rd parameter of the function DiscretizeCurvedEdge). A higher value means more tolerance to this exception. The recommended value would be 1 / Scaling Factor.
 
+### Data validation
+
+According to the Boost Voronoi Documentation [here](https://www.boost.org/doc/libs/1_84_0/libs/polygon/doc/voronoi_main.htm)
+
+> Input points and segments should not overlap except their endpoints. This means that input point should not lie inside the input segment and input segments should not intersect except their endpoints.
+
+Pyvoronoi gives you 3 method to validate your input points and segments.
+
+* GetPointsOnSegments: this function returns the list of indexes of all the input points located anywhere on a segment. Segments end points are disregarded.
+* GetDegenerateSegments: this function returns the list of indexes of all degenerate segments. Degenerate segments use the same coordinates for their first and last point.
+* GetIntersectingSegments: this function returns the list of indexes of all the segments that intersect another segment
+
+Those function are can be handy if you are using a factor greater than 1 since the code validates the data after the factor has been applied. In other words, the coordinates tested are the coordinates used to solve the Voronoi problem. 
+
+#### Example 1
+
+```python
+     pv = pyvoronoi.Pyvoronoi(1)
+
+     # Those two segments not intersect or overlap anything
+     pv.AddSegment([[-6, -6], [-10, -10]])
+     pv.AddSegment([[6, 6], [10, 10]])
+     pv.AddPoint([0, 0])
+     pv.AddPoint([7, 7])
+        
+     # Will return [1] as the second point is on the second segment
+     invalid_points = pv.GetPointsOnSegments()
+```
+
+#### Example 2
+
+```python
+     pv = pyvoronoi.Pyvoronoi(1)
+
+     # Those two segments overlap on 0,0 --> 5,0
+     pv.AddSegment([[0, 0], [10, 0]])
+     pv.AddSegment([[-10, 0], [5, 0]])
+
+     # Those two segments not intersect or overlap anything
+     pv.AddSegment([[-6, -6], [-10, -10]])
+     pv.AddSegment([[6, 6], [10, 10]])
+
+    # Will return [0, 1] since the first two segments overlap
+     intersecting_segments = pv.GetIntersectingSegments()
+```
+
 # License
 
 -  Pyvoronoi is available under `MIT
@@ -209,7 +255,6 @@ The curve interpolation code can return 2 exceptions.
 -  The core Voronoi library is available under `Boost Software
    License <http://www.boost.org/LICENSE_1_0.txt>`__. Freeware for both
    open source and commercial applications.
-
 
 # Development
 
