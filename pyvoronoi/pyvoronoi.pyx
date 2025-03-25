@@ -330,12 +330,21 @@ cdef class Pyvoronoi:
         return output
 
     def GetIntersectingSegments(self):
+        """
+        Returns the indexes of segments that intersect another segment. The indexes are returned as a list.
+        """
         return self.thisptr.GetIntersectingSegments()
 
     def GetDegenerateSegments(self):
+        """
+        Return the indexes of segments which has identical coordinates for its start point and end point. The indexes are returned as a list.
+        """
         return self.thisptr.GetDegenerateSegments()
 
     def GetPointsOnSegments(self):
+        """
+        Return the indexes of points located on a segments. Connection at any of the end points is disregarded. The indexes are returned as a list.
+        """
         return self.thisptr.GetPointsOnSegments()
 
     def GetEdges(self):

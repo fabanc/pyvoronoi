@@ -282,18 +282,19 @@ class TestInputSegmentIntersects(TestCase):
 
         pv = pyvoronoi.Pyvoronoi(1)
 
-        # Those first two segments not intersect
+        # Those first two segments do not intersect
         pv.AddSegment([[-6, -6], [-10, -10]])
         pv.AddSegment([[6, 6], [10, 10]])
 
-        # Those two segments intersect but do not intersect the first two segment
+        # Those two segments intersect but do not intersect the first two segments
         pv.AddSegment([[0, 0], [10, 0]])
         pv.AddSegment([[5, -5], [5, 10]])
 
+        # The output should be our two intersecting segments indexed, without duplicating any idenfiers
         intersecting_segments = pv.GetIntersectingSegments()
-        self.assertEqual(len(intersecting_segments), 2)
-        self.assertEqual(intersecting_segments[0], 2)
-        self.assertEqual(intersecting_segments[1], 3)
+        self.assertEqual(2, len(intersecting_segments))
+        self.assertEqual(2, intersecting_segments[0])
+        self.assertEqual(3, intersecting_segments[1])
 
     def test_true_intersection_2(self):
         """
@@ -325,7 +326,7 @@ class TestInputSegmentIntersects(TestCase):
         pv.AddSegment([[-10, 0], [0, 0]])
 
         intersecting_segments = pv.GetIntersectingSegments()
-        self.assertEqual(len(intersecting_segments), 0)
+        self.assertEqual(0, len(intersecting_segments))
 
     def test_colinearity_intersects(self):
         pv = pyvoronoi.Pyvoronoi(1)
@@ -338,6 +339,7 @@ class TestInputSegmentIntersects(TestCase):
         pv.AddSegment([[-6, -6], [-10, -10]])
         pv.AddSegment([[6, 6], [10, 10]])
 
+        # Validate that the two segments that intersects on 0 --> 5 intersect
         intersecting_segments = pv.GetIntersectingSegments()
         self.assertEqual(2, len(intersecting_segments))
         self.assertEqual(0, intersecting_segments[0])

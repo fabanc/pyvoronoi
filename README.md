@@ -221,9 +221,11 @@ Those function are can be handy if you are using a factor greater than 1 since t
 ```python
      pv = pyvoronoi.Pyvoronoi(1)
 
-     # Those two segments not intersect or overlap anything
+     # Those two segments do not intersect or overlap anything
      pv.AddSegment([[-6, -6], [-10, -10]])
      pv.AddSegment([[6, 6], [10, 10]])
+     
+     # The second point is located on the second segment
      pv.AddPoint([0, 0])
      pv.AddPoint([7, 7])
         
