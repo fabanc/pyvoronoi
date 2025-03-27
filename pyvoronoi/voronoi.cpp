@@ -27,6 +27,8 @@ std::vector<Segment> VoronoiDiagram::GetSegments() {
 	return segments;
 }
 
+
+
 std::vector<int> VoronoiDiagram::GetIntersectingSegments(){
     std::vector<int> overlapping_indexes;
     for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
@@ -36,7 +38,7 @@ std::vector<int> VoronoiDiagram::GetIntersectingSegments(){
         int next_index = left_index + 1;
         for (int right_index=next_index;right_index < segments.size(); right_index ++){
             Segment segmentRight = segments[right_index];
-            if(segmentLeft->intersects(segmentRight)){
+            if(segmentLeft->findIntersection(segmentRight)){
                 overlapping_indexes.push_back(left_index);
                 overlapping_indexes.push_back(right_index);
             }
@@ -62,8 +64,11 @@ std::vector<int> VoronoiDiagram::GetPointsOnSegments(){
         for (auto it_segment = segments.begin(); it_segment != segments.end(); ++it_segment) {
             Segment* segment = &(*it_segment);
             if(segment->onSegment(segment->p0, *it_point, segment->p1)){
-                degenerate_indexes.push_back(distance(points.begin(),it_point));
-                break;
+                if(segment->onEndpoint(*it_point) == false)
+                {
+                    degenerate_indexes.push_back(distance(points.begin(),it_point));
+                    break;
+                }
             }
         }
     }
@@ -127,6 +132,14 @@ void VoronoiDiagram::MapCellIndexes(){
 		map_cells_to_indexes.insert(cell_to_index(cell, index));
 		index++;
 	}
+}
+
+Point VoronoiDiagram::GetPoint(int index){
+    return points[index];
+}
+
+Segment VoronoiDiagram::GetSegment(int index){
+    return segments[index];
 }
 
 c_Vertex VoronoiDiagram::GetVertex(long long index){

@@ -11,6 +11,13 @@
 
 #include "boost/polygon/voronoi.hpp"
 #include "map"
+#include <cmath>
+
+struct IntersectionPoint{
+	double X;
+	double Y;
+	IntersectionPoint(double x = 0, double y = 0) : X(x), Y(y) {}
+};
 
 struct Point {
 	int X;
@@ -27,17 +34,34 @@ struct Segment {
 
     // Given three collinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
-    bool onSegment(Point p, Point q, Point r)
+    bool onSegment(Point p, IntersectionPoint q, Point r)
     {
-        // If the segments just equals an endpoint, returns false. It touches, but does not intersect
-        if (q.X == p.X && q.Y == p.Y)
-            return false;
-        if (q.X == r.X && q.Y == r.Y)
-            return false;
         // Otherwise, it is in the pr space, returns true
         if (q.X <= std::max(p.X, r.X) && q.X >= std::min(p.X, r.X) && q.Y <= std::max(p.Y, r.Y) && q.Y >= std::min(p.Y, r.Y))
             return true;
 
+        return false;
+    }
+
+    bool onSegment(Point p, Point q, Point r)
+    {
+        if (q.X <= std::max(p.X, r.X) && q.X >= std::min(p.X, r.X) && q.Y <= std::max(p.Y, r.Y) && q.Y >= std::min(p.Y, r.Y))
+            return true;
+        return false;
+    }
+
+    bool onSegment2(Point p, Point q, Point r)
+    {
+        if (q.X < std::max(p.X, r.X) && q.X > std::min(p.X, r.X) && q.Y < std::max(p.Y, r.Y) && q.Y > std::min(p.Y, r.Y))
+            return true;
+        return false;
+    }
+
+    bool onEndpoint(Point q){
+        if (q.X == p0.X && q.Y == p0.Y)
+            return true;
+        if (q.X == p1.X && q.Y == p1.Y)
+            return true;
         return false;
     }
 
@@ -58,34 +82,156 @@ struct Segment {
         return (val > 0)? 1: 2; // clock or counterclock wise
     }
 
+    //  Returns Point of intersection if do intersect otherwise default Point (null)
+    bool findIntersection(Segment otherSegment)
+    {
+        double tolerance = 0.01;
+        long long x1 = p0.X, y1 = p0.Y;
+        long long x2 = p1.X, y2 = p1.Y;
 
-    bool intersects(Segment otherSegment){
-        // Find the four orientations needed for general and
-        // special cases
-        int o1 = orientation(p0, p1, otherSegment.p0);
-        int o2 = orientation(p0, p1, otherSegment.p1);
-        int o3 = orientation(otherSegment.p0, otherSegment.p1, p0);
-        int o4 = orientation(otherSegment.p0, otherSegment.p1, p1);
+        long long x3 = otherSegment.p0.X, y3 = otherSegment.p0.Y;
+        long long x4 = otherSegment.p1.X, y4 = otherSegment.p1.Y;
 
-        // General case
-        if (o1 != o2 && o3 != o4)
+        // equations of the form x=c (two vertical lines) with overlapping
+        if (abs(x1 - x2) < tolerance && abs(x3 - x4) < tolerance && abs(x1 - x3) < tolerance)
+        {
+            //throw new Exception("Both lines overlap vertically, ambiguous intersection points.");
+            if (onEndpoint(otherSegment.p0) || onEndpoint(otherSegment.p1))
+                return false;
+            else{
+                return true;
+            }
+        }
+
+        //equations of the form y=c (two horizontal lines) with overlapping
+        if (abs(y1 - y2) < tolerance && abs(y3 - y4) < tolerance && abs(y1 - y3) < tolerance)
+        {
+            //throw new Exception("Both lines overlap horizontally, ambiguous intersection points.");
+            if (onEndpoint(otherSegment.p0) || onEndpoint(otherSegment.p1))
+                return false;
+            return true;
+        }
+
+        //equations of the form x=c (two vertical parallel lines)
+        if (abs(x1 - x2) < tolerance && abs(x3 - x4) < tolerance)
+        {
+            //return default (no intersection)
+            if (onEndpoint(otherSegment.p0) || onEndpoint(otherSegment.p1))
+                return false;
+            return true;
+        }
+
+        //equations of the form y=c (two horizontal parallel lines)
+        if (abs(y1 - y2) < tolerance && abs(y3 - y4) < tolerance)
+        {
+            //return default (no intersection)
+            if (onEndpoint(otherSegment.p0) || onEndpoint(otherSegment.p1))
+                return false;
+            return true;
+        }
+
+
+        if (orientation(p0, otherSegment.p0, p1) == 0 && orientation(p0, otherSegment.p1, p1) == 0){
+            if (
+                onSegment2(p0, otherSegment.p0, p1) ||
+                onSegment2(p0, otherSegment.p1, p1) ||
+                onSegment2(otherSegment.p0, p0, otherSegment.p1) ||
+                onSegment2(otherSegment.p0, p1, otherSegment.p1)
+                ){
+
+                return true;
+               }
+        }
+
+
+        //general equation of line is y = mx + c where m is the slope
+        //assume equation of line 1 as y1 = m1x1 + c1
+        //=> -m1x1 + y1 = c1 ----(1)
+        //assume equation of line 2 as y2 = m2x2 + c2
+        //=> -m2x2 + y2 = c2 -----(2)
+        //if line 1 and 2 intersect then x1=x2=x & y1=y2=y where (x,y) is the intersection point
+        //so we will get below two equations
+        //-m1x + y = c1 --------(3)
+        //-m2x + y = c2 --------(4)
+
+        double x, y;
+
+        //lineA is vertical x1 = x2
+        //slope will be infinity
+        //so lets derive another solution
+        if (abs(x1 - x2) < tolerance)
+        {
+            //compute slope of line 2 (m2) and c2
+            double m2 = (y4 - y3) / (x4 - x3);
+            double c2 = -m2 * x3 + y3;
+
+            //equation of vertical line is x = c
+            //if line 1 and 2 intersect then x1=c1=x
+            //subsitute x=x1 in (4) => -m2x1 + y = c2
+            // => y = c2 + m2x1
+            x = x1;
+            y = c2 + m2 * x1;
+        }
+        //otherSegment is vertical x3 = x4
+        //slope will be infinity
+        //so lets derive another solution
+        else if (abs(x3 - x4) < tolerance)
+        {
+            //compute slope of line 1 (m1) and c2
+            double m1 = (y2 - y1) / (x2 - x1);
+            double c1 = -m1 * x1 + y1;
+
+            //equation of vertical line is x = c
+            //if line 1 and 2 intersect then x3=c3=x
+            //subsitute x=x3 in (3) => -m1x3 + y = c1
+            // => y = c1 + m1x3
+            x = x3;
+            y = c1 + m1 * x3;
+        }
+        //lineA & otherSegment are not vertical
+        //(could be horizontal we can handle it with slope = 0)
+        else
+        {
+            //compute slope of line 1 (m1) and c2
+            double m1 = (y2 - y1) / (x2 - x1);
+            double c1 = -m1 * x1 + y1;
+
+            //compute slope of line 2 (m2) and c2
+            double m2 = (y4 - y3) / (x4 - x3);
+            double c2 = -m2 * x3 + y3;
+
+            //solving equations (3) & (4) => x = (c1-c2)/(m2-m1)
+            //plugging x value in equation (4) => y = c2 + m2 * x
+            x = (c1 - c2) / (m2 - m1);
+            y = c2 + m2 * x;
+
+            //verify by plugging intersection point (x, y)
+            //in orginal equations (1) & (2) to see if they intersect
+            //otherwise x,y values will not be finite and will fail this check
+            if (!(abs(-m1 * x + y - c1) < tolerance
+                && abs(-m2 * x + y - c2) < tolerance))
+            {
+                //return default (no intersection)
+                return false;
+            }
+        }
+
+        //x,y can intersect outside the line segment since line is infinitely long
+        //so finally check if x, y is within both the line segments
+        IntersectionPoint p =  IntersectionPoint(x, y);
+        if (onSegment(p0, p, p1) && onSegment(otherSegment.p0, p, otherSegment.p1))
+        {
+            Point pi = Point(round(x), round(y));
+            if (onEndpoint(pi) && otherSegment.onEndpoint(pi))
+                return false;
             return true;
 
-        // Special Cases
-        // p0, p1 and otherSegment.p0 are collinear and otherSegment.p0 lies on segment p0p1
-        if (o1 == 0 && onSegment(p0, otherSegment.p0, p1)) return true;
+        }
 
-        // p0, p1 and otherSegment.p1 are collinear and otherSegment.p1 lies on segment p0p1
-        if (o2 == 0 && onSegment(p0, otherSegment.p1, p1)) return true;
-
-        // otherSegment.p0, otherSegment.p1 and p0 are collinear and p0 lies on segment otherSegment.p0otherSegment.p1
-        if (o3 == 0 && onSegment(otherSegment.p0, p0, otherSegment.p1)) return true;
-
-        // otherSegment.p0, otherSegment.p1 and p1 are collinear and p1 lies on segment otherSegment.p0otherSegment.p1
-        if (o4 == 0 && onSegment(otherSegment.p0, p1, otherSegment.p1)) return true;
-
-        return false; // Doesn't fall in any of the above cases
+        //return default (no intersection)
+        return false;
     }
+
 };
 
 
@@ -222,6 +368,8 @@ public:
 	void MapEdgeIndexes();
 	void MapCellIndexes();
 
+    Point GetPoint(int index);
+    Segment GetSegment(int index);
 	c_Vertex GetVertex(long long index);
 	c_Edge GetEdge(long long index);
 	c_Cell GetCell(long long index);

@@ -212,7 +212,7 @@ Pyvoronoi gives you 3 method to validate your input points and segments.
 
 * GetPointsOnSegments: this function returns the list of indexes of all the input points located anywhere on a segment. Segments end points are disregarded.
 * GetDegenerateSegments: this function returns the list of indexes of all degenerate segments. Degenerate segments use the same coordinates for their first and last point.
-* GetIntersectingSegments: this function returns the list of indexes of all the segments that intersect another segment
+* GetIntersectingSegments: this function returns the list of indexes of all the segments that intersect another segment. Intersections between segments at endpoints only are disregarded.
 
 Those function are can be handy if you are using a factor greater than 1 since the code validates the data after the factor has been applied. In other words, the coordinates tested are the coordinates used to solve the Voronoi problem. 
 

@@ -108,6 +108,8 @@ cdef extern from "voronoi.hpp":
         long long CountEdges()
         long long CountCells()
 
+        Point GetPoint(int index)
+        Segment GetSegment(int index)
         c_Vertex GetVertex(long long index)
         c_Edge GetEdge(long long index)
         c_Cell GetCell(long long index)
@@ -274,6 +276,11 @@ cdef class Pyvoronoi:
         self.thisptr.MapEdgeIndexes()
         self.thisptr.MapCellIndexes()
 
+    def GetPoint(self, index):
+        return self.thisptr.GetPoint(index)
+
+    def GetSegment(self, index):
+        return self.thisptr.GetSegment(index)
 
     def GetVertex(self, index):
         """
