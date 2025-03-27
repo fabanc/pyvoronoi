@@ -1,6 +1,7 @@
 #pragma warning(disable : 4503)
 #include "voronoi.hpp"
 #include "map"
+#include <unordered_set>
 
 VoronoiDiagram::VoronoiDiagram() {
 
@@ -25,6 +26,71 @@ std::vector<Point> VoronoiDiagram::GetPoints() {
 std::vector<Segment> VoronoiDiagram::GetSegments() {
 	return segments;
 }
+
+
+
+std::vector<int> VoronoiDiagram::GetIntersectingSegments(){
+    std::vector<int> overlapping_indexes;
+    for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
+        Segment* segmentLeft = &(*it_left);
+
+        int left_index = distance(segments.begin(),it_left);
+        int next_index = left_index + 1;
+        for (int right_index=next_index;right_index < segments.size(); right_index ++){
+            Segment segmentRight = segments[right_index];
+            if(segmentLeft->findIntersection(segmentRight)){
+                overlapping_indexes.push_back(left_index);
+                overlapping_indexes.push_back(right_index);
+            }
+        }
+    }
+    return overlapping_indexes;
+}
+
+std::vector<int> VoronoiDiagram::GetDegenerateSegments(){
+    std::vector<int> degenerate_indexes;
+    for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
+        Segment* segment = &(*it_left);
+        if (segment->p0.X == segment->p1.X && segment->p0.Y == segment->p1.Y)
+            degenerate_indexes.push_back(distance(segments.begin(),it_left));
+    }
+    return degenerate_indexes;
+}
+
+std::vector<int> VoronoiDiagram::GetPointsOnSegments(){
+    std::vector<int> degenerate_indexes;
+    for (auto it_point = points.begin(); it_point != points.end(); ++it_point) {
+        Point* point = &(*it_point);
+        for (auto it_segment = segments.begin(); it_segment != segments.end(); ++it_segment) {
+            Segment* segment = &(*it_segment);
+            if(segment->onSegment(segment->p0, *it_point, segment->p1)){
+                if(segment->onEndpoint(*it_point) == false)
+                {
+                    degenerate_indexes.push_back(distance(points.begin(),it_point));
+                    break;
+                }
+            }
+        }
+    }
+    return degenerate_indexes;
+}
+
+//std::vector<c_Vertex> VoronoiDiagram::GetOverlappingPoints(){
+//
+//    // A hashmap to be populated as we iterate through vertices.
+//    std::unordered_set<std::string> si;
+//    std::vector<c_Vertex> duplicates;
+//    for (auto it = begin (points); it != end (points); ++it) {
+//        const Point point = &(*it);
+//        std::string hash_text =  std::to_string(point.x) + "," + std::to_string(point.y);
+////        if (!si.insert(hash_text).second)
+////        {
+////            duplicates.push_back(c_Vertex(point->x, point->y));
+////        }
+//    }
+//    return overlappingPoints;
+//}
+
 
 long long VoronoiDiagram::CountVertices(){
 	return vd.num_vertices();
@@ -66,6 +132,14 @@ void VoronoiDiagram::MapCellIndexes(){
 		map_cells_to_indexes.insert(cell_to_index(cell, index));
 		index++;
 	}
+}
+
+Point VoronoiDiagram::GetPoint(int index){
+    return points[index];
+}
+
+Segment VoronoiDiagram::GetSegment(int index){
+    return segments[index];
 }
 
 c_Vertex VoronoiDiagram::GetVertex(long long index){

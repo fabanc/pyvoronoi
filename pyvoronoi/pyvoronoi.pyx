@@ -97,7 +97,9 @@ cdef extern from "voronoi.hpp":
         void Construct() nogil
         vector[Point] GetPoints()
         vector[Segment] GetSegments()
-
+        vector[int] GetIntersectingSegments()
+        vector[int] GetDegenerateSegments()
+        vector[int] GetPointsOnSegments()
         void MapVertexIndexes()
         void MapEdgeIndexes()
         void MapCellIndexes()
@@ -106,6 +108,8 @@ cdef extern from "voronoi.hpp":
         long long CountEdges()
         long long CountCells()
 
+        Point GetPoint(int index)
+        Segment GetSegment(int index)
         c_Vertex GetVertex(long long index)
         c_Edge GetEdge(long long index)
         c_Cell GetCell(long long index)
@@ -272,6 +276,12 @@ cdef class Pyvoronoi:
         self.thisptr.MapEdgeIndexes()
         self.thisptr.MapCellIndexes()
 
+    def GetPoint(self, index):
+        return self.thisptr.GetPoint(index)
+
+    def GetSegment(self, index):
+        return self.thisptr.GetSegment(index)
+
     def GetVertex(self, index):
         """
         """
@@ -325,6 +335,24 @@ cdef class Pyvoronoi:
         for index in  range(count):
             output.append(self.GetVertex(index))
         return output
+
+    def GetIntersectingSegments(self):
+        """
+        Returns the indexes of segments that intersect another segment. The indexes are returned as a list.
+        """
+        return self.thisptr.GetIntersectingSegments()
+
+    def GetDegenerateSegments(self):
+        """
+        Return the indexes of segments which has identical coordinates for its start point and end point. The indexes are returned as a list.
+        """
+        return self.thisptr.GetDegenerateSegments()
+
+    def GetPointsOnSegments(self):
+        """
+        Return the indexes of points located on a segments. Connection at any of the end points is disregarded. The indexes are returned as a list.
+        """
+        return self.thisptr.GetPointsOnSegments()
 
     def GetEdges(self):
         count = self.CountEdges()
