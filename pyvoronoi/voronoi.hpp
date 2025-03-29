@@ -332,6 +332,8 @@ public:
 	std::vector<Point> GetPoints();
 	std::vector<Segment> GetSegments();
 
+    int CountPoints();
+    int CountSegments();
 	long long CountVertices();
 	long long CountEdges();
 	long long CountCells();

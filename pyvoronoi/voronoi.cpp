@@ -91,6 +91,13 @@ std::vector<int> VoronoiDiagram::GetPointsOnSegments(){
 //    return overlappingPoints;
 //}
 
+int VoronoiDiagram:: CountPoints(){
+    return points.size();
+}
+
+int VoronoiDiagram:: CountSegments(){
+    return segments.size();
+}
 
 long long VoronoiDiagram::CountVertices(){
 	return vd.num_vertices();
