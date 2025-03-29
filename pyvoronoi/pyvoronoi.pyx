@@ -104,6 +104,8 @@ cdef extern from "voronoi.hpp":
         void MapEdgeIndexes()
         void MapCellIndexes()
 
+        int CountPoints()
+        int CountSegments()
         long long CountVertices()
         long long CountEdges()
         long long CountCells()
@@ -161,6 +163,14 @@ class Cell:
         if len(self.vertices) > 0:
             self.vertices.append(self.vertices[0])
 
+def pointDictToPointArray(p):
+    return [p['X'], p['Y']]
+
+def segmentDictToPointArray(s):
+    return[
+        [s['p0']['X'], s['p0']['Y']],
+        [s['p1']['X'], s['p1']['Y']]
+    ]
 
 class VoronoiException(Exception):
     pass
@@ -215,9 +225,6 @@ cdef class Pyvoronoi:
     cdef VoronoiDiagram *thisptr
     cdef int constructed
 
-    cdef readonly list inputPoints
-    cdef readonly list inputSegments
-
     cdef public int SCALING_FACTOR
 
     def __cinit__(self, scaling_factor = None):
@@ -232,8 +239,7 @@ cdef class Pyvoronoi:
         else:
             self.SCALING_FACTOR = 1
 
-        self.inputPoints = []
-        self.inputSegments = []
+
 
     def __dealloc__(self):
         log_action("Deleting the VoronoiDiagram instance")
@@ -248,7 +254,6 @@ cdef class Pyvoronoi:
 
         cdef Point c_point = self._to_voronoi_point(point)
         self.thisptr.AddPoint(c_point)
-        self.inputPoints.append([c_point.X, c_point.Y])
 
     def AddSegment(self, segment):
         """ Add a segment
@@ -259,7 +264,6 @@ cdef class Pyvoronoi:
 
         cdef Segment c_segment = self._to_voronoi_segment(segment)
         self.thisptr.AddSegment(c_segment)
-        self.inputSegments.append([[c_segment.p0.X, c_segment.p0.Y], [c_segment.p1.X, c_segment.p1.Y]])
 
     def Construct(self):
         """ Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
@@ -322,12 +326,12 @@ cdef class Pyvoronoi:
     def GetPoints(self):
         """ Returns the points added to the voronoi diagram
         """
-        return self.inputPoints
+        return [pointDictToPointArray(p) for p in self.thisptr.GetPoints()]
 
     def GetSegments(self):
         """ Returns the segments added to the voronoi diagram
         """
-        return self.inputSegments
+        return [segmentDictToPointArray(s) for s in self.thisptr.GetSegments()]
 
     def GetVertices(self):
         count = self.CountVertices()
@@ -403,7 +407,7 @@ cdef class Pyvoronoi:
 		:param cell: the cell that contains a point. The point can be either a input point or the end point of an input segment.
         """
         if(cell.source_category == 0):
-            return self.inputPoints[cell.site]
+            return pointDictToPointArray(self.thisptr.GetPoint(cell.site))
 
         input_segment = self.RetrieveSegment(cell)
         if(cell.source_category == 1):
@@ -414,7 +418,11 @@ cdef class Pyvoronoi:
     def RetrieveSegment(self, cell):
         """Retrive the input segment associated with a cell.
         """
-        return self.inputSegments[cell.site - len(self.inputPoints)]
+        i = cell.site - self.thisptr.CountPoints()
+        c_s = self.thisptr.GetSegment(i)
+        s = segmentDictToPointArray(c_s)
+        return s
+
 
 
     def RetrieveScaledPoint(self, cell):

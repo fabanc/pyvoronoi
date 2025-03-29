@@ -196,7 +196,7 @@ class TestPyvoronoiConstruct(TestCase):
         pv = pyvoronoi.Pyvoronoi(1)
         pv.AddPoint([5,5])
         pv.Construct()
-        self.assertTrue(1 == len(pv.inputPoints))
+        self.assertTrue(1 == len(pv.GetPoints()))
 
     def test_discretize(self):
         pv = pyvoronoi.Pyvoronoi(1)
@@ -267,10 +267,10 @@ class TestPyvoronoiConstruct(TestCase):
         pv.Construct()
         pv2.Construct()
 
-        self.assertEqual([[5, 5]], pv.inputPoints)
-        self.assertEqual([[[0, 0], [0, 10]]], pv.inputSegments)
-        self.assertEqual([[9, 9]], pv2.inputPoints)
-        self.assertEqual([[[1, 1], [1, 9]]], pv2.inputSegments)
+        self.assertEqual([[5, 5]], pv.GetPoints())
+        self.assertEqual([[[0, 0], [0, 10]]], pv.GetSegments())
+        self.assertEqual([[9, 9]], pv2.GetPoints())
+        self.assertEqual([[[1, 1], [1, 9]]], pv2.GetSegments())
 
 
 class TestInputSegmentIntersects(TestCase):
