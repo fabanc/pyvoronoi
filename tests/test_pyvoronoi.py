@@ -28,7 +28,7 @@ class TestPyvoronoiAdd(TestCase):
         inputPoint = [0.5, 1]
         pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddPoint(inputPoint)
-        points = pv.GetPoints()
+        points = list(pv.GetPoints())
         self.assertTrue(len(points) == 1)
         self.assertTrue(points[0][0] == inputPoint[0] * factor)
         self.assertTrue(points[0][1] == inputPoint[1] * factor)
@@ -38,7 +38,7 @@ class TestPyvoronoiAdd(TestCase):
         segment = [[0.5, 1], [0, 2]]
         pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddSegment(segment)
-        segments = pv.GetSegments()
+        segments = list(pv.GetSegments())
         self.assertTrue(len(segments) == 1)
         self.assertTrue(segments[0] == [
             [segment[0][0] * factor, segment[0][1] * factor],
@@ -55,7 +55,7 @@ class TestPyvoronoiAdd(TestCase):
         segment = [[0.59, 1.09], [0, 2]]
         pv = pyvoronoi.Pyvoronoi(factor)
         pv.AddSegment(segment)
-        segments = pv.GetSegments()
+        segments = list(pv.GetSegments())
         self.assertTrue(len(segments) == 1)
         self.assertTrue(segments[0] == [
             [round(segment[0][0] * factor), round(segment[0][1] * factor)],
@@ -192,11 +192,39 @@ class TestPyvoronoiConstruct(TestCase):
                 valid_vertices = [v for v in cell.vertices if v != -1]
                 self.assertTrue(len(valid_vertices) > 0)
 
-    def test_input_point(self):
+    # def test_input_point(self):
+    #     pv = pyvoronoi.Pyvoronoi(1)
+    #     pv.AddPoint([5,5])
+    #     pv.Construct()
+    #     self.assertTrue(1 == len(pv.GetPoints()))
+    #     self.assertEqual([5, 5], pv.GetPoint(0))
+
+    def test_retrieve_input(self):
         pv = pyvoronoi.Pyvoronoi(1)
-        pv.AddPoint([5,5])
+
+        p1 = [5, 5]
+        p2 = [0, 0]
+        s1 = [[10, 10], [20, 20]]
+        s2 = [[10, 10], [20, 20]]
+        s3 = [[-10, -10], [-20, -20]]
+
+        pv.AddPoint(p1)
+        pv.AddPoint(p2)
+        pv.AddSegment(s1)
+        pv.AddSegment(s2)
+        pv.AddSegment(s3)
+
+
         pv.Construct()
-        self.assertTrue(1 == len(pv.GetPoints()))
+
+        self.assertTrue(2 == len(list(pv.GetPoints())))
+        self.assertEqual(2, pv.CountPoints())
+        self.assertTrue(3 == len(list(pv.GetSegments())))
+        self.assertEqual(3, pv.CountSegments())
+        self.assertEqual(p1, pv.GetPoint(0))
+        self.assertEqual(p2, pv.GetPoint(1))
+        self.assertEqual(s1, pv.GetSegment(0))
+        self.assertEqual(s2, pv.GetSegment(1))
 
     def test_discretize(self):
         pv = pyvoronoi.Pyvoronoi(1)
@@ -267,10 +295,10 @@ class TestPyvoronoiConstruct(TestCase):
         pv.Construct()
         pv2.Construct()
 
-        self.assertEqual([[5, 5]], pv.GetPoints())
-        self.assertEqual([[[0, 0], [0, 10]]], pv.GetSegments())
-        self.assertEqual([[9, 9]], pv2.GetPoints())
-        self.assertEqual([[[1, 1], [1, 9]]], pv2.GetSegments())
+        self.assertEqual([[5, 5]], list(pv.GetPoints()))
+        self.assertEqual([[[0, 0], [0, 10]]], list(pv.GetSegments()))
+        self.assertEqual([[9, 9]], list(pv2.GetPoints()))
+        self.assertEqual([[[1, 1], [1, 9]]], list(pv2.GetSegments()))
 
 
 class TestInputSegmentIntersects(TestCase):

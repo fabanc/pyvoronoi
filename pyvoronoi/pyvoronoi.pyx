@@ -281,10 +281,10 @@ cdef class Pyvoronoi:
         self.thisptr.MapCellIndexes()
 
     def GetPoint(self, index):
-        return self.thisptr.GetPoint(index)
+        return pointDictToPointArray(self.thisptr.GetPoint(index))
 
     def GetSegment(self, index):
-        return self.thisptr.GetSegment(index)
+        return segmentDictToPointArray(self.thisptr.GetSegment(index))
 
     def GetVertex(self, index):
         """
@@ -314,6 +314,12 @@ cdef class Pyvoronoi:
         cell.is_open = c_cell.is_open != False
         return cell
 
+    def CountPoints(self):
+        return self.thisptr.CountPoints()
+
+    def CountSegments(self):
+        return self.thisptr.CountSegments()
+
     def CountVertices(self):
         return self.thisptr.CountVertices()
 
@@ -324,14 +330,19 @@ cdef class Pyvoronoi:
         return self.thisptr.CountCells()
 
     def GetPoints(self):
-        """ Returns the points added to the voronoi diagram
         """
-        return [pointDictToPointArray(p) for p in self.thisptr.GetPoints()]
+        Iterate through the input points added to the voronoi builder
+        """
+        for p in self.thisptr.GetPoints():
+            yield pointDictToPointArray(p)
+
 
     def GetSegments(self):
-        """ Returns the segments added to the voronoi diagram
         """
-        return [segmentDictToPointArray(s) for s in self.thisptr.GetSegments()]
+        Iterate through the input segments added to the voronoi builder
+        """
+        for s in self.thisptr.GetSegments():
+            yield segmentDictToPointArray(s)
 
     def GetVertices(self):
         count = self.CountVertices()
@@ -407,7 +418,7 @@ cdef class Pyvoronoi:
 		:param cell: the cell that contains a point. The point can be either a input point or the end point of an input segment.
         """
         if(cell.source_category == 0):
-            return pointDictToPointArray(self.thisptr.GetPoint(cell.site))
+            return self.GetPoint(cell.site)
 
         input_segment = self.RetrieveSegment(cell)
         if(cell.source_category == 1):
@@ -419,8 +430,7 @@ cdef class Pyvoronoi:
         """Retrive the input segment associated with a cell.
         """
         i = cell.site - self.thisptr.CountPoints()
-        c_s = self.thisptr.GetSegment(i)
-        s = segmentDictToPointArray(c_s)
+        s = self.GetSegment(i)
         return s
 
 
