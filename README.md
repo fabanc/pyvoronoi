@@ -118,9 +118,6 @@ def GetCells(self):
     return output
 ```
 
-If you are running python 2.x, you might want to write your own wrappers using xrange. This will be more efficient.
-
-
 Vertices have the following properties:
 
 * ``X``: the position on the X-axis of the vertex.
@@ -208,7 +205,7 @@ According to the Boost Voronoi Documentation [here](https://www.boost.org/doc/li
 
 > Input points and segments should not overlap except their endpoints. This means that input point should not lie inside the input segment and input segments should not intersect except their endpoints.
 
-Pyvoronoi gives you 3 method to validate your input points and segments.
+As of version 1.1.7 Pyvoronoi gives you 3 method to validate your input points and segments.
 
 * GetPointsOnSegments: this function returns the list of indexes of all the input points located anywhere on a segment. Segments end points are disregarded.
 * GetDegenerateSegments: this function returns the list of indexes of all degenerate segments. Degenerate segments use the same coordinates for their first and last point.
@@ -249,6 +246,60 @@ Those function are can be handy if you are using a factor greater than 1 since t
     # Will return [0, 1] since the first two segments overlap
      intersecting_segments = pv.GetIntersectingSegments()
 ```
+
+### Retrieving input geometries
+
+Along with the validation data, you can inspect the data passed to pyvoronoi using a few convenience methods. Note that the coordinates returned are the coordinates after pyvoronoi applies the factor.
+The coordinates you see are the coordinates used solve the Voronoi problem. 
+
+As of version 1.1.9, you can access the input geometries used by pyvoronoi using
+
+* GetPoint(index): returns the coordinates of the input point as pair of coordinate [x, y]
+* GetSegment(index): returns the coordinates of the input segment pair of pair of coordinate [[x1, y1], [x2, y2]]
+* CountPoints(): returns the number of input points passed to pyvoronoi
+* CountSegments(): returns the number of input segments passed to pyvoronoi
+
+Pyvoronoi also provides two generator to iterate through input points and segments:
+* GetPoints()
+* GetSegments()
+
+A good example on how to use this code can be found in this unit test:
+
+```python
+    def test_retrieve_input(self):
+        pv = pyvoronoi.Pyvoronoi(1)
+
+        p1 = [5, 5]
+        p2 = [0, 0]
+        s1 = [[10, 10], [20, 20]]
+        s2 = [[10, 10], [20, 20]]
+        s3 = [[-10, -10], [-20, -20]]
+
+        pv.AddPoint(p1)
+        pv.AddPoint(p2)
+        pv.AddSegment(s1)
+        pv.AddSegment(s2)
+        pv.AddSegment(s3)
+
+
+        pv.Construct()
+
+        self.assertTrue(2 == len(list(pv.GetPoints())))
+        self.assertEqual(2, pv.CountPoints())
+        self.assertTrue(3 == len(list(pv.GetSegments())))
+        self.assertEqual(3, pv.CountSegments())
+        self.assertEqual(p1, pv.GetPoint(0))
+        self.assertEqual(p2, pv.GetPoint(1))
+        self.assertEqual(s1, pv.GetSegment(0))
+        self.assertEqual(s2, pv.GetSegment(1))
+```
+
+#### Example:
+
+```python
+
+```
+
 
 # License
 
