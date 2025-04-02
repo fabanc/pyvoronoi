@@ -130,6 +130,36 @@ class TestPyvoronoiConstruct(TestCase):
         self.assertNotEqual(cell.vertices[-2], cell.vertices[-1])
         self.assertEqual(cell.vertices[0], cell.vertices[-1])
 
+    def test_output_enumeration(self):
+        """
+        Validate that the first and last vertex are the same on cells.
+        :return:
+        """
+        pv = pyvoronoi.Pyvoronoi(1)
+        pv.AddPoint([5,5])
+        pv.AddSegment([[0,0],[0,10]])
+        pv.AddSegment([[0,0],[10,0]])
+        pv.AddSegment([[0,10],[10,10]])
+        pv.AddSegment([[10,0],[10,10]])
+        pv.Construct()
+        cells = pv.GetCells()
+        edges = pv.GetEdges()
+        vertices = pv.GetVertices()
+
+        # Check that enumerators return the same content that list
+        for index, vertex in pv.EnumerateVertices():
+            self.assertEqual(vertex.X, vertices[index].X)
+            self.assertEqual(vertex.Y, vertices[index].Y)
+
+        for index, edge in pv.EnumerateEdges():
+            self.assertEqual(edge.start, edges[index].start)
+            self.assertEqual(edge.end, edges[index].end)
+
+        for index, cell in pv.EnumerateCells():
+            self.assertEqual(cell.cell_identifier, cells[index].cell_identifier)
+            self.assertEqual(cell.site, cells[index].site)
+
+
     def test_vertex_reference_for_edges(self):
         """
         Test the node edge have both ends not referencing a vertex.
@@ -191,13 +221,6 @@ class TestPyvoronoiConstruct(TestCase):
             if not cell.is_degenerate:
                 valid_vertices = [v for v in cell.vertices if v != -1]
                 self.assertTrue(len(valid_vertices) > 0)
-
-    # def test_input_point(self):
-    #     pv = pyvoronoi.Pyvoronoi(1)
-    #     pv.AddPoint([5,5])
-    #     pv.Construct()
-    #     self.assertTrue(1 == len(pv.GetPoints()))
-    #     self.assertEqual([5, 5], pv.GetPoint(0))
 
     def test_retrieve_input(self):
         pv = pyvoronoi.Pyvoronoi(1)
