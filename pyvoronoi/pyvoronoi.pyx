@@ -344,13 +344,6 @@ cdef class Pyvoronoi:
         for s in self.thisptr.GetSegments():
             yield segmentDictToPointArray(s)
 
-    def GetVertices(self):
-        count = self.CountVertices()
-        output = []
-        for index in  range(count):
-            output.append(self.GetVertex(index))
-        return output
-
     def GetIntersectingSegments(self):
         """
         Returns the indexes of segments that intersect another segment. The indexes are returned as a list.
@@ -369,6 +362,17 @@ cdef class Pyvoronoi:
         """
         return self.thisptr.GetPointsOnSegments()
 
+    def GetVertices(self):
+        count = self.CountVertices()
+        output = []
+        for index in  range(count):
+            output.append(self.GetVertex(index))
+        return output
+
+    def EnumerateVertices(self):
+        for index in range(self.CountVertices()):
+            yield index, self.GetVertex(index)
+
     def GetEdges(self):
         count = self.CountEdges()
         output = []
@@ -376,12 +380,20 @@ cdef class Pyvoronoi:
             output.append(self.GetEdge(index))
         return output
 
+    def EnumerateEdges(self):
+        for index in range(self.CountEdges()):
+            yield index, self.GetEdge(index)
+
     def GetCells(self):
         count = self.CountCells()
         output = []
         for index in range(count):
             output.append(self.GetCell(index))
         return output
+
+    def EnumerateCells(self):
+        for index in range(self.CountCells()):
+            yield index, self.GetCell(index)
 
     def ReturnCurvedSiteInformation(self, edge):
         """Return the index of the point side and the segment site associated  with a segment index

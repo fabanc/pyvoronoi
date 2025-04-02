@@ -118,6 +118,51 @@ def GetCells(self):
     return output
 ```
 
+Note code above duplicates output data, which might be a problem for big datasets. As of 1.2.0, there is a more memory-friendly way to do that.
+
+```python
+    def GetVertices(self):
+        count = self.CountVertices()
+        output = []
+        for index in  range(count):
+            output.append(self.GetVertex(index))
+        return output
+
+    def EnumerateVertices(self):
+        for index in range(self.CountVertices()):
+            yield index, self.GetVertex(index)
+            
+    def EnumerateEdges(self):
+        for index in range(self.CountEdges()):
+            yield index, self.GetEdge(index)
+
+    def EnumerateCells(self):
+        for index in range(self.CountCells()):
+            yield index, self.GetCell(index)
+```
+
+They return the same information as the list, but fetch each output object from the Boost C++ API. This is much more memory-friendly.
+
+```python
+   import pyvoronoi
+   pv = pyvoronoi.Pyvoronoi(1)
+   pv.AddPoint([5,5])
+   pv.AddSegment([[0,0],[0,10]])
+   pv.AddSegment([[0,0],[10,0]])
+   pv.AddSegment([[0,10],[10,10]])
+   pv.AddSegment([[10,0],[10,10]])
+   pv.Construct()
+   
+   for index, vertex in pv.EnumerateVertices():
+      # ... do things with vertex.X or vertex.Y
+   
+   for index, edge in pv.EnumerateEdges():
+      # ... do things with the current edge
+   
+   for index, cell in pv.EnumerateCells():
+      # ... do things with the current cell
+```
+
 Vertices have the following properties:
 
 * ``X``: the position on the X-axis of the vertex.
