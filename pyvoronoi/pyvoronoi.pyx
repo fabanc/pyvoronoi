@@ -291,7 +291,10 @@ cdef class Pyvoronoi:
 
     def GetVertex(self, index: int) -> Vertex:
         """
-        Returns  the vertex at a given index. The list of vertex is generated upon calling Construct.
+        Returns  the output vertex at a given index. The list of vertex is generated upon calling Construct.
+        :param index: The index of the vertex to retrieve.
+        :return: The matching vertex.
+        :rtype: Vertex
         """
         if index < 0 or index >= self.CountVertices():
             raise IndexError(index)
@@ -301,6 +304,9 @@ cdef class Pyvoronoi:
     def GetEdge(self, index: int) -> Edge:
         """
         Returns  the edge at a given index. The list of edge is generated upon calling Construct.
+        :param index: The index of the edge to retrieve.
+        :return: The matching edge.
+        :rtype: Edge
         """
         if index < 0 or index >= self.CountEdges():
             raise IndexError(index)
@@ -313,6 +319,9 @@ cdef class Pyvoronoi:
     def GetCell(self, index: int) -> Cell:
         """
         Returns  the cell at a given index. The list of cells is generated upon calling Construct.
+        :param index: The index of the cell to retrieve.
+        :return: The matching cell.
+        :rtype: Cell
         """
         if index < 0 or index >= self.CountCells():
             raise IndexError(index)
@@ -325,23 +334,50 @@ cdef class Pyvoronoi:
         return cell
 
     def CountPoints(self):
+        """
+        Returns the number of input points stored in memory to solve the Voronoi problem.
+        :return: The number of input points.
+        :rtype: int
+        """
         return self.thisptr.CountPoints()
 
     def CountSegments(self):
+        """
+        Returns the number of input segments stored in memory to solve the Voronoi problem.
+        :return: The number of input segments.
+        :rtype: int
+        """
         return self.thisptr.CountSegments()
 
     def CountVertices(self):
+        """
+        Returns the number of output Vertices generated as part of the Voronoi solution after having called Construct.
+        :return: The number of vertices.
+        :rtype: int
+        """
         return self.thisptr.CountVertices()
 
     def CountEdges(self):
+        """
+        Returns the number of output Edges generated as part of the Voronoi solution after having called Construct.
+        :return: The number of edges.
+        :rtype: int
+        """
         return self.thisptr.CountEdges()
 
     def CountCells(self):
+        """
+        Returns the number of output Cells generated as part of the Voronoi solution after having called Construct.
+        :return: The number of cells.
+        :rtype: int
+        """
         return self.thisptr.CountCells()
 
     def GetPoints(self):
         """
         Iterate through the input points added to the voronoi builder
+        :return: A generator that iterates through the list of input points.
+        :rtype: Generator[list[int, int]]
         """
         for p in self.thisptr.GetPoints():
             yield pointDictToPointArray(p)
@@ -350,29 +386,49 @@ cdef class Pyvoronoi:
     def GetSegments(self):
         """
         Iterate through the input segments added to the voronoi builder
+        :return: A generator that iterates through the list of input segments.
+        :rtype: Generator[list[int, int]]
         """
         for s in self.thisptr.GetSegments():
             yield segmentDictToPointArray(s)
 
     def GetIntersectingSegments(self):
         """
-        Returns the indexes of segments that intersect another segment. The indexes are returned as a list.
+        Returns the indexes of segments that intersect another segment beyond sharing an end point.
+        Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
+        The indexes are returned as a list.
+        :return: A list of indexes.
+        :rtype: list[int]
         """
         return self.thisptr.GetIntersectingSegments()
 
     def GetDegenerateSegments(self):
         """
-        Return the indexes of segments which has identical coordinates for its start point and end point. The indexes are returned as a list.
+        Return the indexes of segments which has identical coordinates for its start point and end point.
+        Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
+        The indexes are returned as a list.
+        :return: A list of indexes.
+        :rtype: list[int]
         """
         return self.thisptr.GetDegenerateSegments()
 
     def GetPointsOnSegments(self):
         """
-        Return the indexes of points located on a segments. Connection at any of the end points is disregarded. The indexes are returned as a list.
+        Return the indexes of points located on a segments. Connection at any of the end points is disregarded.
+        Those situations can prevent the voronoi algorithm from solving, or generate a corrupted output.
+        The indexes are returned as a list.
+        :return: A list of indexes.
+        :rtype: list[int]
         """
         return self.thisptr.GetPointsOnSegments()
 
     def GetVertices(self):
+        """
+        Get the list of vertices generated after calling construct. This returns a duplicated list of the output Vertices.
+        Consider using EnumerateVertices instead.
+        :return: A copy of the output vertices.
+        :rtype: list[Vertex]
+        """
         count = self.CountVertices()
         output = []
         for index in  range(count):
@@ -380,10 +436,22 @@ cdef class Pyvoronoi:
         return output
 
     def EnumerateVertices(self):
+        """
+        Iterate through the list of output vertices generated after calling Construct.
+        :return: A generator iterating through the output vertices. Each object is tuple with two elements.
+        The first one is the index. The second element is the vertex.
+        :rtype: Generator[(int, Vertex)]
+        """
         for index in range(self.CountVertices()):
             yield index, self.GetVertex(index)
 
     def GetEdges(self):
+        """
+        Get the list of edges generated after calling construct. This returns a duplicated list of the output edges.
+        Consider using EnumerateEdges instead.
+        :return: A copy of the output edges.
+        :rtype: list[Edge]
+        """
         count = self.CountEdges()
         output = []
         for index in range(count):
@@ -391,10 +459,22 @@ cdef class Pyvoronoi:
         return output
 
     def EnumerateEdges(self):
+        """
+        Iterate through the list of output edges generated after calling Construct.
+        :return: A generator iterating through the output edges. Each object is tuple with two elements.
+        The first one is the index. The second element is the edge.
+        :rtype: Generator[(int, Edge)]
+        """
         for index in range(self.CountEdges()):
             yield index, self.GetEdge(index)
 
     def GetCells(self):
+        """
+        Get the list of cells generated after calling construct. This returns a duplicated list of the output cells.
+        Consider using EnumerateCells instead.
+        :return: A copy of the output cells.
+        :rtype: list[Cell]
+        """
         count = self.CountCells()
         output = []
         for index in range(count):
@@ -402,6 +482,12 @@ cdef class Pyvoronoi:
         return output
 
     def EnumerateCells(self):
+        """
+        Iterate through the list of output cells generated after calling Construct.
+        :return: A generator iterating through the output edges. Each object is tuple with two elements.
+        The first one is the index. The second element is the cell.
+        :rtype: Generator[(int, Cell)]
+        """
         for index in range(self.CountCells()):
             yield index, self.GetCell(index)
 
