@@ -2,11 +2,8 @@
 Cython wrapper for the C++ translation of the Voronoi diagram part of Boost's
 Polygon library: http://www.boost.org/doc/libs/1_53_0_beta1/libs/polygon/doc/voronoi_diagram.htm
 """
-from __future__ import division
-
 import struct
 import math
-from typing import Iterable
 
 from cython.operator cimport dereference as deref
 
