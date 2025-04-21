@@ -269,13 +269,20 @@ def Distance(point_start: list[float, float], point_end: list[float, float]) -> 
 ####################################
 
 cdef class Pyvoronoi:
+    """
+    The wrapper class around Boost Voronoi. Add input point or segments, and then call Construct to generate Voronoi
+    cells.
+    """
     cdef VoronoiDiagram *thisptr
     cdef int constructed
 
     cdef public int SCALING_FACTOR
 
-    def __cinit__(self, scaling_factor:int = None):
-        """ Creates an instance of the Pyvoronoi class.
+    def __cinit__(self, scaling_factor:int = None) -> None:
+        """
+        Creates an instance of the Pyvoronoi class.
+        :param scaling_factor: The scaling factor that can be used to multiply the coordinate of input points or segment. If null, the value will be forced to 1.
+        :type scaling_factor: int
         """
         log_action("Creating an VoronoiDiagram instance")
         self.thisptr = new VoronoiDiagram()
