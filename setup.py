@@ -74,6 +74,7 @@ class build_ext_subclass( build_ext ):
 this_directory = Path(__file__).parent
 setup(
     name='pyvoronoi',
+    python_requires='>=3.8',
     version=version,
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
     long_description=(this_directory / "README.md").read_text(),
