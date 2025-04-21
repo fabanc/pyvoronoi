@@ -1,4 +1,10 @@
 
 [build-system]
-requires = ["Cython", "setuptools", "wheel", "git+https://github.com/RaubCamaioni/CythonPEG.git"]
+requires = [
+    "Cython",
+    "setuptools",
+    "wheel",
+    "cythonpeg @ git+https://github.com/RaubCamaioni/CythonPEG.git"
+]
+
 build-backend = "setuptools.build_meta"
