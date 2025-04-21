@@ -10,4 +10,5 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
+name=pyvoronoi
 requires-python = ">=3.8"
