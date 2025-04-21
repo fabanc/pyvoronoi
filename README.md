@@ -359,3 +359,4 @@ A good example on how to use this code can be found in this unit test:
 ## Build tools
 
 This project uses [cibuildwheel](https://github.com/pypa/cibuildwheel) to build wheels on multiple platforms.
+Stubfile generation: https://github.com/RaubCamaioni/CythonPEG
