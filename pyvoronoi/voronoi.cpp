@@ -91,11 +91,11 @@ std::vector<int> VoronoiDiagram::GetPointsOnSegments(){
 //    return overlappingPoints;
 //}
 
-int VoronoiDiagram:: CountPoints(){
+long long VoronoiDiagram:: CountPoints(){
     return points.size();
 }
 
-int VoronoiDiagram:: CountSegments(){
+long long VoronoiDiagram:: CountSegments(){
     return segments.size();
 }
 
