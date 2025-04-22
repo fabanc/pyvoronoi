@@ -4,7 +4,7 @@ from setuptools import setup
 from setuptools.extension import Extension
 from pathlib import Path
 
-version = '1.2.0'
+version = '1.2.1'
 
 """
 Note on using the setup.py:
@@ -51,6 +51,11 @@ if sys.argv[-1] == 'tag':
     os.system("git push --tags")
     sys.exit()
 
+# Run generation of pyi files
+pyi_command = f'{os.path.dirname(sys.executable)}{os.path.sep}Scripts{os.path.sep}cythonpeg pyvoronoi/*.pyx'
+print(pyi_command)
+os.system(pyi_command)
+
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
         print(f'Compiler type: {self.compiler.compiler_type} - Version: {sys.version_info.major}.{sys.version_info.minor}')
@@ -69,6 +74,7 @@ class build_ext_subclass( build_ext ):
 this_directory = Path(__file__).parent
 setup(
     name='pyvoronoi',
+    python_requires='>=3.8',
     version=version,
     description='Cython wrapper for the Boost Voronoi library (version 1.59.0)',
     long_description=(this_directory / "README.md").read_text(),
@@ -77,6 +83,7 @@ setup(
     author_email='',
     url='https://github.com/fabanc/pyvoronoi',
     keywords=['voronoi','Boost','polygon'],
+    data_files=['pyvoronoi/pyvoronoi.pyi'],
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",

@@ -36,6 +36,7 @@ jobs:
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_DEBUG_TRACEBACK: TRUE
                 CIBW_SKIP: "pp3*"
+                CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
               with:
                 package-dir: .
                 output-dir: dist
