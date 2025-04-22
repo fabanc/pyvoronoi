@@ -3,6 +3,14 @@
 
 A wrapper for Boost's Voronoi diagram library. The full documentation of the Boost Voronoi API is available [here](https://www.boost.org/doc/libs/1_75_0/libs/polygon/doc/voronoi_main.htm).
 
+## Change log
+
+ * 1.2.1: Introduction of type hints for all function and their documentation. This enables intellisense and code completion.
+ * 1.2.0: Improved memory management when returning Boost Voronoi output.
+ * 1.1.9: Improved memory management when reading Boost Voronoi input.
+ * 1.1.8: (skipped)
+ * 1.1.7: Added method to validate the input data served to Boost Voronoi.
+
 ## Install
 
 The installation have been tested on Windows and Linux Ubuntu. If you notice any issue on Mac, reach out to us, we are interested in making sure it works for you.
