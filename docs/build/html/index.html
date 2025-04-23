@@ -1,0 +1,802 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pyvoronoi - API documentation &mdash; pyvoronoi 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            pyvoronoi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Pyvoronoi - API documentation</a><ul>
+<li><a class="reference internal" href="#pyvoronoi.Cell"><code class="docutils literal notranslate"><span class="pre">Cell</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Distance"><code class="docutils literal notranslate"><span class="pre">Distance()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.DistanceSquared"><code class="docutils literal notranslate"><span class="pre">DistanceSquared()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.FocusOnDirectixException"><code class="docutils literal notranslate"><span class="pre">FocusOnDirectixException</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi</span></code></a><ul>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.AddPoint"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.AddPoint()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.AddSegment"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.AddSegment()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.CheckUnsolvableParabolaEquation"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.CheckUnsolvableParabolaEquation()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.Construct"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.Construct()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.CountCells"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.CountCells()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.CountEdges"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.CountEdges()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.CountPoints"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.CountPoints()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.CountSegments"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.CountSegments()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.CountVertices"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.CountVertices()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.Discretize"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.Discretize()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.DiscretizeCurvedEdge"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.DiscretizeCurvedEdge()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.EnumerateCells"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.EnumerateCells()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.EnumerateEdges"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.EnumerateEdges()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.EnumerateVertices"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.EnumerateVertices()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetCell"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetCell()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetCells"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetCells()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetDegenerateSegments"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetDegenerateSegments()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetEdge"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetEdge()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetEdges"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetEdges()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetIntersectingSegments"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetIntersectingSegments()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetParabolaY"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetParabolaY()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetPoint"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetPoint()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetPoints"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetPoints()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetPointsOnSegments"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetPointsOnSegments()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetSegment"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetSegment()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetSegments"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetSegments()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetVertex"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetVertex()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.GetVertices"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.GetVertices()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.RetrievePoint"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.RetrievePoint()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.RetrieveScaledPoint"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.RetrieveScaledPoint()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.RetrieveScaledSegment"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.RetrieveScaledSegment()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.RetrieveSegment"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.RetrieveSegment()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Pyvoronoi.ReturnCurvedSiteInformation"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi.ReturnCurvedSiteInformation()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyvoronoi.UnsolvableParabolaEquation"><code class="docutils literal notranslate"><span class="pre">UnsolvableParabolaEquation</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.Vertex"><code class="docutils literal notranslate"><span class="pre">Vertex</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.VoronoiException"><code class="docutils literal notranslate"><span class="pre">VoronoiException</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pyvoronoi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Pyvoronoi - API documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyvoronoi">
+<span id="pyvoronoi-api-documentation"></span><h1>Pyvoronoi - API documentation<a class="headerlink" href="#module-pyvoronoi" title="Link to this heading"></a></h1>
+<p>Cython wrapper for the C++ translation of the Voronoi diagram part of Boost’s
+Polygon library: <a class="reference external" href="https://www.boost.org/doc/libs/1_80_0/libs/polygon/doc/voronoi_diagram.htm">https://www.boost.org/doc/libs/1_80_0/libs/polygon/doc/voronoi_diagram.htm</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvoronoi.Cell">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">Cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Cell" title="Link to this definition"></a></dt>
+<dd><p>This class represents any cell generated when constructing Boost Voronoi output. A Voronoi cell represents a region of the Voronoi diagram bounded by the Voronoi edges.
+Voronoi cells are built around an input site that can be either site or segment. When a cells is on the border of the Voronoi solution, it might have
+infinite edges, meaning edges that do not have coordinates at one of their end point.</p>
+<dl class="simple">
+<dt>The list of source categories for each cell can be found on the boost website.</dt><dd><ul class="simple">
+<li><p>SOURCE_CATEGORY_SINGLE_POINT: 0</p></li>
+<li><p>SOURCE_CATEGORY_SEGMENT_START_POINT: 1</p></li>
+<li><p>SOURCE_CATEGORY_SEGMENT_END_POINT: 2</p></li>
+<li><p>SOURCE_CATEGORY_INITIAL_SEGMENT: 3</p></li>
+<li><p>SOURCE_CATEGORY_REVERSE_SEGMENT: 4</p></li>
+<li><p>SOURCE_CATEGORY_GEOMETRY_SHIFT: 5</p></li>
+<li><p>SOURCE_CATEGORY_BITMASK: 6</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.Distance">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">Distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.Distance" title="Link to this definition"></a></dt>
+<dd><p>Returns the length of a line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point_start</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the start point of the line.</p></li>
+<li><p><strong>point_end</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the end point of the line.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the squared of the line</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.DistanceSquared">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">DistanceSquared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.DistanceSquared" title="Link to this definition"></a></dt>
+<dd><p>Returns the squared length of a line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point_start</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the start point of the line.</p></li>
+<li><p><strong>point_end</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the end point of the line.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the squared length of the line</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvoronoi.Edge">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Edge" title="Link to this definition"></a></dt>
+<dd><p>This class represents any edge generated when constructing Boost Voronoi output. Those edges are referenced by cells. Think
+of an edge as a linear component. It can be either straight lines or parabolas when returned by Boost Voronoi. An edge can
+only belong to one cell. That means that if two cells share a border, two edges will exist. Those two edges will be twins.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyvoronoi.FocusOnDirectixException">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">FocusOnDirectixException</span></span><a class="headerlink" href="#pyvoronoi.FocusOnDirectixException" title="Link to this definition"></a></dt>
+<dd><p>When computing a parabola between a point and a line, the input point must not be on the input line. If this scenario occurs, this exception is raised.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">Pyvoronoi</span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi" title="Link to this definition"></a></dt>
+<dd><p>The wrapper class around Boost Voronoi. Add input point or segments, and then call Construct to generate Voronoi
+cells.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.AddPoint">
+<span class="sig-name descname"><span class="pre">AddPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.AddPoint" title="Link to this definition"></a></dt>
+<dd><p>Add a point to the Voronoi builder. The coordinate will be multiplied by the factor, then rounded as an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – A list with 2 elements. The first element represents the X-coordinate of the point.  The second element represents the Y-coordinate of the point.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.AddSegment">
+<span class="sig-name descname"><span class="pre">AddSegment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.AddSegment" title="Link to this definition"></a></dt>
+<dd><p>Add a segment to the Voronoi builder. The segment is made of an array of coordinates. The coordinates will be multiplied by the factor, then rounded as an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>segment</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – A list that contains two elements. Each element is an array containing the [X, Y] coordinate for each of the segment end points.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.CheckUnsolvableParabolaEquation">
+<span class="sig-name descname"><span class="pre">CheckUnsolvableParabolaEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boost_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">focus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.CheckUnsolvableParabolaEquation" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Used for interpolating parabolas</dt><dd><dl class="simple">
+<dt>Compare the y-coordinate of a point on the parabola returned by Boost with the computed value.</dt><dd><p>The function will return an exception if the difference between the computed y-value and the y-value returned by Boost.
+The computed point will be returned otherwise.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>boost_x</strong> (<em>float</em>) – the x-value of the point parabola returned by boost.</p></li>
+<li><p><strong>boost_y</strong> (<em>float</em>) – the y-value of the point parabola returned by boost.</p></li>
+<li><p><strong>focus</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the focus point used for solving the equation of the parabola.</p></li>
+<li><p><strong>directix</strong> (<em>float
+:param tolerance: the distance allowed between the point computed by boost and the point computed by the equation.
+:type tolerance: float
+:raises UnsolvableParabolaEquation: Indicates a scenario where a parabola cannot be computed.
+:return: the point on the parabola computed using the value</em><em> of </em><em>boost_x.
+:rtype: list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the directix value used for solving the equation of the parabola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.Construct">
+<span class="sig-name descname"><span class="pre">Construct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.Construct" title="Link to this definition"></a></dt>
+<dd><p>Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
+Calling this method will prevent adding any new input point or segment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.CountCells">
+<span class="sig-name descname"><span class="pre">CountCells</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.CountCells" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of output Cells generated as part of the Voronoi solution after having called Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of cells.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.CountEdges">
+<span class="sig-name descname"><span class="pre">CountEdges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.CountEdges" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of output Edges generated as part of the Voronoi solution after having called Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of edges.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.CountPoints">
+<span class="sig-name descname"><span class="pre">CountPoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.CountPoints" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of input points stored in memory to solve the Voronoi problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of input points.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.CountSegments">
+<span class="sig-name descname"><span class="pre">CountSegments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.CountSegments" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of input segments stored in memory to solve the Voronoi problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of input segments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.CountVertices">
+<span class="sig-name descname"><span class="pre">CountVertices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.CountVertices" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of output Vertices generated as part of the Voronoi solution after having called Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of vertices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.Discretize">
+<span class="sig-name descname"><span class="pre">Discretize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parabola_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parabola_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parabola_equation_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">map</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.Discretize" title="Link to this definition"></a></dt>
+<dd><p>Interpolate points on a parabola. The points are garanteed to be closer than the value of the parameter max_dist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – The input point associated with the cell or the neighbour cell. The point is used as the focus in the equation of the parabola.</p></li>
+<li><p><strong>segment</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – The input segment associated with the cell or the neighbour cell. The point is used as the directix in the equation of the parabola.</p></li>
+<li><p><strong>parabola_start</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – The starting point of the parabola.</p></li>
+<li><p><strong>parabola_end</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – The end point of the parabola</p></li>
+<li><p><strong>max_dist</strong> (<em>float</em>) – The maximum distance between 2 vertices on the discretized geometry.</p></li>
+<li><p><strong>parabola_equation_tolerance</strong> (<em>float</em>) – The maximum difference allowed between the y coordinate returned by Boost, and the equation of the parabola.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The list of points on the parabola.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>map[list[float, float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.DiscretizeCurvedEdge">
+<span class="sig-name descname"><span class="pre">DiscretizeCurvedEdge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parabola_equation_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">map</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.DiscretizeCurvedEdge" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of point that represent the parabola given the index of an edge. This is a convenience wrapper
+around the function Discretize</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – The index of the edge discretize.</p></li>
+<li><p><strong>max_dist</strong> (<em>float</em>) – The maximum distance between points.</p></li>
+<li><p><strong>parabola_equation_tolerance</strong> (<em>float</em>) – The maximum difference allowed between the y coordinate returned by Boost, and the equation of the parabola.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The list of points on the parabola returned as a map.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>map[list[float, float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.EnumerateCells">
+<span class="sig-name descname"><span class="pre">EnumerateCells</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.EnumerateCells" title="Link to this definition"></a></dt>
+<dd><p>Iterate through the list of output cells generated after calling Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A generator iterating through the output edges. Each object is tuple with two elements.
+The first one is the index. The second element is the cell.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generator[(int, <a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell">Cell</a>)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.EnumerateEdges">
+<span class="sig-name descname"><span class="pre">EnumerateEdges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.EnumerateEdges" title="Link to this definition"></a></dt>
+<dd><p>Iterate through the list of output edges generated after calling Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A generator iterating through the output edges. Each object is tuple with two elements.
+The first one is the index. The second element is the edge.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generator[(int, <a class="reference internal" href="#pyvoronoi.Edge" title="pyvoronoi.Edge">Edge</a>)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.EnumerateVertices">
+<span class="sig-name descname"><span class="pre">EnumerateVertices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.EnumerateVertices" title="Link to this definition"></a></dt>
+<dd><p>Iterate through the list of output vertices generated after calling Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A generator iterating through the output vertices. Each object is tuple with two elements.
+The first one is the index. The second element is the vertex.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generator[(int, <a class="reference internal" href="#pyvoronoi.Vertex" title="pyvoronoi.Vertex">Vertex</a>)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetCell">
+<span class="sig-name descname"><span class="pre">GetCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><span class="pre">Cell</span></a></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetCell" title="Link to this definition"></a></dt>
+<dd><p>Return  the cell at a given index. The list of cells is generated upon calling Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – The index of the cell to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matching cell.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell">Cell</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetCells">
+<span class="sig-name descname"><span class="pre">GetCells</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetCells" title="Link to this definition"></a></dt>
+<dd><p>Get the list of cells generated after calling construct. This returns a duplicated list of the output cells.
+Consider using EnumerateCells instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the output cells.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell">Cell</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetDegenerateSegments">
+<span class="sig-name descname"><span class="pre">GetDegenerateSegments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetDegenerateSegments" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Input Data Validation</dt><dd><p>Return the indexes of segments which has identical coordinates for its start point and end point.
+Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
+The indexes are returned as a list.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of indexes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetEdge">
+<span class="sig-name descname"><span class="pre">GetEdge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvoronoi.Edge" title="pyvoronoi.Edge"><span class="pre">Edge</span></a></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetEdge" title="Link to this definition"></a></dt>
+<dd><p>Return  the edge at a given index. The list of edge is generated upon calling Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – The index of the edge to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matching edge.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pyvoronoi.Edge" title="pyvoronoi.Edge">Edge</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetEdges">
+<span class="sig-name descname"><span class="pre">GetEdges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetEdges" title="Link to this definition"></a></dt>
+<dd><p>Get the list of edges generated after calling construct. This returns a duplicated list of the output edges.
+Consider using EnumerateEdges instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the output edges.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#pyvoronoi.Edge" title="pyvoronoi.Edge">Edge</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetIntersectingSegments">
+<span class="sig-name descname"><span class="pre">GetIntersectingSegments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetIntersectingSegments" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Input Data Validation</dt><dd><p>Returns the indexes of segments that intersect another segment beyond sharing an end point.
+Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
+The indexes are returned as a list.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of indexes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetParabolaY">
+<span class="sig-name descname"><span class="pre">GetParabolaY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">focus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directrix_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetParabolaY" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Used for interpolating parabolas</dt><dd><p>Solve the parabola equation for a given value on the x-axis and return the associated value on the y-axis. This equation assumes that the directix is parallel to the x-axis. Parabola equation are different if the directix is parallel to the y-axis.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The position of a point on the X-axis. The Y value is derived based on this coordinate.</p></li>
+<li><p><strong>focus</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – The focus point used to solve the equation.</p></li>
+<li><p><strong>directrix_y</strong> (<em>float</em>) – The value on the Y-axis of the directix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the value on the y-axis derivated for x</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetPoint">
+<span class="sig-name descname"><span class="pre">GetPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetPoint" title="Link to this definition"></a></dt>
+<dd><p>Return an input point used to generate the voronoi diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – The index of the point to retrieve. The function CountPoints can be used to retrieve the number of input points stored in memory.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list with two elements. The first element is the X coordinate of the input point. The second element is the Y coordinate.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetPoints">
+<span class="sig-name descname"><span class="pre">GetPoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetPoints" title="Link to this definition"></a></dt>
+<dd><p>Iterate through the input points added to the voronoi builder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A generator that iterates through the list of input points.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generator[list[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetPointsOnSegments">
+<span class="sig-name descname"><span class="pre">GetPointsOnSegments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetPointsOnSegments" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Input Data Validation</dt><dd><p>Return the indexes of points located on a segments. Connection at any of the end points is disregarded.
+Those situations can prevent the voronoi algorithm from solving, or generate a corrupted output.
+The indexes are returned as a list.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of indexes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetSegment">
+<span class="sig-name descname"><span class="pre">GetSegment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetSegment" title="Link to this definition"></a></dt>
+<dd><p>Return an input point segment to generate the voronoi diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – The index of the segment to retrieve. The function CountSegments can be used to retrieve the number of input segments stored in memory.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list with two elements. The first element is a list representing the start point of the segment. The second element is a list representing the end point of the segment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetSegments">
+<span class="sig-name descname"><span class="pre">GetSegments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetSegments" title="Link to this definition"></a></dt>
+<dd><p>Iterate through the input segments added to the voronoi builder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A generator that iterates through the list of input segments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generator[list[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetVertex">
+<span class="sig-name descname"><span class="pre">GetVertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvoronoi.Vertex" title="pyvoronoi.Vertex"><span class="pre">Vertex</span></a></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetVertex" title="Link to this definition"></a></dt>
+<dd><p>Return  the output vertex at a given index. The list of vertex is generated upon calling Construct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – The index of the vertex to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matching vertex.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pyvoronoi.Vertex" title="pyvoronoi.Vertex">Vertex</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.GetVertices">
+<span class="sig-name descname"><span class="pre">GetVertices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.GetVertices" title="Link to this definition"></a></dt>
+<dd><p>Get the list of vertices generated after calling construct. This returns a duplicated list of the output Vertices.
+Consider using EnumerateVertices instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the output vertices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#pyvoronoi.Vertex" title="pyvoronoi.Vertex">Vertex</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.RetrievePoint">
+<span class="sig-name descname"><span class="pre">RetrievePoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.RetrievePoint" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the input point associated with a cell. The point coordinates are as used by Boost Voronoi: they have been multiplied by the factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><em>Cell</em></a>) – the cell that contains a point. The point can either an input point or the end point of an input segment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An input point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.RetrieveScaledPoint">
+<span class="sig-name descname"><span class="pre">RetrieveScaledPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.RetrieveScaledPoint" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the input point associated with a cell. The point coordinates are returned as passed to Boost Voronoi, before applying the factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><em>Cell</em></a>) – the cell that contains a point. The point can either an input point or the end point of an input segment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An input point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.RetrieveScaledSegment">
+<span class="sig-name descname"><span class="pre">RetrieveScaledSegment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.RetrieveScaledSegment" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the input segment associated with a cell. The segment coordinates are returned as passed to Boost Voronoi, before applying the factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><em>Cell</em></a>) – the cell that contains a segment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An input segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[int, int], list[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.RetrieveSegment">
+<span class="sig-name descname"><span class="pre">RetrieveSegment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.RetrieveSegment" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the input segment associated with a cell. The segment coordinates are as used by Boost Voronoi: they have been multiplied by the factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="#pyvoronoi.Cell" title="pyvoronoi.Cell"><em>Cell</em></a>) – the cell that contains a segment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An input segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[int, int], list[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvoronoi.Pyvoronoi.ReturnCurvedSiteInformation">
+<span class="sig-name descname"><span class="pre">ReturnCurvedSiteInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvoronoi.Edge" title="pyvoronoi.Edge"><span class="pre">Edge</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.Pyvoronoi.ReturnCurvedSiteInformation" title="Link to this definition"></a></dt>
+<dd><p>Returns the index of the input point site and the segment site associated  with a segment index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>edge</strong> (<a class="reference internal" href="#pyvoronoi.Edge" title="pyvoronoi.Edge"><em>Edge</em></a>) – The edge for which to retrieve information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list with two elements.  The first element is the input point. The second element is the input segment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[float, float], list[list[float, float], list[float, float]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyvoronoi.UnsolvableParabolaEquation">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">UnsolvableParabolaEquation</span></span><a class="headerlink" href="#pyvoronoi.UnsolvableParabolaEquation" title="Link to this definition"></a></dt>
+<dd><p>Indicates a scenario where a parabola cannot be computed.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvoronoi.Vertex">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">Vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvoronoi.Vertex" title="Link to this definition"></a></dt>
+<dd><p>This class represents any vertex generated when constructing Boost Voronoi output. Those vertices are referenced by edges
+and cells.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyvoronoi.VoronoiException">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">VoronoiException</span></span><a class="headerlink" href="#pyvoronoi.VoronoiException" title="Link to this definition"></a></dt>
+<dd><p>Indicate a problem generating a output with Boost Voronoi. This might indicate problem with your input data.</p>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Fabien Ancelin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
