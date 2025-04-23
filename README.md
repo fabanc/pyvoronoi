@@ -367,4 +367,27 @@ A good example on how to use this code can be found in this unit test:
 ## Build tools
 
 This project uses [cibuildwheel](https://github.com/pypa/cibuildwheel) to build wheels on multiple platforms.
-Stubfile generation: https://github.com/RaubCamaioni/CythonPEG
+
+### Stubfile generation
+
+I used CythonPEG.
+https://github.com/RaubCamaioni/CythonPEG
+
+
+### Documentation
+
+I use Sphinx. No particular reason except I like how it works and the output is user-friendly, especially with the RTD theme.
+
+ * Documentation: https://www.sphinx-doc.org/en/master/tutorial/index.html
+ * Read the doc theme: https://sphinx-rtd-tutorial.readthedocs.io/en/latest/index.html
+
+To generate the documentation:
+
+```commandline
+python.exe setup.py build_ext --inplace
+D:\arcgis-pro-envs\pyvoronoi\Scripts\sphinx-build -M html docs/source/ docs/build/ -E -a
+```
+
+$ (sudo) pip install sphinx
+$ (sudo) pip install sphinx-rtd-theme
+D:\arcgis-pro-envs\pyvoronoi\Scripts\sphinx-build -M html docs/source/ docs/build/ -E -a

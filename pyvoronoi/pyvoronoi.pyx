@@ -1,6 +1,6 @@
 ﻿"""
 Cython wrapper for the C++ translation of the Voronoi diagram part of Boost's
-Polygon library: http://www.boost.org/doc/libs/1_53_0_beta1/libs/polygon/doc/voronoi_diagram.htm
+Polygon library: https://www.boost.org/doc/libs/1_80_0/libs/polygon/doc/voronoi_diagram.htm
 """
 import struct
 import math
@@ -117,7 +117,7 @@ cdef extern from "voronoi.hpp":
 ####################################
 class Vertex:
     """
-    This class represents any vertex generated when constructing Boost Voronoi output. Those vertices are reference by edges
+    This class represents any vertex generated when constructing Boost Voronoi output. Those vertices are referenced by edges
     and cells.
     """
     def __init__(self,x: float,y: float) -> None:
@@ -133,8 +133,8 @@ class Vertex:
 
 class Edge:
     """
-    This class represents any edge generated when constructing Boost Voronoi output. Those edges are reference by cells. This
-    of an edge as a linear component. They can be either straight lines or parabolas when returned by Boost Voronoi. An edge can
+    This class represents any edge generated when constructing Boost Voronoi output. Those edges are referenced by cells. Think
+    of an edge as a linear component. It can be either straight lines or parabolas when returned by Boost Voronoi. An edge can
     only belong to one cell. That means that if two cells share a border, two edges will exist. Those two edges will be twins.
     """
     def __init__(self, start: int, end: int, cell: int, twin: int) -> None:
@@ -214,12 +214,15 @@ def _segment_dict_to_point_array(s):
     ]
 
 class VoronoiException(Exception):
+    """Indicate a problem generating a output with Boost Voronoi. This might indicate problem with your input data."""
     pass
 
 class FocusOnDirectixException(Exception):
+    """When computing a parabola between a point and a line, the input point must not be on the input line. If this scenario occurs, this exception is raised."""
     pass
 
 class UnsolvableParabolaEquation(Exception):
+    """Indicates a scenario where a parabola cannot be computed."""
     pass
 
 ####################################
@@ -253,14 +256,28 @@ def GetLineAngleInRadians(start_point_x: float, start_point_y: float, end_point_
 ####################################
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def DistanceSquared(point_start: list[float, float], point_end: list[float, float]) -> float:
-    """Returns the squared length of the line.
-    :return: a float representing the squared length of the line.
+    """Returns the squared length of a line.
+
+    :param point_start: the start point of the line.
+    :type point_start: list[float, float]
+    :param point_end: the end point of the line.
+    :type point_end: list[float, float]
+    :return: the squared length of the line
+    :rtype: float
     """
     return pow(point_end[0] - point_start[0], 2) + pow(point_end[1] - point_start[1], 2)
 
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def Distance(point_start: list[float, float], point_end: list[float, float]) -> float:
-    """Returns the length of the line"""
+    """Returns the length of a line.
+
+    :param point_start: the start point of the line.
+    :type point_start: list[float, float]
+    :param point_end: the end point of the line.
+    :type point_end: list[float, float]
+    :return: the squared of the line
+    :rtype: float
+    """
     return math.sqrt(DistanceSquared(point_start, point_end))
 
 
@@ -300,8 +317,8 @@ cdef class Pyvoronoi:
         del self.thisptr
 
     def AddPoint(self, point:list[float, float])->None:
-        """
-        Add a point to the Voronoi builder. The coordinate will be multiplied by the factor, then rounded as an integer.
+        """Add a point to the Voronoi builder. The coordinate will be multiplied by the factor, then rounded as an integer.
+
         :param point: A list with 2 elements. The first element represents the X-coordinate of the point.  The second element represents the Y-coordinate of the point.
         :type point: list[float, float]
         :return: None
@@ -314,10 +331,10 @@ cdef class Pyvoronoi:
         self.thisptr.AddPoint(c_point)
 
     def AddSegment(self, segment: list[list[float, float], list[float, float]]) -> None:
-        """
-        Add a segment to the Voronoi builder. The segment is made of an array of coordinates. The coordinates will be multiplied by the factor, then rounded as an integer.
+        """Add a segment to the Voronoi builder. The segment is made of an array of coordinates. The coordinates will be multiplied by the factor, then rounded as an integer.
+
         :param segment: A list that contains two elements. Each element is an array containing the [X, Y] coordinate for each of the segment end points.
-        :type : list[list[float, float], list[float, float]]
+        :type segment: list[list[float, float], list[float, float]]
         :return: None
         """
 
@@ -328,8 +345,7 @@ cdef class Pyvoronoi:
         self.thisptr.AddSegment(c_segment)
 
     def Construct(self):
-        """
-        Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
+        """Generates the voronoi diagram for the added points and segments. Voronoi cell structure will be generated.
         Calling this method will prevent adding any new input point or segment.
         """
 
@@ -345,8 +361,8 @@ cdef class Pyvoronoi:
         self.thisptr.MapCellIndexes()
 
     def GetPoint(self, index: int) -> list[int, int]:
-        """
-        Returns an input point used to generate the voronoi diagram.
+        """Return an input point used to generate the voronoi diagram.
+
         :param index: The index of the point to retrieve. The function CountPoints can be used to retrieve the number of input points stored in memory.
         :type index: int
         :return: A list with two elements. The first element is the X coordinate of the input point. The second element is the Y coordinate.
@@ -355,8 +371,8 @@ cdef class Pyvoronoi:
         return _point_dict_to_point_array(self.thisptr.GetPoint(index))
 
     def GetSegment(self, index: int) -> list[list[int, int], list[int, int]]:
-        """
-        Returns an input point segment to generate the voronoi diagram.
+        """Return an input point segment to generate the voronoi diagram.
+
         :param index: The index of the segment to retrieve. The function CountSegments can be used to retrieve the number of input segments stored in memory.
         :type index: int
         :return: A list with two elements. The first element is a list representing the start point of the segment. The second element is a list representing the end point of the segment.
@@ -365,8 +381,8 @@ cdef class Pyvoronoi:
         return _segment_dict_to_point_array(self.thisptr.GetSegment(index))
 
     def GetVertex(self, index: int) -> Vertex:
-        """
-        Returns  the output vertex at a given index. The list of vertex is generated upon calling Construct.
+        """Return  the output vertex at a given index. The list of vertex is generated upon calling Construct.
+
         :param index: The index of the vertex to retrieve.
         :type index: int
         :return: The matching vertex.
@@ -378,8 +394,8 @@ cdef class Pyvoronoi:
         return Vertex(c_vertex.X / self.SCALING_FACTOR, c_vertex.Y / self.SCALING_FACTOR)
 
     def GetEdge(self, index: int) -> Edge:
-        """
-        Returns  the edge at a given index. The list of edge is generated upon calling Construct.
+        """Return  the edge at a given index. The list of edge is generated upon calling Construct.
+
         :param index: The index of the edge to retrieve.
         :type index: int
         :return: The matching edge.
@@ -394,8 +410,8 @@ cdef class Pyvoronoi:
         return edge
 
     def GetCell(self, index: int) -> Cell:
-        """
-        Returns  the cell at a given index. The list of cells is generated upon calling Construct.
+        """Return  the cell at a given index. The list of cells is generated upon calling Construct.
+
         :param index: The index of the cell to retrieve.
         :type index: int
         :return: The matching cell.
@@ -412,48 +428,48 @@ cdef class Pyvoronoi:
         return cell
 
     def CountPoints(self):
-        """
-        Returns the number of input points stored in memory to solve the Voronoi problem.
+        """Returns the number of input points stored in memory to solve the Voronoi problem.
+
         :return: The number of input points.
         :rtype: int
         """
         return self.thisptr.CountPoints()
 
     def CountSegments(self):
-        """
-        Returns the number of input segments stored in memory to solve the Voronoi problem.
+        """Returns the number of input segments stored in memory to solve the Voronoi problem.
+
         :return: The number of input segments.
         :rtype: int
         """
         return self.thisptr.CountSegments()
 
     def CountVertices(self):
-        """
-        Returns the number of output Vertices generated as part of the Voronoi solution after having called Construct.
+        """Returns the number of output Vertices generated as part of the Voronoi solution after having called Construct.
+
         :return: The number of vertices.
         :rtype: int
         """
         return self.thisptr.CountVertices()
 
     def CountEdges(self):
-        """
-        Returns the number of output Edges generated as part of the Voronoi solution after having called Construct.
+        """Returns the number of output Edges generated as part of the Voronoi solution after having called Construct.
+
         :return: The number of edges.
         :rtype: int
         """
         return self.thisptr.CountEdges()
 
     def CountCells(self):
-        """
-        Returns the number of output Cells generated as part of the Voronoi solution after having called Construct.
+        """Returns the number of output Cells generated as part of the Voronoi solution after having called Construct.
+
         :return: The number of cells.
         :rtype: int
         """
         return self.thisptr.CountCells()
 
     def GetPoints(self):
-        """
-        Iterate through the input points added to the voronoi builder
+        """Iterate through the input points added to the voronoi builder
+
         :return: A generator that iterates through the list of input points.
         :rtype: Generator[list[int, int]]
         """
@@ -462,8 +478,8 @@ cdef class Pyvoronoi:
 
 
     def GetSegments(self):
-        """
-        Iterate through the input segments added to the voronoi builder
+        """Iterate through the input segments added to the voronoi builder
+
         :return: A generator that iterates through the list of input segments.
         :rtype: Generator[list[int, int]]
         """
@@ -471,39 +487,42 @@ cdef class Pyvoronoi:
             yield _segment_dict_to_point_array(s)
 
     def GetIntersectingSegments(self):
-        """
-        Returns the indexes of segments that intersect another segment beyond sharing an end point.
-        Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
-        The indexes are returned as a list.
+        """Input Data Validation
+            Returns the indexes of segments that intersect another segment beyond sharing an end point.
+            Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
+            The indexes are returned as a list.
+
         :return: A list of indexes.
         :rtype: list[int]
         """
         return self.thisptr.GetIntersectingSegments()
 
     def GetDegenerateSegments(self):
-        """
-        Return the indexes of segments which has identical coordinates for its start point and end point.
-        Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
-        The indexes are returned as a list.
+        """Input Data Validation
+            Return the indexes of segments which has identical coordinates for its start point and end point.
+            Those segments can prevent the voronoi algorithm from solving, or generate a corrupted output.
+            The indexes are returned as a list.
+
         :return: A list of indexes.
         :rtype: list[int]
         """
         return self.thisptr.GetDegenerateSegments()
 
     def GetPointsOnSegments(self):
-        """
-        Return the indexes of points located on a segments. Connection at any of the end points is disregarded.
-        Those situations can prevent the voronoi algorithm from solving, or generate a corrupted output.
-        The indexes are returned as a list.
+        """Input Data Validation
+            Return the indexes of points located on a segments. Connection at any of the end points is disregarded.
+            Those situations can prevent the voronoi algorithm from solving, or generate a corrupted output.
+            The indexes are returned as a list.
+
         :return: A list of indexes.
         :rtype: list[int]
         """
         return self.thisptr.GetPointsOnSegments()
 
     def GetVertices(self):
-        """
-        Get the list of vertices generated after calling construct. This returns a duplicated list of the output Vertices.
+        """Get the list of vertices generated after calling construct. This returns a duplicated list of the output Vertices.
         Consider using EnumerateVertices instead.
+
         :return: A copy of the output vertices.
         :rtype: list[Vertex]
         """
@@ -514,19 +533,19 @@ cdef class Pyvoronoi:
         return output
 
     def EnumerateVertices(self):
-        """
-        Iterate through the list of output vertices generated after calling Construct.
+        """Iterate through the list of output vertices generated after calling Construct.
+
         :return: A generator iterating through the output vertices. Each object is tuple with two elements.
-        The first one is the index. The second element is the vertex.
+            The first one is the index. The second element is the vertex.
         :rtype: Generator[(int, Vertex)]
         """
         for index in range(self.CountVertices()):
             yield index, self.GetVertex(index)
 
     def GetEdges(self):
-        """
-        Get the list of edges generated after calling construct. This returns a duplicated list of the output edges.
+        """Get the list of edges generated after calling construct. This returns a duplicated list of the output edges.
         Consider using EnumerateEdges instead.
+
         :return: A copy of the output edges.
         :rtype: list[Edge]
         """
@@ -537,19 +556,19 @@ cdef class Pyvoronoi:
         return output
 
     def EnumerateEdges(self):
-        """
-        Iterate through the list of output edges generated after calling Construct.
+        """Iterate through the list of output edges generated after calling Construct.
+
         :return: A generator iterating through the output edges. Each object is tuple with two elements.
-        The first one is the index. The second element is the edge.
+            The first one is the index. The second element is the edge.
         :rtype: Generator[(int, Edge)]
         """
         for index in range(self.CountEdges()):
             yield index, self.GetEdge(index)
 
     def GetCells(self):
-        """
-        Get the list of cells generated after calling construct. This returns a duplicated list of the output cells.
+        """Get the list of cells generated after calling construct. This returns a duplicated list of the output cells.
         Consider using EnumerateCells instead.
+
         :return: A copy of the output cells.
         :rtype: list[Cell]
         """
@@ -560,18 +579,18 @@ cdef class Pyvoronoi:
         return output
 
     def EnumerateCells(self):
-        """
-        Iterate through the list of output cells generated after calling Construct.
+        """Iterate through the list of output cells generated after calling Construct.
+
         :return: A generator iterating through the output edges. Each object is tuple with two elements.
-        The first one is the index. The second element is the cell.
+            The first one is the index. The second element is the cell.
         :rtype: Generator[(int, Cell)]
         """
         for index in range(self.CountCells()):
             yield index, self.GetCell(index)
 
     def ReturnCurvedSiteInformation(self, edge: Edge) -> list[int, int]:
-        """
-        Returns the index of the input point site and the segment site associated  with a segment index.
+        """Returns the index of the input point site and the segment site associated  with a segment index.
+
         :param edge: The edge for which to retrieve information.
         :type edge: Edge
         :return: A list with two elements.  The first element is the input point. The second element is the input segment.
@@ -588,9 +607,9 @@ cdef class Pyvoronoi:
         return [pointSite, segmentSite]
 
     def DiscretizeCurvedEdge(self, index: int, max_dist: float, parabola_equation_tolerance = 0.0001) -> map[list[float, float]]:
-        """
-        Returns a list of point that represent the parabola given the index of an edge. This is a convenience wrapper
+        """Returns a list of point that represent the parabola given the index of an edge. This is a convenience wrapper
         around the function Discretize
+
         :param index: The index of the edge discretize.
         :type index: int
         :param max_dist: The maximum distance between points.
@@ -617,8 +636,8 @@ cdef class Pyvoronoi:
 
 
     def RetrievePoint(self, cell: Cell) -> list[int, int]:
-        """
-        Retrieve the input point associated with a cell. The point coordinates are as used by Boost Voronoi: they have been multiplied by the factor.
+        """Retrieve the input point associated with a cell. The point coordinates are as used by Boost Voronoi: they have been multiplied by the factor.
+
 		:param cell: the cell that contains a point. The point can either an input point or the end point of an input segment.
 		:type cell: Cell
 		:return: An input point
@@ -634,8 +653,8 @@ cdef class Pyvoronoi:
             return input_segment[1]
 
     def RetrieveSegment(self, cell: Cell) -> list[list[int, int], list[int, int]]:
-        """
-        Retrieve the input segment associated with a cell. The segment coordinates are as used by Boost Voronoi: they have been multiplied by the factor.
+        """Retrieve the input segment associated with a cell. The segment coordinates are as used by Boost Voronoi: they have been multiplied by the factor.
+
 		:param cell: the cell that contains a segment.
 		:type cell: Cell
 		:return: An input segment
@@ -646,8 +665,8 @@ cdef class Pyvoronoi:
         return s
 
     def RetrieveScaledPoint(self, cell: Cell) -> list[float, float]:
-        """
-        Retrieve the input point associated with a cell. The point coordinates are returned as passed to Boost Voronoi, before applying the factor.
+        """Retrieve the input point associated with a cell. The point coordinates are returned as passed to Boost Voronoi, before applying the factor.
+
 		:param cell: the cell that contains a point. The point can either an input point or the end point of an input segment.
 		:type cell: Cell
 		:return: An input point
@@ -660,8 +679,8 @@ cdef class Pyvoronoi:
 		]
 
     def RetrieveScaledSegment(self, cell: Cell) -> list[list[float, float], list[float, float]]:
-        """
-        Retrieve the input segment associated with a cell. The segment coordinates are returned as passed to Boost Voronoi, before applying the factor.
+        """Retrieve the input segment associated with a cell. The segment coordinates are returned as passed to Boost Voronoi, before applying the factor.
+
 		:param cell: the cell that contains a segment.
 		:type cell: Cell
 		:return: An input segment
@@ -674,26 +693,26 @@ cdef class Pyvoronoi:
 		]
 
     def GetParabolaY(self, x: float, focus: list[float, float], directrix_y: float) -> float:
-        """
-		Solve the parabola equation for a given value on the x-axis and return the associated value on the y-axis.
-		This equation assumes that the directix is parallel to the x-axis.
-        Parabola equation are different if the directix is parallel to the y-axis.
-		:param x: the x-value used to solve the equation.
-		:type x: float
-        :param focus: the focus point used for solving the equation of the parabola.
+        """Used for interpolating parabolas
+            Solve the parabola equation for a given value on the x-axis and return the associated value on the y-axis. This equation assumes that the directix is parallel to the x-axis. Parabola equation are different if the directix is parallel to the y-axis.
+
+        :param x: The position of a point on the X-axis. The Y value is derived based on this coordinate.
+        :type x: float
+        :param focus: The focus point used to solve the equation.
         :type focus: list[float, float]
-        :param directrix_y: the directix value used for solving the equation of the parabola.
+        :param directrix_y: The value on the Y-axis of the directix.
         :type directrix_y: float
-        :return: the associated value on the y-axis.
+        :return: the value on the y-axis derivated for x
         :rtype: float
         """
         return (pow(x - focus[0], 2) + pow(focus[1], 2) - pow(directrix_y, 2)) / (2 * (focus[1] - directrix_y))
 
     def CheckUnsolvableParabolaEquation(self, boost_x: float, boost_y: float, focus: list[float, float], directix: float, tolerance: float) -> list[float, float]:
-        """
-        Compare the y-coordinate of a point on the parabola returned by Boost with the computed value.
-		The function will return an exception if the difference between the computed y-value and the y-value returned by Boost.
-		The computed point will be returned otherwise.
+        """Used for interpolating parabolas
+            Compare the y-coordinate of a point on the parabola returned by Boost with the computed value.
+		    The function will return an exception if the difference between the computed y-value and the y-value returned by Boost.
+		    The computed point will be returned otherwise.
+
         :param boost_x: the x-value of the point parabola returned by boost.
         :type boost_x: float
         :param boost_y: the y-value of the point parabola returned by boost.
@@ -704,9 +723,11 @@ cdef class Pyvoronoi:
         :type directix: float
 		:param tolerance: the distance allowed between the point computed by boost and the point computed by the equation.
 		:type tolerance: float
+		:raises UnsolvableParabolaEquation: Indicates a scenario where a parabola cannot be computed.
 		:return: the point on the parabola computed using the value of boost_x.
 		:rtype: list[float, float]
 		"""
+
         computed_point_y = self.GetParabolaY(boost_x, focus, directix)
         delta = computed_point_y - boost_y if computed_point_y > boost_y else boost_y - computed_point_y
         if delta > tolerance:
@@ -714,8 +735,8 @@ cdef class Pyvoronoi:
         return [boost_x, computed_point_y]
 
     def Discretize(self, point: list[float, float], segment: list[list[float, float], list[float, float]], parabola_start: list[float, float], parabola_end: list[float, float], max_dist: float, parabola_equation_tolerance: float) -> map[list[float, float]]:
-        """
-        Interpolate points on a parabola. The points are garanteed to be closer than the value of the parameter max_dist.
+        """Interpolate points on a parabola. The points are garanteed to be closer than the value of the parameter max_dist.
+
         :param point: The input point associated with the cell or the neighbour cell. The point is used as the focus in the equation of the parabola.
         :type point: list[float, float]
         :param segment: The input segment associated with the cell or the neighbour cell. The point is used as the directix in the equation of the parabola.
@@ -728,15 +749,15 @@ cdef class Pyvoronoi:
         :type max_dist: float
         :param parabola_equation_tolerance: The maximum difference allowed between the y coordinate returned by Boost, and the equation of the parabola.
         :type parabola_equation_tolerance: float
-		:return: The list of points on the parabola.
-		:rtype: map[list[float, float]]
+        :return: The list of points on the parabola.
+        :rtype: map[list[float, float]]
 		"""
 
-		#Test if the input point is on the input line. If yes, it is impossible to compute a parabola.
+        #Test if the input point is on the input line. If yes, it is impossible to compute a parabola.
         if(point[0] == segment[0][0] and point[1] == segment[0][1]) or (point[0] == segment[1][0] and point[1] == segment[1][1]):
             raise FocusOnDirectixException()
 
-		###############################
+        ###############################
         #Rotate the input information
 		#Rotation is done so that the
 		#Input segment is aligned with the x-axis.
@@ -758,7 +779,7 @@ cdef class Pyvoronoi:
         parabola_start_rotated = RotateWithShift(parabola_start, angle, shift_x, shift_y)
         parabola_end_rotated = RotateWithShift(parabola_end, angle, shift_x, shift_y)
 
-		###############################
+        ###############################
         #Validate the equation for the
 		#first and last point given by
 		#Boost
@@ -768,7 +789,7 @@ cdef class Pyvoronoi:
         parabola_end_rotated_check = self.CheckUnsolvableParabolaEquation(parabola_end_rotated[0], parabola_end_rotated[1], focus_rotated, directix, parabola_equation_tolerance)
 
 
-		###############################
+        ###############################
         #Compute the intermediate points
 		###############################
         densified_rotated  = [parabola_start_rotated_check]
@@ -791,7 +812,7 @@ cdef class Pyvoronoi:
 
         densified_rotated[0] = parabola_start_rotated
         densified_rotated[-1] = parabola_end_rotated
-		###############################
+        ###############################
         #Unrotate the computed intermediate points
 		###############################
         densified = map(lambda x: Unrotate(x, angle, shift_x, shift_y), densified_rotated)
