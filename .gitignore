@@ -1,6 +1,6 @@
 .idea
 .eggs
-build
+/build
 dist
 pyvoronoi.egg-info
 *.so
@@ -9,3 +9,4 @@ pyvoronoi/pyvoronoi.cpp
 *.pyd
 MANIFEST
 Temp.md
+*bat
