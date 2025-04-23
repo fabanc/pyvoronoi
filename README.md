@@ -5,6 +5,7 @@ A wrapper for Boost's Voronoi diagram library. The full documentation of the Boo
 
 ## Change log
 
+ * 1.2.2: Added API documentation using Sphynx and Read The Doc theme.
  * 1.2.1: Introduction of type hints for all function and their documentation. This enables intellisense and code completion.
  * 1.2.0: Improved memory management when returning Boost Voronoi output.
  * 1.1.9: Improved memory management when reading Boost Voronoi input.

@@ -4,7 +4,7 @@ from setuptools import setup
 from setuptools.extension import Extension
 from pathlib import Path
 
-version = '1.2.1'
+version = '1.2.2'
 
 """
 Note on using the setup.py:
