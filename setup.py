@@ -67,6 +67,10 @@ class build_ext_subclass( build_ext ):
                     install_dir = os.path.dirname(sys.executable)
                     cpython_directory = os.path.join(install_dir, 'include', 'cpython')         
                     e.extra_compile_args = [cpython_directory]
+
+        if dev_mode:
+            for e in self.extensions:
+                e.cython_directives = {'language_level': "3"}
         build_ext.build_extensions(self)
 
       
