@@ -3,6 +3,8 @@
 
 A wrapper for Boost's Voronoi diagram library. The full documentation of the Boost Voronoi API is available [here](https://www.boost.org/doc/libs/1_75_0/libs/polygon/doc/voronoi_main.htm).
 
+Pyvoronoi's documentation can be found on [Read the Doc](https://pyvoronoi.readthedocs.io/en/latest/#)
+
 ## Change log
 
  * 1.2.2: Added API documentation using Sphynx and Read The Doc theme.

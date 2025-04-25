@@ -82,6 +82,10 @@ setup(
     author='Fabien Ancelin / Andrii Sydorchuk, Voxel8',
     author_email='',
     url='https://github.com/fabanc/pyvoronoi',
+    project_urls={
+        'GitHub': 'https://github.com/fabanc/pyvoronoi',
+        'Read the doc': 'https://pyvoronoi.readthedocs.io/en/latest/#'
+    },
     keywords=['voronoi','Boost','polygon'],
     data_files=['pyvoronoi/pyvoronoi.pyi'],
     classifiers=[
