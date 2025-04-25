@@ -246,7 +246,7 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 				edge_start = map_vertices_to_indexes[edge->vertex0()];
 			}
 
-			long vertices_count = vertex_identifiers.size();
+			long long vertices_count = vertex_identifiers.size();
 			if (vertices_count == 0){
 				vertex_identifiers.push_back(edge_start);
 			}
