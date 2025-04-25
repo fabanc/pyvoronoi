@@ -91,24 +91,24 @@ cdef extern from "voronoi.hpp":
         void Construct() nogil
         vector[Point] GetPoints()
         vector[Segment] GetSegments()
-        vector[long long] GetIntersectingSegments()
-        vector[long long] GetDegenerateSegments()
-        vector[long long] GetPointsOnSegments()
+        vector[unsigned long long] GetIntersectingSegments()
+        vector[unsigned long long] GetDegenerateSegments()
+        vector[unsigned long long] GetPointsOnSegments()
         void MapVertexIndexes()
         void MapEdgeIndexes()
         void MapCellIndexes()
 
-        long long CountPoints()
-        long long CountSegments()
-        long long CountVertices()
-        long long CountEdges()
-        long long CountCells()
+        unsigned long long CountPoints()
+        unsigned long long CountSegments()
+        unsigned long long CountVertices()
+        unsigned long long CountEdges()
+        unsigned long long CountCells()
 
-        Point GetPoint(int index)
-        Segment GetSegment(int index)
-        c_Vertex GetVertex(long long index)
-        c_Edge GetEdge(long long index)
-        c_Cell GetCell(long long index)
+        Point GetPoint(unsigned long long index)
+        Segment GetSegment(unsigned long long index)
+        c_Vertex GetVertex(unsigned long long index)
+        c_Edge GetEdge(unsigned long long index)
+        c_Cell GetCell(unsigned long long index)
 
 
 

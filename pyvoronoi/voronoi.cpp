@@ -29,14 +29,14 @@ std::vector<Segment> VoronoiDiagram::GetSegments() {
 
 
 
-std::vector<long long> VoronoiDiagram::GetIntersectingSegments(){
-    std::vector<long long> overlapping_indexes;
+std::vector<unsigned long long> VoronoiDiagram::GetIntersectingSegments(){
+    std::vector<unsigned long long> overlapping_indexes;
     for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
         Segment* segmentLeft = &(*it_left);
 
-        long long left_index = distance(segments.begin(),it_left);
-        long long next_index = left_index + 1;
-        for (auto right_index=next_index;right_index < segments.size(); right_index ++){
+        unsigned long long left_index = distance(segments.begin(),it_left);
+        unsigned long long next_index = left_index + 1;
+        for (unsigned long long right_index=next_index;right_index < segments.size(); right_index ++){
             Segment segmentRight = segments[right_index];
             if(segmentLeft->findIntersection(segmentRight)){
                 overlapping_indexes.push_back(left_index);
@@ -47,8 +47,8 @@ std::vector<long long> VoronoiDiagram::GetIntersectingSegments(){
     return overlapping_indexes;
 }
 
-std::vector<long long> VoronoiDiagram::GetDegenerateSegments(){
-    std::vector<long long> degenerate_indexes;
+std::vector<unsigned long long> VoronoiDiagram::GetDegenerateSegments(){
+    std::vector<unsigned long long> degenerate_indexes;
     for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
         Segment* segment = &(*it_left);
         if (segment->p0.X == segment->p1.X && segment->p0.Y == segment->p1.Y)
@@ -57,8 +57,8 @@ std::vector<long long> VoronoiDiagram::GetDegenerateSegments(){
     return degenerate_indexes;
 }
 
-std::vector<long long> VoronoiDiagram::GetPointsOnSegments(){
-    std::vector<long long> degenerate_indexes;
+std::vector<unsigned long long> VoronoiDiagram::GetPointsOnSegments(){
+    std::vector<unsigned long long> degenerate_indexes;
     for (auto it_point = points.begin(); it_point != points.end(); ++it_point) {
         Point* point = &(*it_point);
         for (auto it_segment = segments.begin(); it_segment != segments.end(); ++it_segment) {
@@ -91,23 +91,23 @@ std::vector<long long> VoronoiDiagram::GetPointsOnSegments(){
 //    return overlappingPoints;
 //}
 
-long long VoronoiDiagram:: CountPoints(){
+unsigned long long VoronoiDiagram:: CountPoints(){
     return points.size();
 }
 
-long long VoronoiDiagram:: CountSegments(){
+unsigned long long VoronoiDiagram:: CountSegments(){
     return segments.size();
 }
 
-long long VoronoiDiagram::CountVertices(){
+unsigned long long VoronoiDiagram::CountVertices(){
 	return vd.num_vertices();
 }
 
-long long VoronoiDiagram::CountEdges(){
+unsigned long long VoronoiDiagram::CountEdges(){
 	return vd.num_edges();
 }
 
-long long VoronoiDiagram::CountCells(){
+unsigned long long VoronoiDiagram::CountCells(){
 	return vd.num_cells();
 }
 
@@ -141,22 +141,22 @@ void VoronoiDiagram::MapCellIndexes(){
 	}
 }
 
-Point VoronoiDiagram::GetPoint(int index){
+Point VoronoiDiagram::GetPoint(unsigned long long index){
     return points[index];
 }
 
-Segment VoronoiDiagram::GetSegment(int index){
+Segment VoronoiDiagram::GetSegment(unsigned long long index){
     return segments[index];
 }
 
-c_Vertex VoronoiDiagram::GetVertex(long long index){
+c_Vertex VoronoiDiagram::GetVertex(unsigned long long index){
 	const voronoi_diagram<double>::vertex_type* vertex = map_indexes_to_vertices[index];
 	double x = vertex->x();
 	double y = vertex->y();
 	return c_Vertex(x, y);
 }
 
-c_Edge VoronoiDiagram::GetEdge(long long index)
+c_Edge VoronoiDiagram::GetEdge(unsigned long long index)
 {
 	const voronoi_diagram<double>::edge_type* edge = map_indexes_to_edges[index];
 
@@ -195,7 +195,7 @@ c_Edge VoronoiDiagram::GetEdge(long long index)
 	return c_edge;
 }
 
-c_Cell VoronoiDiagram::GetCell(long long index)
+c_Cell VoronoiDiagram::GetCell(unsigned long long index)
 {
 	//std::map<long long, const voronoi_diagram<double>::cell_type *>::iterator cellMapIterator = cellMap2.find(index);
 	const voronoi_diagram<double>::cell_type* cell = map_indexes_to_cells[index];
