@@ -20,9 +20,9 @@ struct IntersectionPoint{
 };
 
 struct Point {
-	int X;
-	int Y;
-	Point(int x = 0, int y = 0) : X(x), Y(y) {}
+	long long X;
+	long long Y;
+	Point(long long x = 0, long long y = 0) : X(x), Y(y) {}
 };
 
 struct Segment {
@@ -74,7 +74,7 @@ struct Segment {
     {
         // See https://www.geeksforgeeks.org/orientation-3-ordered-points/
         // for details of below formula.
-        int val = (q.Y - p.Y) * (r.X - q.X) -
+        long long val = (q.Y - p.Y) * (r.X - q.X) -
                 (q.X - p.X) * (r.Y - q.Y);
 
         if (val == 0) return 0; // collinear
@@ -221,7 +221,8 @@ struct Segment {
         IntersectionPoint p =  IntersectionPoint(x, y);
         if (onSegment(p0, p, p1) && onSegment(otherSegment.p0, p, otherSegment.p1))
         {
-            Point pi = Point(round(x), round(y));
+
+            Point pi = Point((long long)round(x), (long long)round(y));
             if (onEndpoint(pi) && otherSegment.onEndpoint(pi))
                 return false;
             return true;

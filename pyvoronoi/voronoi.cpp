@@ -34,9 +34,9 @@ std::vector<long long> VoronoiDiagram::GetIntersectingSegments(){
     for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
         Segment* segmentLeft = &(*it_left);
 
-        int left_index = distance(segments.begin(),it_left);
-        int next_index = left_index + 1;
-        for (int right_index=next_index;right_index < segments.size(); right_index ++){
+        long long left_index = distance(segments.begin(),it_left);
+        long long next_index = left_index + 1;
+        for (auto right_index=next_index;right_index < segments.size(); right_index ++){
             Segment segmentRight = segments[right_index];
             if(segmentLeft->findIntersection(segmentRight)){
                 overlapping_indexes.push_back(left_index);

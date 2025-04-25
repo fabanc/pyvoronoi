@@ -54,8 +54,8 @@ cdef extern from "<vector>" namespace "std":
 
 cdef extern from "voronoi.hpp":
     cdef struct Point:
-        int X
-        int Y
+        long long X
+        long long Y
 
     cdef struct Segment:
         Point p0
