@@ -229,7 +229,16 @@ class UnsolvableParabolaEquation(Exception):
 ##ROTATION
 ####################################
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
-def Rotate(point: list[float, float], theta: float) ->  list[float, float]:
+def rotate(point: list[float, float], theta: float) ->  list[float, float]:
+    """Rotate a point using an angle
+
+    :param point: the input point
+    :type point: list[float, float]
+    :param theta: the angle used for the rotation
+    :type theta: float
+    :return: the rotated point.
+    :rtype: list[float, float]
+    """
     t = -1 * theta
     cos = math.cos(t)
     sin = math.sin(t)
@@ -237,17 +246,17 @@ def Rotate(point: list[float, float], theta: float) ->  list[float, float]:
 	(point[0] * sin) + (point[1] * cos)]
 
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
-def RotateWithShift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
-    return Rotate([point[0] - shift_x, point[1] - shift_y], theta)
+def rotate_with_shift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
+    return rotate([point[0] - shift_x, point[1] - shift_y], theta)
 
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
-def Unrotate(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
+def unrotate_with_shift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
     cos = math.cos(theta)
     sin = math.sin(theta)
     return [(point[0] * cos) - (point[1] * sin) + shift_x, (point[0] * sin) + (point[1] * cos) + shift_y]
 
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
-def GetLineAngleInRadians(start_point_x: float, start_point_y: float, end_point_x: float, end_point_y: float) -> float:
+def get_line_angle_in_radians(start_point_x: float, start_point_y: float, end_point_x: float, end_point_y: float) -> float:
     return math.atan2(end_point_y - start_point_y, end_point_x - start_point_x)
 
 
@@ -255,7 +264,7 @@ def GetLineAngleInRadians(start_point_x: float, start_point_y: float, end_point_
 ##DISTANCE
 ####################################
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
-def DistanceSquared(point_start: list[float, float], point_end: list[float, float]) -> float:
+def get_distance_squared(point_start: list[float, float], point_end: list[float, float]) -> float:
     """Returns the squared length of a line.
 
     :param point_start: the start point of the line.
@@ -268,7 +277,7 @@ def DistanceSquared(point_start: list[float, float], point_end: list[float, floa
     return pow(point_end[0] - point_start[0], 2) + pow(point_end[1] - point_start[1], 2)
 
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
-def Distance(point_start: list[float, float], point_end: list[float, float]) -> float:
+def get_distance(point_start: list[float, float], point_end: list[float, float]) -> float:
     """Returns the length of a line.
 
     :param point_start: the start point of the line.
@@ -278,7 +287,7 @@ def Distance(point_start: list[float, float], point_end: list[float, float]) -> 
     :return: the squared of the line
     :rtype: float
     """
-    return math.sqrt(DistanceSquared(point_start, point_end))
+    return math.sqrt(get_distance_squared(point_start, point_end))
 
 
 ####################################
@@ -766,18 +775,18 @@ cdef class Pyvoronoi:
 		###############################
         shift_x = min(segment[0][0], segment[1][0])
         shift_y = min(segment[0][1], segment[1][1])
-        angle = GetLineAngleInRadians(
+        angle = get_line_angle_in_radians(
             segment[0][0],
             segment[0][1],
             segment[1][0],
             segment[1][1],
         )
 
-        focus_rotated = RotateWithShift(point, angle, shift_x, shift_y)
-        directix_start_rotated = RotateWithShift(segment[0], angle, shift_x, shift_y)
-        directix_end_rotated = RotateWithShift(segment[1], angle, shift_x, shift_y)
-        parabola_start_rotated = RotateWithShift(parabola_start, angle, shift_x, shift_y)
-        parabola_end_rotated = RotateWithShift(parabola_end, angle, shift_x, shift_y)
+        focus_rotated = rotate_with_shift(point, angle, shift_x, shift_y)
+        directix_start_rotated = rotate_with_shift(segment[0], angle, shift_x, shift_y)
+        directix_end_rotated = rotate_with_shift(segment[1], angle, shift_x, shift_y)
+        parabola_start_rotated = rotate_with_shift(parabola_start, angle, shift_x, shift_y)
+        parabola_end_rotated = rotate_with_shift(parabola_end, angle, shift_x, shift_y)
 
         ###############################
         #Validate the equation for the
@@ -798,7 +807,7 @@ cdef class Pyvoronoi:
 
         while (len(next) > 0):
             current = next[-1]
-            distance = Distance(current, previous)
+            distance = get_distance(current, previous)
 
             if distance > max_dist:
                 mid_point_x = (previous[0] + current[0]) / 2
@@ -815,7 +824,7 @@ cdef class Pyvoronoi:
         ###############################
         #Unrotate the computed intermediate points
 		###############################
-        densified = map(lambda x: Unrotate(x, angle, shift_x, shift_y), densified_rotated)
+        densified = map(lambda x: unrotate_with_shift(x, angle, shift_x, shift_y), densified_rotated)
         return densified
 
 

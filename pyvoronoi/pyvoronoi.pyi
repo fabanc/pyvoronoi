@@ -115,19 +115,28 @@ class UnsolvableParabolaEquation(Exception):
 
     ...
 
-def Rotate(point: list[float, float], theta: float) -> list[float, float]:
+def rotate(point: list[float, float], theta: float) -> list[float, float]:
+    """Rotate a point using an angle
+
+    :param point: the input point
+    :type point: list[float, float]
+    :param theta: the angle used for the rotation
+    :type theta: float
+    :return: the rotated point.
+    :rtype: list[float, float]
+    """
     ...
 
-def RotateWithShift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
+def rotate_with_shift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
     ...
 
-def Unrotate(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
+def unrotate_with_shift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
     ...
 
-def GetLineAngleInRadians(start_point_x: float, start_point_y: float, end_point_x: float, end_point_y: float) -> float:
+def get_line_angle_in_radians(start_point_x: float, start_point_y: float, end_point_x: float, end_point_y: float) -> float:
     ...
 
-def DistanceSquared(point_start: list[float, float], point_end: list[float, float]) -> float:
+def get_distance_squared(point_start: list[float, float], point_end: list[float, float]) -> float:
     """Returns the squared length of a line.
 
     :param point_start: the start point of the line.
@@ -139,7 +148,7 @@ def DistanceSquared(point_start: list[float, float], point_end: list[float, floa
     """
     ...
 
-def Distance(point_start: list[float, float], point_end: list[float, float]) -> float:
+def get_distance(point_start: list[float, float], point_end: list[float, float]) -> float:
     """Returns the length of a line.
 
     :param point_start: the start point of the line.
