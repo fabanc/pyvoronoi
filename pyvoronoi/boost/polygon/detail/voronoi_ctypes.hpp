@@ -10,8 +10,9 @@
 #ifndef BOOST_POLYGON_DETAIL_VORONOI_CTYPES
 #define BOOST_POLYGON_DETAIL_VORONOI_CTYPES
 
-#include "cstdint.hpp"
+#include <boost/cstdint.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <utility>
