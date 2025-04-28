@@ -1,6 +1,6 @@
 .idea
 .eggs
-/build
+build
 dist
 pyvoronoi.egg-info
 *.so
