@@ -7,7 +7,7 @@ A wrapper for Boost's Voronoi diagram library. The full documentation of the Boo
 
 The documentation for Pyvoronoi is available [here](https://pyvoronoi.readthedocs.io/en/latest/#).
 
-The documentation is built with Sphinx. See the doc folder and the file `requirements.txt` to check the requirements if you want to build it locally .
+The documentation is built with Sphinx. See the `docs` folder and the file `requirements.txt` to check the requirements if you want to build it locally .
 
 ## Change log
 
