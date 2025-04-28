@@ -154,7 +154,7 @@ def unrotate_with_shift(point: list[float, float], theta: float, shift_x: float,
     :type shift_x: float
     :param shift_y: the translation to apply on the y-value to undo.
     :type shift_y: float
-    :return: the rotated point.
+    :return: the unrotated point.
     :rtype: list[float, float]
     """
     ...
