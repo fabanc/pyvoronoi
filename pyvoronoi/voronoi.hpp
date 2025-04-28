@@ -221,7 +221,7 @@ struct Segment {
         IntersectionPoint p =  IntersectionPoint(x, y);
         if (onSegment(p0, p, p1) && onSegment(otherSegment.p0, p, otherSegment.p1))
         {
-            Point pi = Point(round(x), round(y));
+            Point pi = Point((int)round(x), (int)round(y));
             if (onEndpoint(pi) && otherSegment.onEndpoint(pi))
                 return false;
             return true;
