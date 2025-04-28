@@ -228,13 +228,12 @@ class UnsolvableParabolaEquation(Exception):
 ####################################
 ##ROTATION
 ####################################
-# TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def rotate(point: list[float, float], theta: float) ->  list[float, float]:
-    """Rotate a point using an angle
+    """Rotate a point around the origin using an angle
 
     :param point: the input point
     :type point: list[float, float]
-    :param theta: the angle used for the rotation
+    :param theta: the angle of rotation
     :type theta: float
     :return: the rotated point.
     :rtype: list[float, float]
@@ -245,18 +244,55 @@ def rotate(point: list[float, float], theta: float) ->  list[float, float]:
     return [(point[0] * cos) - (point[1] * sin),
 	(point[0] * sin) + (point[1] * cos)]
 
-# TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def rotate_with_shift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
+    """Rotate a point around the origin and shift it along the x-axis and the y-axis
+
+    :param point: the input point
+    :type point: list[float, float]
+    :param theta: the angle of rotation around the origin
+    :type theta: float
+    :param shift_x: the translation to apply on the x-value.
+    :type shift_x: float
+    :param shift_y: the translation to apply on the y-value.
+    :type shift_y: float
+    :return: the rotated point.
+    :rtype: list[float, float]
+    """
     return rotate([point[0] - shift_x, point[1] - shift_y], theta)
 
-# TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def unrotate_with_shift(point: list[float, float], theta: float, shift_x: float, shift_y: float) -> list[float, float]:
+    """ Undo the rotation and shift done by the function rotate_with_shift
+
+    :param point: the input point
+    :type point: list[float, float]
+    :param theta: the angle of rotation around the origin used during the initial rotation
+    :type theta: float
+    :param shift_x: the translation to apply on the x-value to undo.
+    :type shift_x: float
+    :param shift_y: the translation to apply on the y-value to undo.
+    :type shift_y: float
+    :return: the unrotated point.
+    :rtype: list[float, float]
+    """
     cos = math.cos(theta)
     sin = math.sin(theta)
     return [(point[0] * cos) - (point[1] * sin) + shift_x, (point[0] * sin) + (point[1] * cos) + shift_y]
 
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def get_line_angle_in_radians(start_point_x: float, start_point_y: float, end_point_x: float, end_point_y: float) -> float:
+    """Get the orientation of a line in radians
+
+    :param start_point_x: The x coordinate of the start point.
+    :type start_point_x: float
+    :param start_point_y: The y coordinate of the start point.
+    :type start_point_y: float
+    :param end_point_x: The x coordinate of the end point.
+    :type end_point_x: float
+    :param end_point_y: The y coordinate of the end point.
+    :type end_point_y: float
+    :return: The orientation of the line from the start point to the end point in radians
+    :rtype: float
+    """
     return math.atan2(end_point_y - start_point_y, end_point_x - start_point_x)
 
 
@@ -265,26 +301,26 @@ def get_line_angle_in_radians(start_point_x: float, start_point_y: float, end_po
 ####################################
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def get_distance_squared(point_start: list[float, float], point_end: list[float, float]) -> float:
-    """Returns the squared length of a line.
+    """Returns the squared distance between two points.
 
-    :param point_start: the start point of the line.
+    :param point_start: the start point of the line as a list of coordinates
     :type point_start: list[float, float]
-    :param point_end: the end point of the line.
+    :param point_end: the end point of the line as a list of coordinates
     :type point_end: list[float, float]
-    :return: the squared length of the line
+    :return: the squared distance between the two points
     :rtype: float
     """
     return pow(point_end[0] - point_start[0], 2) + pow(point_end[1] - point_start[1], 2)
 
 # TODO This function should be moved in a separate module. Conceptually, they have noting to do with Boost Voronoi and could be pure python
 def get_distance(point_start: list[float, float], point_end: list[float, float]) -> float:
-    """Returns the length of a line.
+    """Returns the distance between two points.
 
     :param point_start: the start point of the line.
     :type point_start: list[float, float]
     :param point_end: the end point of the line.
     :type point_end: list[float, float]
-    :return: the squared of the line
+    :return: the distance between the two points
     :rtype: float
     """
     return math.sqrt(get_distance_squared(point_start, point_end))

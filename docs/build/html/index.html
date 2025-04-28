@@ -44,8 +44,6 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">Pyvoronoi - API documentation</a><ul>
 <li><a class="reference internal" href="#pyvoronoi.Cell"><code class="docutils literal notranslate"><span class="pre">Cell</span></code></a></li>
-<li><a class="reference internal" href="#pyvoronoi.Distance"><code class="docutils literal notranslate"><span class="pre">Distance()</span></code></a></li>
-<li><a class="reference internal" href="#pyvoronoi.DistanceSquared"><code class="docutils literal notranslate"><span class="pre">DistanceSquared()</span></code></a></li>
 <li><a class="reference internal" href="#pyvoronoi.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a></li>
 <li><a class="reference internal" href="#pyvoronoi.FocusOnDirectixException"><code class="docutils literal notranslate"><span class="pre">FocusOnDirectixException</span></code></a></li>
 <li><a class="reference internal" href="#pyvoronoi.Pyvoronoi"><code class="docutils literal notranslate"><span class="pre">Pyvoronoi</span></code></a><ul>
@@ -87,6 +85,12 @@
 <li><a class="reference internal" href="#pyvoronoi.UnsolvableParabolaEquation"><code class="docutils literal notranslate"><span class="pre">UnsolvableParabolaEquation</span></code></a></li>
 <li><a class="reference internal" href="#pyvoronoi.Vertex"><code class="docutils literal notranslate"><span class="pre">Vertex</span></code></a></li>
 <li><a class="reference internal" href="#pyvoronoi.VoronoiException"><code class="docutils literal notranslate"><span class="pre">VoronoiException</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.get_distance"><code class="docutils literal notranslate"><span class="pre">get_distance()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.get_distance_squared"><code class="docutils literal notranslate"><span class="pre">get_distance_squared()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.get_line_angle_in_radians"><code class="docutils literal notranslate"><span class="pre">get_line_angle_in_radians()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.rotate"><code class="docutils literal notranslate"><span class="pre">rotate()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.rotate_with_shift"><code class="docutils literal notranslate"><span class="pre">rotate_with_shift()</span></code></a></li>
+<li><a class="reference internal" href="#pyvoronoi.unrotate_with_shift"><code class="docutils literal notranslate"><span class="pre">unrotate_with_shift()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -135,46 +139,6 @@ infinite edges, meaning edges that do not have coordinates at one of their end p
 <li><p>SOURCE_CATEGORY_GEOMETRY_SHIFT: 5</p></li>
 <li><p>SOURCE_CATEGORY_BITMASK: 6</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyvoronoi.Distance">
-<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">Distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.Distance" title="Link to this definition"></a></dt>
-<dd><p>Returns the length of a line.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>point_start</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the start point of the line.</p></li>
-<li><p><strong>point_end</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the end point of the line.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the squared of the line</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyvoronoi.DistanceSquared">
-<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">DistanceSquared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.DistanceSquared" title="Link to this definition"></a></dt>
-<dd><p>Returns the squared length of a line.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>point_start</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the start point of the line.</p></li>
-<li><p><strong>point_end</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the end point of the line.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the squared length of the line</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -765,6 +729,132 @@ and cells.</p>
 <dt class="sig sig-object py" id="pyvoronoi.VoronoiException">
 <em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">VoronoiException</span></span><a class="headerlink" href="#pyvoronoi.VoronoiException" title="Link to this definition"></a></dt>
 <dd><p>Indicate a problem generating a output with Boost Voronoi. This might indicate problem with your input data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.get_distance">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">get_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.get_distance" title="Link to this definition"></a></dt>
+<dd><p>Returns the distance between two points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point_start</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the start point of the line.</p></li>
+<li><p><strong>point_end</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the end point of the line.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the distance between the two points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.get_distance_squared">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">get_distance_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.get_distance_squared" title="Link to this definition"></a></dt>
+<dd><p>Returns the squared distance between two points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point_start</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the start point of the line as a list of coordinates</p></li>
+<li><p><strong>point_end</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the end point of the line as a list of coordinates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the squared distance between the two points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.get_line_angle_in_radians">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">get_line_angle_in_radians</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_point_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_point_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvoronoi.get_line_angle_in_radians" title="Link to this definition"></a></dt>
+<dd><p>Get the orientation of a line in radians</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_point_x</strong> (<em>float</em>) – The x coordinate of the start point.</p></li>
+<li><p><strong>start_point_y</strong> (<em>float</em>) – The y coordinate of the start point.</p></li>
+<li><p><strong>end_point_x</strong> (<em>float</em>) – The x coordinate of the end point.</p></li>
+<li><p><strong>end_point_y</strong> (<em>float</em>) – The y coordinate of the end point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The orientation of the line from the start point to the end point in radians</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.rotate">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.rotate" title="Link to this definition"></a></dt>
+<dd><p>Rotate a point around the origin using an angle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the input point</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – the angle of rotation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the rotated point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.rotate_with_shift">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">rotate_with_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.rotate_with_shift" title="Link to this definition"></a></dt>
+<dd><p>Rotate a point around the origin and shift it along the x-axis and the y-axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the input point</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – the angle of rotation around the origin</p></li>
+<li><p><strong>shift_x</strong> (<em>float</em>) – the translation to apply on the x-value.</p></li>
+<li><p><strong>shift_y</strong> (<em>float</em>) – the translation to apply on the y-value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the rotated point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvoronoi.unrotate_with_shift">
+<span class="sig-prename descclassname"><span class="pre">pyvoronoi.</span></span><span class="sig-name descname"><span class="pre">unrotate_with_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvoronoi.unrotate_with_shift" title="Link to this definition"></a></dt>
+<dd><p>Undo the rotation and shift done by the function rotate_with_shift</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – the input point</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – the angle of rotation around the origin used during the initial rotation</p></li>
+<li><p><strong>shift_x</strong> (<em>float</em>) – the translation to apply on the x-value to undo.</p></li>
+<li><p><strong>shift_y</strong> (<em>float</em>) – the translation to apply on the y-value to undo.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the rotated point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float, float]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="toctree-wrapper compound">
