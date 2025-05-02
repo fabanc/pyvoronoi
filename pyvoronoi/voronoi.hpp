@@ -162,14 +162,14 @@ struct Segment {
         if (abs(x1 - x2) < tolerance)
         {
             //compute slope of line 2 (m2) and c2
-            double m2 = (y4 - y3) / (x4 - x3);
+            double m2 = (double)(y4 - y3) / (double)(x4 - x3);
             double c2 = -m2 * x3 + y3;
 
             //equation of vertical line is x = c
             //if line 1 and 2 intersect then x1=c1=x
             //subsitute x=x1 in (4) => -m2x1 + y = c2
             // => y = c2 + m2x1
-            x = x1;
+            x = (double)x1;
             y = c2 + m2 * x1;
         }
         //otherSegment is vertical x3 = x4
@@ -178,14 +178,14 @@ struct Segment {
         else if (abs(x3 - x4) < tolerance)
         {
             //compute slope of line 1 (m1) and c2
-            double m1 = (y2 - y1) / (x2 - x1);
+            double m1 = (double)(y2 - y1) / (double)(x2 - x1);
             double c1 = -m1 * x1 + y1;
 
             //equation of vertical line is x = c
             //if line 1 and 2 intersect then x3=c3=x
             //subsitute x=x3 in (3) => -m1x3 + y = c1
             // => y = c1 + m1x3
-            x = x3;
+            x = (double)x3;
             y = c1 + m1 * x3;
         }
         //lineA & otherSegment are not vertical
@@ -193,11 +193,11 @@ struct Segment {
         else
         {
             //compute slope of line 1 (m1) and c2
-            double m1 = (y2 - y1) / (x2 - x1);
+            double m1 = (double)(y2 - y1) / (double)(x2 - x1);
             double c1 = -m1 * x1 + y1;
 
             //compute slope of line 2 (m2) and c2
-            double m2 = (y4 - y3) / (x4 - x3);
+            double m2 = (double)(y4 - y3) / (double)(x4 - x3);
             double c2 = -m2 * x3 + y3;
 
             //solving equations (3) & (4) => x = (c1-c2)/(m2-m1)
@@ -221,7 +221,7 @@ struct Segment {
         IntersectionPoint p =  IntersectionPoint(x, y);
         if (onSegment(p0, p, p1) && onSegment(otherSegment.p0, p, otherSegment.p1))
         {
-            Point pi = Point(round(x), round(y));
+            Point pi = Point((int)round(x), (int)round(y));
             if (onEndpoint(pi) && otherSegment.onEndpoint(pi))
                 return false;
             return true;
@@ -338,9 +338,9 @@ public:
 	long long CountEdges();
 	long long CountCells();
 
-    std::vector<int> GetIntersectingSegments();
-    std::vector<int> GetDegenerateSegments();
-    std::vector<int> GetPointsOnSegments();
+    std::vector<unsigned long long> GetIntersectingSegments();
+    std::vector<unsigned long long> GetDegenerateSegments();
+    std::vector<unsigned long long> GetPointsOnSegments();
 
 	//Map index to vertex
 	typedef std::pair<long long, const voronoi_diagram<double>::vertex_type*> index_to_vertex;

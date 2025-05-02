@@ -29,14 +29,14 @@ std::vector<Segment> VoronoiDiagram::GetSegments() {
 
 
 
-std::vector<int> VoronoiDiagram::GetIntersectingSegments(){
-    std::vector<int> overlapping_indexes;
+std::vector<unsigned long long> VoronoiDiagram::GetIntersectingSegments(){
+    std::vector<unsigned long long> overlapping_indexes;
     for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
         Segment* segmentLeft = &(*it_left);
 
-        int left_index = distance(segments.begin(),it_left);
-        int next_index = left_index + 1;
-        for (int right_index=next_index;right_index < segments.size(); right_index ++){
+        unsigned long long left_index = distance(segments.begin(),it_left);
+        unsigned long long next_index = left_index + 1;
+        for (unsigned long long right_index=next_index;right_index < segments.size(); right_index ++){
             Segment segmentRight = segments[right_index];
             if(segmentLeft->findIntersection(segmentRight)){
                 overlapping_indexes.push_back(left_index);
@@ -47,8 +47,8 @@ std::vector<int> VoronoiDiagram::GetIntersectingSegments(){
     return overlapping_indexes;
 }
 
-std::vector<int> VoronoiDiagram::GetDegenerateSegments(){
-    std::vector<int> degenerate_indexes;
+std::vector<unsigned long long> VoronoiDiagram::GetDegenerateSegments(){
+    std::vector<unsigned long long> degenerate_indexes;
     for (auto it_left = segments.begin(); it_left != segments.end(); ++it_left) {
         Segment* segment = &(*it_left);
         if (segment->p0.X == segment->p1.X && segment->p0.Y == segment->p1.Y)
@@ -57,8 +57,8 @@ std::vector<int> VoronoiDiagram::GetDegenerateSegments(){
     return degenerate_indexes;
 }
 
-std::vector<int> VoronoiDiagram::GetPointsOnSegments(){
-    std::vector<int> degenerate_indexes;
+std::vector<unsigned long long> VoronoiDiagram::GetPointsOnSegments(){
+    std::vector<unsigned long long> degenerate_indexes;
     for (auto it_point = points.begin(); it_point != points.end(); ++it_point) {
         Point* point = &(*it_point);
         for (auto it_segment = segments.begin(); it_segment != segments.end(); ++it_segment) {
@@ -246,7 +246,7 @@ c_Cell VoronoiDiagram::GetCell(long long index)
 				edge_start = map_vertices_to_indexes[edge->vertex0()];
 			}
 
-			long vertices_count = vertex_identifiers.size();
+			long long vertices_count = vertex_identifiers.size();
 			if (vertices_count == 0){
 				vertex_identifiers.push_back(edge_start);
 			}

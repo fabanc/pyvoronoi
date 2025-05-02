@@ -1,10 +1,10 @@
 include pyvoronoi/voronoi.cpp
 include pyvoronoi/voronoi.hpp
 include pyvoronoi/pyvoronoi.cpp
-include pyvoronoi/boost/polygon/detail/config.hpp
-include pyvoronoi/boost/polygon/detail/cstdint.hpp
-include pyvoronoi/boost/polygon/detail/limits.hpp
-include pyvoronoi/boost/polygon/detail/suffix.hpp
+include pyvoronoi/boost/config.hpp
+include pyvoronoi/boost/cstdint.hpp
+include pyvoronoi/boost/limits.hpp
+include pyvoronoi/boost/suffix.hpp
 include pyvoronoi/boost/polygon/interval_concept.hpp
 include pyvoronoi/boost/polygon/interval_data.hpp
 include pyvoronoi/boost/polygon/interval_traits.hpp

@@ -10,7 +10,8 @@ The documentation for Pyvoronoi is available [here](https://pyvoronoi.readthedoc
 The documentation is built with Sphinx. See the `docs` folder and the file `requirements.txt` to check the requirements if you want to build it locally .
 
 ## Change log
-
+ * 1.2.4: Removed C++ warning during compile time by addressing possible data loss when switching between integer types.
+ * 1.2.3: (skipped)
  * 1.2.2: Added API documentation using Sphynx and Read The Doc theme.
  * 1.2.1: Introduction of type hints for all function and their documentation. This enables intellisense and code completion.
  * 1.2.0: Improved memory management when returning Boost Voronoi output.
