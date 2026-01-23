@@ -33,6 +33,7 @@ jobs:
               uses: pypa/cibuildwheel@v2.21.3
               env:
                 CIBW_BEFORE_BUILD: python -m pip install Cython
+                CIBW_ARCHS_LINUX: "x86_64 aarch64"
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_DEBUG_TRACEBACK: TRUE
                 CIBW_SKIP: "pp3*"
