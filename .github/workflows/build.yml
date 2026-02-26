@@ -15,9 +15,9 @@ jobs:
             matrix:
                 os: [
                   ubuntu-22.04,
+                  ubuntu-24.04-arm,
                   windows-2022,
-                  macos-14,
-                  ubuntu-24.04-arm
+                  macos-14
                 ]
     
         steps:
@@ -33,11 +33,11 @@ jobs:
               uses: pypa/cibuildwheel@v2.21.3
               env:
                 CIBW_BEFORE_BUILD: python -m pip install Cython
-                CIBW_ARCHS_LINUX: "x86_64"
+                CIBW_ARCHS_LINUX: "native"
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_DEBUG_TRACEBACK: TRUE
                 CIBW_SKIP: "pp3*"
-                CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
+                CIBW_PROJECT_REQUIRES_PYTHON: ">=3.10"
               with:
                 package-dir: .
                 output-dir: dist
