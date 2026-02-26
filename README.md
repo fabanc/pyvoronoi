@@ -10,7 +10,8 @@ The documentation for Pyvoronoi is available [here](https://pyvoronoi.readthedoc
 The documentation is built with Sphinx. See the `docs` folder and the file `requirements.txt` to check the requirements if you want to build it locally .
 
 ## Change log
- * 1.2.6: Support for Python 3.14. Added wheels for macos-15. Removed wheel support for macos-13.
+ * 1.2.7: Support for Python 3.14. Removed wheel support for macos-13.
+ * 1.2.6: (skipped)
  * 1.2.5: (skipped)
  * 1.2.4: Removed C++ warning during compile time by addressing possible data loss when switching between integer types.
  * 1.2.3: (skipped)
