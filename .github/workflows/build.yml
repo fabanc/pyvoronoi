@@ -15,7 +15,7 @@ jobs:
             matrix:
                 os: [
                   ubuntu-22.04,
-                  ubuntu-24.04-arm,
+                  ubuntu-22.04-arm,
                   windows-2022,
                   macos-14
                 ]
@@ -30,14 +30,14 @@ jobs:
 
             # Calling cibuildwheel. Most of the options are the default, but explicit is better than implicit.
             - name: Build wheels
-              uses: pypa/cibuildwheel@v2.21.3
+              uses: pypa/cibuildwheel@v3.3.1
               env:
                 CIBW_BEFORE_BUILD: python -m pip install Cython
                 CIBW_ARCHS_LINUX: "native"
                 CIBW_BUILD_VERBOSITY: 3
                 CIBW_DEBUG_TRACEBACK: TRUE
                 CIBW_SKIP: "pp3*"
-                CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
+                CIBW_PROJECT_REQUIRES_PYTHON: ">=3.10"
               with:
                 package-dir: .
                 output-dir: dist
