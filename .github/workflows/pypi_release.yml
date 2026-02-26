@@ -34,6 +34,7 @@ jobs:
       with:
         repository-url: https://test.pypi.org/legacy/
         verbose: true
+        skip-existing: true
 
   publish-to-pypi:
     name: >-
@@ -57,6 +58,7 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         verbose: true
+        skip-existing: true
 
   # github-release:
   #   name: >-
