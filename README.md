@@ -10,6 +10,7 @@ The documentation for Pyvoronoi is available [here](https://pyvoronoi.readthedoc
 The documentation is built with Sphinx. See the `docs` folder and the file `requirements.txt` to check the requirements if you want to build it locally .
 
 ## Change log
+ * 1.2.8: Added support for Ubuntu 22.04 ARM. This should support 24.04 ARM as well.
  * 1.2.7: Support for Python 3.14. Removed wheel support for macos-13.
  * 1.2.6: (skipped)
  * 1.2.5: (skipped)
